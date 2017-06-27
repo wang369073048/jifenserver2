@@ -3,6 +3,7 @@ package org.trc.resource.goods;
 import com.alibaba.fastjson.JSONObject;
 import org.hibernate.validator.constraints.NotEmpty;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import org.trc.biz.goods.ICategoryBiz;
 import org.trc.biz.goods.IGoodsBiz;
 import org.trc.constants.Category;
@@ -26,6 +27,7 @@ import static org.trc.util.ResultUtil.createSucssAppResult;
 /**
  * Created by hzwzhen on 2017/6/22.
  */
+@Component
 @Produces(MediaType.APPLICATION_JSON)
 @Path("{shopId}/" + ScoreAdminConstants.Route.Goods.ROOT)
 public class GoodsResource {
@@ -35,6 +37,9 @@ public class GoodsResource {
     @Autowired
     private ICategoryBiz categoryBiz;
 
+    /**
+     * 增加商品
+     */
     @POST
     @Path(ScoreAdminConstants.Route.Goods.ENTITY)
     public AppResult publish(@NotNull @PathParam("shopId") Long shopId, @NotNull @FormParam("category") Long category, @FormParam("brandName") String brandName,
@@ -68,7 +73,9 @@ public class GoodsResource {
         return createSucssAppResult("保存商品成功", "");
 
     }
-
+    /**
+     * 修改商品
+     */
     @POST
     @Path(ScoreAdminConstants.Route.Goods.ENTITY + "/{id}")
     public AppResult modify(@NotNull @PathParam("shopId") Long shopId, @NotNull @FormParam("id") Long id, @NotNull @FormParam("category") Long category,
@@ -170,6 +177,9 @@ public class GoodsResource {
 
     }
 
+    /**
+     * 删除商品
+     */
     @DELETE
     @Path(ScoreAdminConstants.Route.Goods.ENTITY + "/{id}")
     public AppResult deleteGoodsDO(@PathParam("shopId") Long shopId, @PathParam("id") Long id){

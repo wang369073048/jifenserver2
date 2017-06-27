@@ -29,6 +29,16 @@ public class BannerContentResource {
     @Autowired
     private IBannerContentBiz bannerContentBiz;
 
+    /**
+     * 新增banner内容
+     * @param shopId 业务方Id
+     * @param title 标题
+     * @param imgUrl 图片地址
+     * @param targetUrl  目标地址
+     * @param description
+     * @param requestContext
+     * @return
+     */
     @POST
     public AppResult<JSONObject> createBannerContent(@PathParam("shopId") Long shopId,
                                         @NotBlank @FormParam("title") String title,
