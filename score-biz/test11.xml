@@ -1,0 +1,10 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<dataset>
+  <banner id="1" shopId="1" name="1111" contentId="1" isUp="true" sort="1" description="&#27979;&#35797;" operatorUserId="0BA7A96723D843539D78C79A161CFD73" isDeleted="false" createTime="2017-03-22 10:48:17.0" updateTime="2017-06-20 11:40:32.0"/>
+  <banner id="2" shopId="1" name="2222" contentId="2" isUp="true" sort="2" description="&#27979;&#35797;" operatorUserId="0BA7A96723D843539D78C79A161CFD73" isDeleted="false" createTime="2017-03-22 11:12:27.0" updateTime="2017-06-20 11:40:33.0"/>
+  <banner id="3" shopId="1" name="3333" contentId="3" isUp="true" sort="3" description="&#27979;&#35797;" operatorUserId="0BA7A96723D843539D78C79A161CFD73" isDeleted="false" createTime="2017-03-22 11:12:41.0" updateTime="2017-06-20 11:40:34.0"/>
+  <banner id="4" shopId="1" name="4444" contentId="4" isUp="true" sort="4" description="&#27979;&#35797;" operatorUserId="0BA7A96723D843539D78C79A161CFD73" isDeleted="false" createTime="2017-03-22 11:12:58.0" updateTime="2017-06-20 11:40:36.0"/>
+  <banner id="28" shopId="1" name="518" contentId="1123" isUp="false" sort="28" description="&#27979;&#35797;" operatorUserId="userId-1" isDeleted="false" createTime="2017-06-19 18:09:24.0" updateTime="2017-06-19 18:09:24.0"/>
+  <banner id="29" shopId="1" name="518" contentId="1123" isUp="false" sort="29" description="&#27979;&#35797;" operatorUserId="userId-1" isDeleted="false" createTime="2017-06-19 18:09:59.0" updateTime="2017-06-19 18:09:59.0"/>
+  <banner id="31" shopId="1" name="518" contentId="1123" isUp="false" sort="31" description="&#27979;&#35797;" operatorUserId="userId-1" isDeleted="false" createTime="2017-06-19 18:11:52.0" updateTime="2017-06-19 18:11:52.0"/>
+</dataset>
