@@ -1,7 +1,6 @@
 package org.trc.resource.goods;
 
 import com.alibaba.fastjson.JSONObject;
-import com.trc.mall.util.CustomAck;
 import org.hibernate.validator.constraints.NotBlank;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -13,12 +12,14 @@ import org.trc.domain.goods.CategoryDO;
 import org.trc.enums.ExceptionEnum;
 import org.trc.exception.BannerException;
 import org.trc.util.AppResult;
+import org.trc.util.Pagenation;
 
 import javax.validation.constraints.NotNull;
 import javax.ws.rs.*;
 import javax.ws.rs.container.ContainerRequestContext;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
+
 
 import static org.trc.util.ResultUtil.createSucssAppResult;
 
@@ -60,6 +61,7 @@ public class CategoryResource {
         }
         //获取登录者userId
         String userId = (String) requestContext.getProperty("userId");
+        //构建categoryDO
         CategoryDO categoryDO = new CategoryDO();
         categoryDO.setCategoryName(categoryName);
         categoryDO.setIsVirtual(null == isVirtual ? 0 : isVirtual);
@@ -69,6 +71,7 @@ public class CategoryResource {
         categoryDO.setSort(sort);
         categoryDO.setPid(pid);
         categoryDO.setOperatorUserId(userId);
+        //新增
         categoryBiz.addCategoryDO(categoryDO);
         JSONObject jsonObject = new JSONObject();
         jsonObject.put("categoryId", categoryDO.getId());
@@ -151,5 +154,19 @@ public class CategoryResource {
         return createSucssAppResult("删除类目成功", json);
     }
 
+    /**
+     * 查询类目列表
+     *
+     * @param name 类目名称
+     * @return Response
+     */
+    @GET
+    public Pagenation<CategoryDO> getCategoryList(@QueryParam("name") String name,
+                                    @BeanParam Pagenation<CategoryDO> page) {
+        CategoryDO query = new CategoryDO();
+        query.setCategoryName(name);
+        page = categoryBiz.queryCategoryDOListForPage(query, page);
+        return page;
 
+    }
 }
