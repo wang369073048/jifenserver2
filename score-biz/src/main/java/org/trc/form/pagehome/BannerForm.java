@@ -18,7 +18,7 @@ public class BannerForm extends QueryModel{
     private String name; //名称
     @QueryParam("isUp")
     private Integer isUp; //是否上架,0上架,1下架
-    @FormParam("contentId")
+    @QueryParam("contentId")
     private Long contentId;
     public Long getId() {
         return id;

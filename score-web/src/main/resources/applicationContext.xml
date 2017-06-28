@@ -13,6 +13,7 @@
             <list>
                 <value>classpath:config/${package.environment}/score-jdbc.properties</value>
                 <value>classpath:config/${package.environment}/redis.properties</value>
+                <value>classpath:config/${package.environment}/config.properties</value>
             </list>
         </property>
         <property name="fileEncoding">
@@ -24,6 +25,8 @@
     <!-- 本地提供服务 -->
     <import resource="classpath:resource-tx.xml"/>
     <import resource="classpath:redis-config.xml"/>
+    <import resource="classpath:zookeeper.xml"/>
+    <import resource="classpath:consumer-beans.xml"/>
 
     <!-- 开启注解注入等 -->
     <context:annotation-config />
