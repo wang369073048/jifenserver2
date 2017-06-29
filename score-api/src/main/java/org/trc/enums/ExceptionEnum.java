@@ -51,7 +51,11 @@ public enum ExceptionEnum {
     CONVERTER_UPDATE_EXCEPTION("830102","兑换规则更新异常"),
     CONVERTER_LIMIT_PARAM_ERROR("830103","兑换限额参数有误"),
 
-    COUPON_QUERY_EXCEPTION("840100","虚拟卡券查询异常");
+    COUPON_QUERY_EXCEPTION("840100","兑换规则查询异常"),
+    COUPON_SAVE_EXCEPTION("840101","兑换规则保存异常"),
+    COUPON_UPDATE_EXCEPTION("840102","兑换规则更新异常"),
+    COUPON_LIMIT_PARAM_ERROR("840103","兑换限额参数有误");
+
 
 
 

@@ -17,7 +17,7 @@ import org.trc.constants.ExternalserviceResultCodeConstants;
 import org.trc.domain.goods.CardCouponsDO;
 import org.trc.domain.goods.CategoryDO;
 import org.trc.domain.goods.GoodsDO;
-import org.trc.exception.CouponException;
+import org.trc.exception.CardCouponException;
 import org.trc.util.Pagenation;
 
 import java.util.List;
@@ -134,27 +134,27 @@ public class GoodsBiz implements IGoodsBiz{
         if(Category.FINANCIAL_CARD.equals(category.getCode()) && StringUtils.isNotBlank(goodsDO.getBatchNumber())){
             TrCouponAck trCouponAck = trCouponOperation.checkEid2(goodsDO.getBatchNumber());
             if(!ExternalserviceResultCodeConstants.TrCoupon.SUCCESS.equals(trCouponAck.getCode())){
-                throw new CouponException(COUPON_QUERY_EXCEPTION,"批次号:"+ goodsDO.getBatchNumber() +"虚拟卡券不存在!");
+                throw new CardCouponException(COUPON_QUERY_EXCEPTION,"批次号:"+ goodsDO.getBatchNumber() +"虚拟卡券不存在!");
             }
             if(DateUtils.isSameDay(goodsDO.getValidStartTime(),trCouponAck.getStartTime()) && DateUtils.isSameDay(goodsDO.getValidEndTime(),trCouponAck.getEndTime())){
                 logger.info("虚拟卡券领取有效期检查通过");
             }else{
-                throw new CouponException(COUPON_QUERY_EXCEPTION,"虚拟卡券领取有效期检查不通过!");
+                throw new CardCouponException(COUPON_QUERY_EXCEPTION,"虚拟卡券领取有效期检查不通过!");
             }
             if(!goodsDO.getAutoUpTime().before(goodsDO.getValidStartTime()) && !goodsDO.getValidEndTime().before(goodsDO.getAutoDownTime()) && goodsDO.getAutoUpTime().before(goodsDO.getAutoDownTime())){
                 logger.info("虚拟卡券启用有效期检查通过");
             }else{
-                throw new CouponException(COUPON_QUERY_EXCEPTION,"虚拟卡券启用有效期检查不通过!");
+                throw new CardCouponException(COUPON_QUERY_EXCEPTION,"虚拟卡券启用有效期检查不通过!");
             }
         }else if(Category.EXTERNAL_CARD.equals(category.getCode()) && StringUtils.isNotBlank(goodsDO.getBatchNumber())){
             //判断虚拟批次号对应的卡券是否存在！
             CardCouponsDO cardCoupon = couponsBiz.selectByBatchNumer(goodsDO.getShopId(), goodsDO.getBatchNumber());
             if(null == cardCoupon){
-                throw new CouponException(COUPON_QUERY_EXCEPTION,"批次号:" + goodsDO.getBatchNumber() + "对应的外部卡券不存在!");
+                throw new CardCouponException(COUPON_QUERY_EXCEPTION,"批次号:" + goodsDO.getBatchNumber() + "对应的外部卡券不存在!");
             }
             //判断相对库存是否充足
             if(goodsDO.getStock() > cardCoupon.getStock()){
-                throw new CouponException(COUPON_QUERY_EXCEPTION,"批次号:" + goodsDO.getBatchNumber() + "对应的外部卡券库存不充足!");
+                throw new CardCouponException(COUPON_QUERY_EXCEPTION,"批次号:" + goodsDO.getBatchNumber() + "对应的外部卡券库存不充足!");
             }
             //TODO 判断绝对库存是否充足
         }

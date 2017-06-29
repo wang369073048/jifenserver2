@@ -3,12 +3,14 @@ package org.trc.domain.goods;
 import org.trc.domain.CommonDO;
 
 import javax.persistence.Column;
+import javax.persistence.Table;
 import java.io.Serializable;
 import java.util.Date;
 
 /**
  * Created by george on 2017/4/11.
  */
+@Table(name = "card_coupons")
 public class CardCouponsDO extends CommonDO{
 
     /**

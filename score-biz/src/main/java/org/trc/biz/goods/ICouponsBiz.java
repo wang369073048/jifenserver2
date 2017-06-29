@@ -2,6 +2,7 @@ package org.trc.biz.goods;
 
 import org.trc.domain.goods.CardCouponsDO;
 import org.trc.domain.goods.CardItemDO;
+import org.trc.form.goods.CardCouponsForm;
 import org.trc.util.Pagenation;
 
 import java.util.List;
@@ -18,7 +19,7 @@ public interface ICouponsBiz {
 
     int importCardItem(String batchNumber, Long shopId, List<CardItemDO> cardItemList);
 
-    Pagenation<CardCouponsDO> queryCouponsForPage(CardCouponsDO cardCouponsDO, Pagenation<CardCouponsDO> pageRequest);
+    Pagenation<CardCouponsDO> queryCouponsForPage(CardCouponsForm cardCouponsForm, Pagenation<CardCouponsDO> pageRequest);
 
     List<CardItemDO> releaseCardCoupons(CardItemDO cardItem);
 

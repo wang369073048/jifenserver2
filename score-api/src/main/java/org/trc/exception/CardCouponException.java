@@ -5,7 +5,7 @@ import org.trc.enums.ExceptionEnum;
 /**
  * Created by hzwzhen on 2017/6/22.
  */
-public class CouponException extends RuntimeException{
+public class CardCouponException extends RuntimeException{
 
     /**
      * 异常枚举
@@ -16,7 +16,7 @@ public class CouponException extends RuntimeException{
      */
     private String message;
 
-    public CouponException(ExceptionEnum exceptionEnum, String message){
+    public CardCouponException(ExceptionEnum exceptionEnum, String message){
         super(message);
         this.exceptionEnum = exceptionEnum;
         this.message = message;

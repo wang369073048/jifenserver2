@@ -3,10 +3,12 @@ package org.trc.domain.goods;
 import org.trc.domain.CommonDO;
 
 import javax.persistence.Column;
+import javax.persistence.Table;
 
 /**
  * Created by hzwzhen on 2017/6/22.
  */
+@Table(name = "category")
 public class CategoryDO extends CommonDO {
 
     /**

@@ -57,7 +57,7 @@ public class AuthorizationFilter implements ContainerRequestFilter {
                     requestContext.abortWith(Response.status(Response.Status.FORBIDDEN).entity(appResult).type(MediaType.APPLICATION_JSON).encoding("UTF-8").build());
                 } catch (Exception e) {
                     log.error(e.getMessage());
-                    AppResult appResult = new AppResult(ResultEnum.FAILURE.getCode(), "请求重新登录", Response.Status.FORBIDDEN.getStatusCode());
+                    AppResult appResult = new AppResult(ResultEnum.FAILURE.getCode(), "请重新登录", Response.Status.FORBIDDEN.getStatusCode());
                     requestContext.abortWith(Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(appResult).type(MediaType.APPLICATION_JSON).encoding("UTF-8").build());
                 }
             } else {

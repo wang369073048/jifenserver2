@@ -112,7 +112,7 @@ public class ResultUtil {
 	* @return AppResult
 	* @throws
 	 */
-	public static AppResult createFailAppResult(String databuffer){
+	public static AppResult createFailAppResult(String databuffer ){
 		AppResult appResult = new AppResult(ResultEnum.FAILURE.getCode(), databuffer, "");
 		return appResult;
 	}

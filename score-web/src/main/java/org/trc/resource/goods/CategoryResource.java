@@ -24,7 +24,10 @@ import javax.ws.rs.core.MediaType;
 import static org.trc.util.ResultUtil.createSucssAppResult;
 
 /**
- * Created by hzwzhen on 2017/6/27.
+ * author: hzwzhen
+ * JDK-version:  JDK1.8
+ * comments: 类目管理
+ * since Date： 2017/6/27
  */
 @Component
 @Produces(MediaType.APPLICATION_JSON)

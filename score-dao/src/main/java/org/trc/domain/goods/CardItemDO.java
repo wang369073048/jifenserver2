@@ -2,16 +2,14 @@ package org.trc.domain.goods;
 
 import org.trc.domain.CommonDO;
 
-import javax.persistence.Column;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Date;
 
 /**
  * Created by george on 2017/4/11.
  */
+@Table(name = "card_item")
 public class CardItemDO extends CommonDO{
 
     /**

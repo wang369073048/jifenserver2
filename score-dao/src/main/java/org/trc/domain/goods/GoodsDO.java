@@ -6,11 +6,13 @@ import org.springframework.util.StringUtils;
 import org.trc.domain.CommonDO;
 
 import javax.persistence.Column;
+import javax.persistence.Table;
 import java.util.Date;
 
 /**
  * Created by hzwzhen on 2017/6/22.
  */
+@Table(name = "goods")
 public class GoodsDO extends CommonDO{
 
     /**

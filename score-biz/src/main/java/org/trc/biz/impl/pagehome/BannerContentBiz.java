@@ -96,24 +96,35 @@ public class BannerContentBiz implements IBannerContentBiz{
 
     @Override
     public Pagenation<BannerContent> bannerContentPage(BannerContentForm queryModel, Pagenation<BannerContent> page) {
-        Example example = new Example(Banner.class);
-        Example.Criteria criteria = example.createCriteria();
-        if (null != queryModel.getShopId()){ //商铺ID
-            criteria.andEqualTo("shopId",queryModel.getShopId());
+        try{
+            Assert.notNull(page, "分页参数不能为空");
+            Assert.notNull(queryModel, "查询参数不能为空");
+            Example example = new Example(Banner.class);
+            Example.Criteria criteria = example.createCriteria();
+            if (null != queryModel.getShopId()){ //商铺ID
+                criteria.andEqualTo("shopId",queryModel.getShopId());
+            }
+            if (StringUtils.isNotBlank(queryModel.getTitle())){ //标题
+                criteria.andEqualTo("title",queryModel.getTitle());
+            }
+            if (StringUtil.isNotEmpty(queryModel.getStartDate())) {//开始日期
+                criteria.andGreaterThanOrEqualTo("updateTime", DateUtils.parseDate(queryModel.getStartDate()));
+            }
+            if (StringUtil.isNotEmpty(queryModel.getEndDate())) {//截止日期
+                Date endDate = DateUtils.parseDate(queryModel.getEndDate());
+                criteria.andLessThan("updateTime", DateUtils.addDays(endDate, 1));
+            }
+            example.orderBy("createTime").desc();
+            page = bannerContentService.pagination(example,page,queryModel);
+            return page;
+        }catch(IllegalArgumentException e){
+            logger.error("查询banner列表校验参数异常!", e);
+            throw new BannerException(ExceptionEnum.PARAM_ERROR_ILLEGAL, "查询banner列表校验参数异常!");
+        }catch (Exception e) {
+            logger.error("查询banner列表列表失败!", e);
+            throw new BannerException( ExceptionEnum.BANNER_QUERY_EXCEPTION, "查询banner列表列表失败!");
         }
-        if (StringUtils.isNotBlank(queryModel.getTitle())){ //标题
-            criteria.andEqualTo("title",queryModel.getTitle());
-        }
-        if (StringUtil.isNotEmpty(queryModel.getStartDate())) {//开始日期
-            criteria.andGreaterThanOrEqualTo("updateTime", DateUtils.parseDate(queryModel.getStartDate()));
-        }
-        if (StringUtil.isNotEmpty(queryModel.getEndDate())) {//截止日期
-            Date endDate = DateUtils.parseDate(queryModel.getEndDate());
-            criteria.andLessThan("updateTime", DateUtils.addDays(endDate, 1));
-        }
-        example.orderBy("createTime").desc();
-        page = bannerContentService.pagination(example,page,queryModel);
-        return page;
+
     }
 
 
