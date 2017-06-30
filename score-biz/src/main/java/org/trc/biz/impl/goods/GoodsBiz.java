@@ -2,22 +2,29 @@ package org.trc.biz.impl.goods;
 
 import com.trc.mall.externalservice.TrCouponAck;
 import com.trc.mall.externalservice.TrCouponOperation;
+import com.trc.mall.util.GuidUtil;
 import org.apache.commons.lang.time.DateUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
+import org.trc.annotation.cache.CacheEvit;
 import org.trc.biz.goods.ICategoryBiz;
 import org.trc.biz.goods.ICouponsBiz;
 import org.trc.biz.goods.IGoodsBiz;
+import org.trc.biz.goods.IGoodsRecommendBiz;
 import org.trc.constants.Category;
 import org.trc.constants.ExternalserviceResultCodeConstants;
 import org.trc.domain.goods.CardCouponsDO;
 import org.trc.domain.goods.CategoryDO;
 import org.trc.domain.goods.GoodsDO;
+import org.trc.enums.ExceptionEnum;
 import org.trc.exception.CardCouponException;
+import org.trc.exception.GoodsException;
+import org.trc.service.goods.IGoodsService;
 import org.trc.util.Pagenation;
 
 import java.util.List;
@@ -38,17 +45,67 @@ public class GoodsBiz implements IGoodsBiz{
     @Autowired
     private ICouponsBiz couponsBiz;
 
+    @Autowired
+    private IGoodsService goodsService;
+
+    @Autowired
+    private IGoodsRecommendBiz goodsRecommendBiz;
+
     //@Autowired
     private TrCouponOperation trCouponOperation;
 
     @Override
+    @CacheEvit(key="#goodsDO.id")
     public int saveGoodsDO(GoodsDO goodsDO) {
-        return 0;
+        try {
+            goodsDO.setGoodsSn(GuidUtil.getNextUid("pro"));
+            validateForAdd(goodsDO);
+            validateGoods(goodsDO);
+            int result = goodsService.insert(goodsDO);
+            logger.info("新增ID=>[" + goodsDO.getId() + "]的GoodsDO成功");
+            return result;
+        } catch (IllegalArgumentException e) {
+            logger.error("新增GoodsDO校验参数异常!",e);
+            throw new GoodsException(ExceptionEnum.PARAM_CHECK_EXCEPTION,e.getMessage());
+        } catch (GoodsException e) {
+            throw e;
+        } catch (DuplicateKeyException e){
+            logger.error("新增GoodsDO校验索引异常!",e);
+            throw new GoodsException(ExceptionEnum.PARAM_CHECK_EXCEPTION, "请检查商品条码是否已存在!");
+        } catch (Exception e) {
+            logger.error("添加商品异常!",e);
+            throw new GoodsException(ExceptionEnum.GOODS_SAVE_EXCEPTION, "添加商品异常!");
+        }
     }
 
     @Override
+    @CacheEvit(key="#goodsDO.id")
     public int updateGoodsDO(GoodsDO goodsDO) {
-        return 0;
+        try {
+            validateForUpdate(goodsDO);
+            int result = goodsRecommendBiz.selectCountByGoodsId(goodsDO.getId());
+            if(result > 0){
+                throw new GoodsException(ExceptionEnum.GOODS_CAN_NOT_BE_DOWNED,"热门推荐了该商品,当前不允许编辑或下架！如需下架请先删除热门推荐!");
+            }
+            validateGoods(goodsDO);
+            result = goodsService.updateById(goodsDO);
+            if(result != 1){
+                logger.error("修改GoodsDO异常!请求参数为:"+goodsDO);
+                throw new GoodsException(ExceptionEnum.GOODS_UPDATE_EXCEPTION, "修改GoodsDO异常!");
+            }
+            logger.info("修改ID=>[" + goodsDO.getId() + "]的GoodsDO成功!");
+            return result;
+        } catch (IllegalArgumentException e) {
+            logger.error("修改GoodsDO校验参数异常!",e);
+            throw new GoodsException(ExceptionEnum.PARAM_CHECK_EXCEPTION,e.getMessage());
+        } catch (CardCouponException e) {
+            throw e;
+        } catch (GoodsException e) {
+            throw e;
+        } catch (Exception e) {
+            logger.error("修改ID=>[" + goodsDO.getId() + "]的GoodsDO信息异常",e);
+            throw new GoodsException(ExceptionEnum.GOODS_UPDATE_EXCEPTION, "修改信息异常!");
+        }
     }
 
     @Override
@@ -127,6 +184,20 @@ public class GoodsBiz implements IGoodsBiz{
         Assert.hasText(goodsDO.getGoodsSn(),"goodsDO对应的商品编号不能为空！");
         Assert.hasText(goodsDO.getMediumImg(),"goodsDO对应的商品组图不能为空！");
         Assert.hasText(goodsDO.getContent(),"goodsDO对应的商品描述不能为空！");
+    }
+
+    private void validateForUpdate(GoodsDO goodsDO) {
+        Assert.isTrue(null!=goodsDO,"goodsDO不能为空!");
+        Assert.isTrue(null!=goodsDO.getId(),"goodsDO对应的商品编号不能为空!");
+        Assert.hasText(goodsDO.getGoodsName(),"goodsDO对应的商品名称不能为空！");
+        Assert.isTrue(null!=goodsDO.getShopId(),"goodsDO对应的shopId不能为空！");
+        Assert.isTrue(null!=goodsDO.getCategory(),"goodsDO对应的category不能为空！");
+        Assert.isTrue(null!=goodsDO.getPriceScore()&&goodsDO.getPriceScore()>0&&goodsDO.getPriceScore()<10000000l,"goodsDO对应的兑换价不能为空并且最大不超过99999999！");
+        Assert.isTrue(null!=goodsDO.getStock()&&goodsDO.getStock()>0&&goodsDO.getStock()<100000000,"goodsDO对应的库存不能为空并且最大不超过99999999！");
+        Assert.isTrue(null!=goodsDO.getStockWarn()&&goodsDO.getStockWarn()>0&&goodsDO.getStockWarn()<100000000,"goodsDO对应的库存预警不能为空并且最大不超过99999999！");
+        Assert.hasText(goodsDO.getMediumImg(),"goodsDO对应的商品组图不能为空！");
+        Assert.hasText(goodsDO.getContent(),"goodsDO对应的商品描述不能为空！");
+
     }
 
     private void validateGoods(GoodsDO goodsDO) {

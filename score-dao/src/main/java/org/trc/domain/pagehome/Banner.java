@@ -40,6 +40,16 @@ public class Banner extends CommonDO {
     @Column(name = "isDeleted")
     private boolean isDeleted;
 
+    private String description;
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
     public String getName() {
         return name;
     }

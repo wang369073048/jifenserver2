@@ -1,19 +1,24 @@
 package org.trc.biz.impl.goods;
 
 import com.txframework.util.Assert;
+import org.apache.commons.lang.RandomStringUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 import org.trc.biz.goods.ICouponsBiz;
+import org.trc.constants.Category;
 import org.trc.domain.goods.CardCouponsDO;
 import org.trc.domain.goods.CardItemDO;
-import org.trc.domain.pagehome.Banner;
+import org.trc.domain.goods.CategoryDO;
+import org.trc.domain.goods.GoodsDO;
 import org.trc.enums.ExceptionEnum;
 import org.trc.exception.CardCouponException;
 import org.trc.form.goods.CardCouponsForm;
-import org.trc.service.goods.ICouponsService;
+import org.trc.service.goods.*;
 import org.trc.util.DateUtils;
 import org.trc.util.Pagenation;
 import tk.mybatis.mapper.entity.Example;
@@ -30,19 +35,98 @@ public class CouponsBiz implements ICouponsBiz{
     private Logger logger = LoggerFactory.getLogger(CouponsBiz.class);
     @Autowired
     private ICouponsService couponsService;
+    @Autowired
+    private ICategoryService categoryService;
+    @Autowired
+    private IGoodsService goodsService;
+    @Autowired
+    private ICardItemAbandonedService cardItemAbandonedService;
+    @Autowired
+    private ICardItemService cardItemService;
     @Override
+    @Transactional(propagation= Propagation.REQUIRED,rollbackFor=Exception.class)
     public int deleteByBatchNumber(CardCouponsDO cardCoupon) {
-        return 0;
+        try{
+            Assert.notNull(cardCoupon, "查询参数不能为空！");
+            Assert.notNull(cardCoupon.getBatchNumber(), "批次号不能为空！");
+            //1、上架商品使用此卡券时，无法删除
+            GoodsDO param = new GoodsDO();
+            param.setBatchNumber(cardCoupon.getBatchNumber());
+            CategoryDO category = new CategoryDO();
+            category.setCode(Category.EXTERNAL_CARD);
+            category.setIsDeleted(false);
+            category = categoryService.selectOne(category);
+            param.setCategory(category.getId());
+            param.setIsUp(1);
+            int count = goodsService.selectCount(param);
+            if(count > 0){
+                throw new CardCouponException(ExceptionEnum.COUPON_DELETE_EXCEPTION,"该批次卡券无法删除，请先下架对应的外部优惠券商品!");
+            }
+            //2、将卡券状态设置为删除状态
+            couponsService.deleteByBatchNumber(cardCoupon);
+            CardItemDO cardItem = new CardItemDO();
+            cardItem.setBatchNumber(cardCoupon.getBatchNumber());
+            cardItem.setShopId(cardCoupon.getShopId());
+            //3、将未发放的卡券明细移动到废弃明细表
+            int cardItemAbandonedCount = cardItemAbandonedService.selectIntoFromCardItem(cardItem);
+            //4、同步删除卡券明细(物理删除)
+            int cardItemDeletedCount = cardItemService.deleteByBatchNumber(cardItem);
+            if (cardItemAbandonedCount != cardItemDeletedCount) {
+                throw new CardCouponException(ExceptionEnum.COUPON_DELETE_EXCEPTION, "删除卡券出现异常，废弃条数与物理删除条数不匹配!");
+            }
+            return cardItemAbandonedCount;
+        } catch (CardCouponException e) {
+            throw e;
+        } catch (IllegalArgumentException e) {
+            logger.error("删除卡券校验参数异常!", e);
+            throw new CardCouponException(ExceptionEnum.PARAM_CHECK_EXCEPTION,e.getMessage());
+        }catch (Exception e) {
+            logger.error("删除卡券异常!请求参数为:"+ cardCoupon, e);
+            throw new CardCouponException(ExceptionEnum.COUPON_DELETE_EXCEPTION, "删除卡券异常!");
+        }
     }
 
     @Override
+    @Transactional(propagation= Propagation.REQUIRED,rollbackFor=Exception.class)
     public int deleteItemById(CardItemDO cardItem) {
-        return 0;
+        try{
+            //1、将未发放的卡券明细移动到废弃明细表
+            int cardItemAbandonedCount = cardItemAbandonedService.selectIntoFromCardItem(cardItem);
+            //2、同步删除卡券明细(物理删除)
+            int cardItemDeletedCount = cardItemService.deleteById(cardItem);
+            if(cardItemAbandonedCount != cardItemDeletedCount){
+                throw new CardCouponException(ExceptionEnum.PARAM_CHECK_EXCEPTION, "删除卡券出现异常，废弃条数与物理删除条数不匹配!");
+            }
+            return cardItemAbandonedCount;
+        } catch (CardCouponException e) {
+            throw e;
+        } catch (Exception e) {
+            logger.error("删除卡券明细异常!请求参数为:"+ cardItem, e);
+            throw new CardCouponException(ExceptionEnum.COUPON_DELETE_EXCEPTION, "删除卡券明细异常!");
+        }
+
     }
 
     @Override
     public int insert(CardCouponsDO cardCoupons) {
-        return 0;
+        try{
+            if(null != cardCoupons && StringUtils.isBlank(cardCoupons.getBatchNumber())) {
+                cardCoupons.setBatchNumber(RandomStringUtils.randomAlphanumeric(16));
+            }
+            int result = couponsService.insert(cardCoupons);
+            if (result < 0 ){
+                logger.error("新增卡券异常!请求参数为 :" + cardCoupons);
+                throw new CardCouponException(ExceptionEnum.COUPON_SAVE_EXCEPTION, "新增卡券异常!");
+            }
+            logger.info("新增ID=>[{}]的CardCouponsDO成功",cardCoupons.getId());
+            return result;
+        } catch (CardCouponException e) {
+            throw e;
+        }catch (Exception e) {
+            logger.error("新增卡券异常!请求参数为 :" + cardCoupons);
+            throw new CardCouponException(ExceptionEnum.COUPON_SAVE_EXCEPTION, "新增卡券异常!");
+        }
+
     }
 
     @Override
@@ -92,12 +176,20 @@ public class CouponsBiz implements ICouponsBiz{
 
     @Override
     public CardCouponsDO selectByBatchNumer(Long shopId, String batchNumber) {
-        return null;
+        CardCouponsDO cardCouponsDO = new CardCouponsDO();
+        cardCouponsDO.setShopId(shopId);
+        cardCouponsDO.setBatchNumber(batchNumber);
+        cardCouponsDO.setIsDeleted(0);
+        return couponsService.selectOne(cardCouponsDO);
     }
 
     @Override
     public CardItemDO selectItemByCode(Long shopId, String batchNumber, String code) {
-        return null;
+        CardItemDO cardItem = new CardItemDO();
+        cardItem.setBatchNumber(batchNumber);
+        cardItem.setCode(code);
+        cardItem.setShopId(shopId);
+        return cardItemService.selectByParams(cardItem);
     }
 
     @Override

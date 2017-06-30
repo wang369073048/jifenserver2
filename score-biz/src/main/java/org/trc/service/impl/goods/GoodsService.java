@@ -1,7 +1,9 @@
 package org.trc.service.impl.goods;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.trc.domain.goods.GoodsDO;
+import org.trc.mapper.goods.IGoodsMapper;
 import org.trc.service.goods.IGoodsService;
 import org.trc.service.impl.BaseService;
 
@@ -10,4 +12,12 @@ import org.trc.service.impl.BaseService;
  */
 @Service("goodsService")
 public class GoodsService extends BaseService<GoodsDO,Long> implements IGoodsService{
+
+    @Autowired
+    private IGoodsMapper goodsMapper;
+
+    @Override
+    public int updateById(GoodsDO goodsDO) {
+        return goodsMapper.updateById(goodsDO);
+    }
 }

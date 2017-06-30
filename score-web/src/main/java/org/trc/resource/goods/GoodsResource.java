@@ -215,7 +215,6 @@ public class GoodsResource {
 
     //构建GoodsDO
     private void handleGoodsDO(GoodsDO goodsDO, Long category, String batchNumber, String targetUrl, Long validStartTime, Long validEndTime, Long autoUpTime, Long autoDownTime) {
-        //TODO 获取类目
         CategoryDO category1 = categoryBiz.getCategoryDOById(category);
         if (1 == category1.getIsVirtual().intValue()) {
             goodsDO.setBatchNumber(batchNumber);

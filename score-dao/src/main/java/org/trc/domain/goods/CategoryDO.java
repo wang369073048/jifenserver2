@@ -117,12 +117,10 @@ public class CategoryDO extends CommonDO {
         this.sort = sort;
     }
 
-    @Override
     public String getDescription() {
         return description;
     }
 
-    @Override
     public void setDescription(String description) {
         this.description = description;
     }

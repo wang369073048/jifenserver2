@@ -1,5 +1,6 @@
 package org.trc.domain.goods;
 
+import jdk.nashorn.internal.ir.annotations.Ignore;
 import org.trc.domain.CommonDO;
 
 import javax.persistence.*;
@@ -7,11 +8,19 @@ import java.io.Serializable;
 import java.util.Date;
 
 /**
- * Created by george on 2017/4/11.
+ * Created by hzwzhen on 2017/6/9.
  */
 @Table(name = "card_item")
-public class CardItemDO extends CommonDO{
+public class CardItemDO implements Serializable{
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    protected Long id; //主键
+    /**
+     *  业务方ID
+     */
+    @Column(name = "shopId")
+    protected Long shopId;
     /**
      * 批次号
      */
@@ -43,13 +52,20 @@ public class CardItemDO extends CommonDO{
     /**
      * 临时属性 数量
      */
+    @Transient //添加该注解的字段不会作为表字段使用
     private Integer quantity;
 
     /**
      * 卡券名称 temporary property
      */
+    @Transient //添加该注解的字段不会作为表字段使用
     @Column(name = "couponName")
     private String couponName;
+    /**
+     *  创建时间
+     */
+    @Column(name = "createTime")
+    protected Date createTime;
 
     public Long getId() {
         return id;

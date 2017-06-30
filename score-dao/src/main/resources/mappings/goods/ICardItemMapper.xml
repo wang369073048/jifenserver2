@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="org.trc.mapper.goods.ICardItemMapper" >
+    <!-- 根据ID删除数据-->
+    <delete id="deleteByBatchNumber" parameterType="org.trc.domain.goods.CardItemDO">
+        delete from card_item
+        WHERE batchNumber = #{batchNumber} and shopId = #{shopId} and state = 0
+    </delete>
+
+    <!-- 根据ID查询实体数据 -->
+    <select id="selectByParams" parameterType="org.trc.domain.goods.CardItemDO" resultType="org.trc.domain.goods.CardItemDO">
+        SELECT
+        ci.id,
+        ci.shopId,
+        ci.batchNumber,
+        ci.code,
+        ci.state,
+        ci.userId,
+        ci.orderCode,
+        ci.createTime,
+        ci.releaseTime,
+        cc.couponName
+        FROM card_item ci inner join card_coupons cc on ci.batchNumber = cc.batchNumber
+        <where>
+            <if test="shopId != null">
+                and ci.shopId = #{shopId}
+            </if>
+            <if test="batchNumber != null and batchNumber != ''">
+                and ci.batchNumber = #{batchNumber}
+            </if>
+            <if test="code != null and code != ''">
+                and ci.code = #{code}
+            </if>
+        </where>
+    </select>
+    <!-- 根据ID删除数据-->
+    <delete id="deleteById" parameterType="org.trc.domain.goods.CardItemDO">
+        delete from card_item
+        WHERE id = #{id} and shopId = #{shopId} and state = 0
+    </delete>
+</mapper>

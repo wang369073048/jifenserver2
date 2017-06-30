@@ -2,17 +2,19 @@ package org.trc.domain.goods;
 
 import org.trc.domain.CommonDO;
 
-import javax.persistence.Column;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Date;
 
 /**
- * Created by george on 2017/4/11.
+ * Created by hzwzhen on 2017/6/9.
  */
 @Table(name = "card_coupons")
-public class CardCouponsDO extends CommonDO{
+public class CardCouponsDO implements Serializable{
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    protected Long id; //主键
     /**
      * 卡券名称
      */
@@ -57,6 +59,24 @@ public class CardCouponsDO extends CommonDO{
      */
     @Column(name = "validEndTime")
     private Date validEndTime;
+
+    /**
+     *  业务方ID
+     */
+    @Column(name = "shopId")
+    protected Long shopId;
+
+    /**
+     * 创建时间
+     */
+    @Column(name = "createTime")
+    protected Date createTime;
+
+    /**
+     * 更新时间
+     */
+    @Column(name = "updateTime")
+    protected Date updateTime;
 
 
     public Long getId() {

@@ -57,6 +57,8 @@ public class BannerBiz implements IBannerBiz {
               throw new BannerException(ExceptionEnum.BANNER_UPDATE_EXCEPTION,"修改Banner异常!");
           }
           return upateResult;
+      }catch (BannerException e){
+          throw e;
       }catch (IllegalArgumentException e){
           logger.error("新增Banner校验参数异常!", e);
           throw new BannerException(ExceptionEnum.PARAM_CHECK_EXCEPTION, e.getMessage());

@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.trc.mapper.goods.IGoodsMapper">
+
+    <!-- 根据ID更新信息-->
+    <update id="updateById" parameterType="org.trc.domain.goods.GoodsDO">
+        UPDATE goods SET
+        versionLock = versionLock + 1,
+        isUp = 0,
+        <if test="brandName != null and brandName != ''">
+            brandName = #{brandName},
+        </if>
+        <if test="goodsName != null and goodsName != ''">
+            goodsName = #{goodsName},
+        </if>
+        <if test="barcode != null and barcode != ''">
+            barcode = #{barcode},
+        </if>
+        <if test="goodsNo != null">
+            goodsNo = #{goodsNo},
+        </if>
+        <if test="virtualExchangeQuantity != null">
+            virtualExchangeQuantity = #{virtualExchangeQuantity},
+        </if>
+        <if test="batchNumber != null and batchNumber != ''">
+            batchNumber = #{batchNumber},
+        </if>
+        <if test="goodsSn != null and goodsSn != ''">
+            goodsSn = #{goodsSn},
+        </if>
+        <if test="mainImg !=null and mainImg !=''">
+            mainImg = #{mainImg},
+        </if>
+        <if test="mediumImg !=null and mediumImg !=''">
+            mediumImg = #{mediumImg},
+        </if>
+        priceMarket = #{priceMarket},
+        <if test="priceScore != null ">
+            priceScore = #{priceScore},
+        </if>
+        <if test="targetUrl != null ">
+            targetUrl = #{targetUrl},
+        </if>
+        <if test="stock != null ">
+            stock = #{stock},
+        </if>
+        <if test="stockWarn != null ">
+            stockWarn = #{stockWarn},
+        </if>
+        <if test="content != null ">
+            content = #{content},
+        </if>
+        <if test="validStartTime != null ">
+            validStartTime = #{validStartTime},
+        </if>
+        <if test="validEndTime != null ">
+            validEndTime = #{validEndTime},
+        </if>
+        <if test="autoUpTime != null ">
+            autoUpTime = #{autoUpTime},
+        </if>
+        <if test="autoDownTime != null ">
+            autoDownTime = #{autoDownTime},
+        </if>
+        updateTime = NOW()
+        WHERE id = #{id}
+    </update>
+</mapper>

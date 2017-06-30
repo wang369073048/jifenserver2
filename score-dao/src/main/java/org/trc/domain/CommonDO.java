@@ -14,7 +14,6 @@ public class CommonDO implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     protected Long id; //主键
-    protected String description; //描述
     @Column(name = "operatorUserId")
     protected String operatorUserId; //操作人ID
     @Column(name = "shopId")
@@ -23,8 +22,7 @@ public class CommonDO implements Serializable {
     protected Date createTime; //创建时间
     @Column(name = "updateTime")
     protected Date updateTime; //更新时间
-//    @Column(name = "isDeleted")
-//    protected Boolean isDeleted; //是否删除:0-否,1-是
+
 
     public Long getId() {
         return id;
@@ -48,14 +46,6 @@ public class CommonDO implements Serializable {
 
     public void setUpdateTime(Date updateTime) {
         this.updateTime = updateTime;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
     }
 
     public String getOperatorUserId() {

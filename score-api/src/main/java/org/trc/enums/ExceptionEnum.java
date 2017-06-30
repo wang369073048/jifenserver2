@@ -20,8 +20,7 @@ public enum ExceptionEnum {
     SYSTEM_BUSY("4000101","系统繁忙"),
     ERROR_ILLEGAL_OPERATION("4000102", "操作不合法"),
 
-    PARAM_CHECK_EXCEPTION("2000100","参数校验错误"),
-    PARAM_ERROR_ILLEGAL("2000200", "缺少参数或参数不合法"),
+
 
     DATABASE_DUPLICATE_KEY_EXCEPTION("3000100","数据库主键重复异常"),
     DATABASE_PERMISSION_DENIED_EXCEPTION("3000101","数据库数据访问权限异常"),
@@ -51,15 +50,24 @@ public enum ExceptionEnum {
     CONVERTER_UPDATE_EXCEPTION("830102","兑换规则更新异常"),
     CONVERTER_LIMIT_PARAM_ERROR("830103","兑换限额参数有误"),
 
-    COUPON_QUERY_EXCEPTION("840100","兑换规则查询异常"),
-    COUPON_SAVE_EXCEPTION("840101","兑换规则保存异常"),
-    COUPON_UPDATE_EXCEPTION("840102","兑换规则更新异常"),
-    COUPON_LIMIT_PARAM_ERROR("840103","兑换限额参数有误");
+    COUPON_QUERY_EXCEPTION("840100","卡券查询异常"),
+    COUPON_SAVE_EXCEPTION("840101","卡券保存异常"),
+    COUPON_DELETE_EXCEPTION("840101","卡券删除异常"),
+    COUPON_UPDATE_EXCEPTION("840102","卡券更新异常"),
 
+    CATEGORY_QUERY_EXCEPTION("850100","bannerContent查询异常"),
+    CATEGORY_SAVE_EXCEPTION("850101","bannerContent保存异常"),
+    CATEGORY_UPDATE_EXCEPTION("850102","bannerContent更新异常"),
+    CATEGORY_ID_NOT_EXIST("850103","bannerContentId不存在"),
 
+    GOODS_QUERY_EXCEPTION("850100","商品查询异常"),
+    GOODS_SAVE_EXCEPTION("850101","商品保存异常"),
+    GOODS_UPDATE_EXCEPTION("850102","商品更新异常"),
+    GOODS_ID_NOT_EXIST("850103","商品Id不存在"),
+    GOODS_CAN_NOT_BE_DOWNED("850104","商品不允许下架或删除"),
 
-
-
+    PARAM_CHECK_EXCEPTION("2000100","参数校验错误"),
+    PARAM_ERROR_ILLEGAL("2000200", "缺少参数或参数不合法");
     private String code;
     private String message;
 

@@ -10,6 +10,7 @@ import org.springframework.test.context.transaction.TransactionConfiguration;
 import org.trc.biz.consumer.IAddressBiz;
 import org.trc.domain.consumer.Address;
 
+import javax.annotation.Resource;
 import java.util.Calendar;
 import java.util.Date;
 
