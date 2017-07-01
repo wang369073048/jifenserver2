@@ -32,7 +32,17 @@ public class CategoryBiz implements ICategoryBiz {
 
     @Override
     public List<CategoryDO> selectCategoryDOList(CategoryDO categoryDO) {
-        return null;
+        try {
+            Assert.notNull(categoryDO, "传入参数不能为空");
+            List<CategoryDO> list = categoryService.selectListByParams(categoryDO);
+            return list;
+        } catch (IllegalArgumentException e) {
+            logger.error("多条件查询CategoryDO校验参数异常!", e);
+            throw new CategoryException(ExceptionEnum.PARAM_CHECK_EXCEPTION, "多条件查询CategoryDO校验参数异常!");
+        } catch (Exception e) {
+            logger.error("多条件查询CategoryDO信息异常!", e);
+            throw new CategoryException(ExceptionEnum.CATEGORY_QUERY_EXCEPTION, "多条件查询CategoryDO信息异常!");
+        }
     }
 
     @Override

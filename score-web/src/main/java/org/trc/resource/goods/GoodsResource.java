@@ -1,6 +1,10 @@
 package org.trc.resource.goods;
 
+import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.trc.mall.externalservice.TrCouponAck;
+import com.trc.mall.util.CustomAck;
+import com.txframework.util.ListUtils;
 import org.hibernate.validator.constraints.NotEmpty;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -19,8 +23,10 @@ import org.trc.util.Pagenation;
 import javax.validation.constraints.NotNull;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 
 import static org.trc.util.ResultUtil.createSucssAppResult;
 
@@ -233,6 +239,96 @@ public class GoodsResource {
             }
             goodsDO.setBarcode(GuidUtil.getNextUid("bar"));
         }
+    }
+
+    /**
+     * 上架商品
+     * @param shopId
+     * @param id
+     * @return
+     */
+    @PUT
+    @Path(ScoreAdminConstants.Route.Goods.ENTITY_UP + "/{id}")
+    public AppResult upById(@PathParam("shopId") Long shopId, @PathParam("id") Long id) {
+        GoodsDO goods = goodsBiz.getGoodsDOById(id, null);
+        if (null == goods || goods.getShopId().longValue() != shopId.longValue()) {
+            throw new GoodsException(ExceptionEnum.ERROR_ILLEGAL_OPERATION,"操作不合法");
+        }
+        return up(id);
+    }
+
+    /**
+     * 下架商品
+     * @param shopId
+     * @param id
+     * @return
+     */
+    @PUT
+    @Path(ScoreAdminConstants.Route.Goods.ENTITY_DOWN + "/{id}")
+    public AppResult downById(@PathParam("shopId") Long shopId, @PathParam("id") Long id) {
+        GoodsDO goods = goodsBiz.getGoodsDOById(id, null);
+        if (null == goods || goods.getShopId().longValue() != shopId.longValue()) {
+            throw new GoodsException(ExceptionEnum.ERROR_ILLEGAL_OPERATION,"操作不合法");
+        }
+        return down(id);
+    }
+
+    private AppResult up(Long goodsId) {
+        goodsBiz.upById(goodsId);
+        return createSucssAppResult("商品上架成功", "");
+    }
+
+    private AppResult down(Long goodsId) {
+        goodsBiz.downById(goodsId);
+        return createSucssAppResult("商品下架成功", "");
+    }
+
+    /**
+     * 查询类目列表
+     * @param name 类目名称
+     * @return Response
+     */
+    @GET
+    @Path(ScoreAdminConstants.Route.Goods.ENTITY + ScoreAdminConstants.Route.Goods.CATEGORY)
+    public AppResult<JSONArray> getCategoryList(@PathParam("shopId") Long shopId, @QueryParam("name") String name) {
+
+        CategoryDO query = new CategoryDO();
+        query.setCategoryName(name);
+        List<CategoryDO> categoryDOs = categoryBiz.selectCategoryDOList(query);
+        JSONArray jsonArray = new JSONArray();
+        if (ListUtils.isNotEmpty(categoryDOs)) {
+            for (CategoryDO categoryDO : categoryDOs) {
+                JSONObject json = new JSONObject();
+                json.put("id", categoryDO.getId());
+                json.put("pid", categoryDO.getPid());
+                json.put("categoryName", categoryDO.getCategoryName());
+                json.put("logoUrl", categoryDO.getLogoUrl());
+                json.put("sort", categoryDO.getSort());
+                json.put("description", categoryDO.getDescription());
+                json.put("operatorUserId", categoryDO.getOperatorUserId());
+                json.put("createTime", categoryDO.getCreateTime().getTime());
+                json.put("updateTime", categoryDO.getUpdateTime().getTime());
+                jsonArray.add(json);
+            }
+        }
+        return createSucssAppResult("商品下架成功", jsonArray);
+    }
+
+    /**
+     * 检查批次号
+     * @param shopId
+     * @param eid
+     * @return
+     */
+    @GET
+    @Path(ScoreAdminConstants.Route.Goods.CHECKEID)
+    public AppResult<JSONObject> checkEid(@PathParam("shopId") Long shopId, @NotNull @QueryParam("eid")String eid){
+
+        TrCouponAck trCouponAck = goodsBiz.checkEid(eid);
+        JSONObject result = new JSONObject();
+        result.put("packageFrom",trCouponAck.getPackageFrom());
+        result.put("packageTo",trCouponAck.getPackageTo());
+        return createSucssAppResult("检查批次号成功", result);
 
     }
 }

@@ -21,12 +21,17 @@ import org.trc.constants.ExternalserviceResultCodeConstants;
 import org.trc.domain.goods.CardCouponsDO;
 import org.trc.domain.goods.CategoryDO;
 import org.trc.domain.goods.GoodsDO;
+import org.trc.domain.pagehome.Banner;
 import org.trc.enums.ExceptionEnum;
 import org.trc.exception.CardCouponException;
 import org.trc.exception.GoodsException;
 import org.trc.service.goods.IGoodsService;
 import org.trc.util.Pagenation;
+import tk.mybatis.mapper.entity.Example;
+import tk.mybatis.mapper.util.StringUtil;
 
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 import static org.trc.enums.ExceptionEnum.COUPON_QUERY_EXCEPTION;
@@ -51,7 +56,7 @@ public class GoodsBiz implements IGoodsBiz{
     @Autowired
     private IGoodsRecommendBiz goodsRecommendBiz;
 
-    //@Autowired
+    @Autowired //TODO 注入失败
     private TrCouponOperation trCouponOperation;
 
     @Override
@@ -110,7 +115,18 @@ public class GoodsBiz implements IGoodsBiz{
 
     @Override
     public int deleteGoodsDO(GoodsDO goodsDO) {
-        return 0;
+        Assert.isTrue(null != goodsDO,"goodsDO不能为空!");
+        Assert.isTrue(null != goodsDO.getId(),"待删除商品id不能为空!");
+        Assert.isTrue(null != goodsDO.getShopId(),"待删除商品所属店铺id不能为空!");
+        _checkDependencies(goodsDO.getId());
+        return goodsService.deleteByParam(goodsDO);
+    }
+    private boolean _checkDependencies(Long id){
+        int result = goodsRecommendBiz.selectCountByGoodsId(id);
+        if(result > 0){
+            throw new GoodsException(ExceptionEnum.GOODS_CAN_NOT_BE_DOWNED, "热门推荐了该商品,当前操作不允许！请先删除热门推荐!");
+        }
+        return true;
     }
 
     @Override
@@ -125,7 +141,27 @@ public class GoodsBiz implements IGoodsBiz{
 
     @Override
     public GoodsDO getGoodsDOById(Long id, Integer isUp) {
-        return null;
+        try {
+            Assert.isTrue(id != null,"查询Id不能为空!");
+            GoodsDO param = new GoodsDO();
+            param.setIsUp(isUp);
+            param.setId(id);
+            GoodsDO goodsDO = goodsService.selectOne(param);
+            if (null == goodsDO) {
+                logger.warn("查询结果为空!");
+                throw new GoodsException(ExceptionEnum.GOODS_ID_NOT_EXIST, "查询结果为空");
+            } else {
+                return goodsDO;
+            }
+        } catch (IllegalArgumentException e) {
+            logger.error("查询GoodsDO传入Id为空!",e);
+            throw new GoodsException(ExceptionEnum.PARAM_CHECK_EXCEPTION,e.getMessage());
+        } catch (GoodsException e) {
+            throw e;
+        } catch (Exception e) {
+            logger.error("根据ID=>[" + id + "]查询GoodsDO信息异常!",e);
+            throw new GoodsException(ExceptionEnum.GOODS_QUERY_EXCEPTION, "根据ID=>[" + id + "]查询GoodsDO信息异常!");
+        }
     }
 
     @Override
@@ -134,13 +170,57 @@ public class GoodsBiz implements IGoodsBiz{
     }
 
     @Override
+    @CacheEvit(key="#id")
     public int upById(Long id) {
-        return 0;
+        try {
+            Assert.notNull(id,"商品id不能为空!");
+            GoodsDO goodsDO= new GoodsDO();
+            goodsDO.setId(id);
+            goodsDO.setIsUp(1);
+            goodsDO.setUpTime(Calendar.getInstance().getTime());
+            int result = goodsService.upOrDownById(goodsDO);
+            if(result != 1){
+                logger.error("上架商品ID=>[" + goodsDO.getId() + "]的GoodsDO异常!请求参数为:"+goodsDO);
+                throw new GoodsException(ExceptionEnum.GOODS_UPDATE_EXCEPTION, "上架商品ID=>[" + goodsDO.getId() + "]的GoodsDO异常!");
+            }
+            logger.info("上架商品ID=>[" + goodsDO.getId() + "]的GoodsDO成功!");
+            return result;
+        } catch (IllegalArgumentException e) {
+            logger.error("上架商品校验参数异常!",e);
+            throw new GoodsException(ExceptionEnum.PARAM_CHECK_EXCEPTION,e.getMessage());
+        } catch (GoodsException e) {
+            throw e;
+        } catch (Exception e) {
+            logger.error("上架商品ID=>[" + id + "]的GoodsDO信息异常",e);
+            throw new GoodsException(ExceptionEnum.GOODS_UPDATE_EXCEPTION, "上架商品异常!");
+        }
     }
 
     @Override
+    @CacheEvit(key="#id")
     public int downById(Long id) {
-        return 0;
+        try {
+            Assert.notNull(id,"商品id不能为空!");
+            GoodsDO goodsDO= new GoodsDO();
+            goodsDO.setId(id);
+            goodsDO.setIsUp(0);
+            goodsDO.setUpTime(Calendar.getInstance().getTime());
+            int result = goodsService.upOrDownById(goodsDO);
+            if(result != 1){
+                logger.error("下架商品ID=>[" + goodsDO.getId() + "]的GoodsDO异常!请求参数为:"+goodsDO);
+                throw new GoodsException(ExceptionEnum.GOODS_UPDATE_EXCEPTION, "下架商品ID=>[" + goodsDO.getId() + "]的GoodsDO异常!");
+            }
+            logger.info("下架商品ID=>[" + goodsDO.getId() + "]的GoodsDO成功!");
+            return result;
+        } catch (IllegalArgumentException e) {
+            logger.error("下架商品校验参数异常!",e);
+            throw new GoodsException(ExceptionEnum.PARAM_CHECK_EXCEPTION,e.getMessage());
+        } catch (GoodsException e) {
+            throw e;
+        } catch (Exception e) {
+            logger.error("下架商品ID=>[" + id + "]的GoodsDO信息异常",e);
+            throw new GoodsException(ExceptionEnum.GOODS_UPDATE_EXCEPTION, "下架商品异常!");
+        }
     }
 
     @Override
@@ -154,8 +234,19 @@ public class GoodsBiz implements IGoodsBiz{
     }
 
     @Override
-    public Pagenation<GoodsDO> queryGoodsDOListExceptRecommendForPage(GoodsDO query, Pagenation<GoodsDO> page) {
-        return null;
+    public Pagenation<GoodsDO> queryGoodsDOListExceptRecommendForPage(GoodsDO queryModel, Pagenation<GoodsDO> page) {
+        try {
+            Assert.notNull(page, "分页参数不能为空");
+            Assert.notNull(queryModel, "传入参数不能为空");
+            //执行查询
+            return  goodsService.queryGoodsDOListExceptRecommendForPage(queryModel,page);
+        } catch (IllegalArgumentException e) {
+            logger.error("多条件查询goodsDO校验参数异常!", e);
+            throw new GoodsException(ExceptionEnum.PARAM_CHECK_EXCEPTION,e.getMessage());
+        } catch (Exception e) {
+            logger.error("多条件查询goodsDO信息异常!", e);
+            throw new GoodsException(ExceptionEnum.GOODS_QUERY_EXCEPTION, "多条件查询goodsDO信息异常!");
+        }
     }
 
     @Override
@@ -170,7 +261,11 @@ public class GoodsBiz implements IGoodsBiz{
 
     @Override
     public TrCouponAck checkEid(String eid) {
-        return null;
+        TrCouponAck trCouponAck = trCouponOperation.checkEid2(eid);
+        if(!ExternalserviceResultCodeConstants.TrCoupon.SUCCESS.equals(trCouponAck.getCode())){
+            throw new CardCouponException(ExceptionEnum.COUPON_QUERY_EXCEPTION,"虚拟卡券对应的批次号不存在!");
+        }
+        return trCouponAck;
     }
 
     private void validateForAdd(GoodsDO goodsDO) {

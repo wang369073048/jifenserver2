@@ -2,6 +2,39 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="org.trc.mapper.goods.IGoodsMapper">
 
+    <!-- 所有查询字段 -->
+    <sql id="allSelectionColumn">
+        id,
+        shopId,
+        category,
+        brandName,
+        goodsName,
+        barcode,
+        goodsNo,
+        batchNumber,
+        goodsSn,
+        mainImg,
+        mediumImg,
+        priceMarket,
+        priceScore,
+        targetUrl,
+        stock,
+        stockWarn,
+        exchangeQuantity,
+        virtualExchangeQuantity,
+        isUp,
+        content,
+        versionLock,
+        isDeleted,
+        validStartTime,
+        validEndTime,
+        autoUpTime,
+        autoDownTime,
+        upTime,
+        snapshotTime,
+        createTime,
+        updateTime
+    </sql>
     <!-- 根据ID更新信息-->
     <update id="updateById" parameterType="org.trc.domain.goods.GoodsDO">
         UPDATE goods SET
@@ -65,4 +98,27 @@
         updateTime = NOW()
         WHERE id = #{id}
     </update>
+
+    <!-- 根据ID删除数据-->
+    <update id="deleteByParam" parameterType="org.trc.domain.goods.GoodsDO">
+        UPDATE goods SET
+        versionLock = versionLock+1,
+        isDeleted = 1
+        WHERE
+        id = #{id}
+        and shopId = #{shopId}
+    </update>
+
+    <!--多条件查询未推荐商品信息(分页) -->
+    <select id="selectListExceptRecommendByPage" parameterType="org.trc.domain.goods.GoodsDO"
+            resultType="org.trc.domain.goods.GoodsDO">
+        SELECT
+        <include refid="allSelectionColumn"/>
+        FROM goods g where not exists (select 1 from goods_recommend where g.id = goodsId and shopId = #{shopId} and isDeleted = 0)
+        and g.shopId = #{shopId} and g.isUp = 1 and g.isDeleted = 0
+        <if test="goodsName != null">
+            and g.goodsName like concat('%',#{goodsName},'%')
+        </if>
+        order by updateTime desc
+    </select>
 </mapper>

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.1.xsd">
+
+    <bean id="tcoinOperation" class="com.trc.mall.externalservice.TcoinOperation">
+        <property name="tcoinBaseUrl" value="${trc_finance.base_url}" />
+        <property name="key" value="${trc_finance.key}" />
+    </bean>
+
+    <bean id="trCouponOperation" class="com.trc.mall.externalservice.TrCouponOperation">
+        <property name="couponsBaseUrl" value="${trc_mall.couponsBaseUrl}" />
+        <property name="exchangeUrl" value="${trc_mall.exchangeUrl}" />
+    </bean>
+
+</beans>

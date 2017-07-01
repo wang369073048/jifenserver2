@@ -8,6 +8,6 @@ import org.trc.service.impl.BaseService;
 /**
  * Created by hzwzhen on 2017/6/6.
  */
-@Service("addressService")
+@Service
 public class AddressService extends BaseService<Address,Long> implements IAddressService{
 }

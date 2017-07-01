@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.trc.mapper.goods.IGoodsRecommendMapper">
+
+    <!-- 查询推荐商品列表 -->
+    <select id="selectGoodsRecommendsByPage" resultType="com.trc.mall.model.GoodsRecommendDTO"
+            parameterType="com.trc.mall.model.GoodsRecommendDO">
+        select
+        recommend.id as recommendId,
+        recommend.goodsId ,
+        recommend.sort ,
+        goods.shopId shopId,
+        goods.goodsName goodsName,
+        goods.category category,
+        goods.mainImg mainImg,
+        goods.batchNumber batchNumber,
+        goods.targetUrl targetUrl,
+        goods.stock stock,
+        goods.priceScore priceScore,
+        goods.priceMarket priceMarket,
+        goods.validStartTime validStartTime,
+        goods.validEndTime validEndTime,
+        goods.shopId shopId
+        from goods_recommend as recommend INNER JOIN goods as goods
+        on recommend.goodsId = goods.id
+        <where>
+            recommend.shopId = #{shopId} and recommend.isDeleted = 0
+            <if test="goodsName != null and goodsName != ''">
+                and goodsName list CONCAT(#{goodsName},'%')
+            </if>
+        </where>
+        order by sort DESC
+    </select>
+</mapper>

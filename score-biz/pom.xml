@@ -45,12 +45,6 @@
             <scope>test</scope>
         </dependency>
 
-        <dependency>
-            <groupId>com.trc.mall</groupId>
-            <artifactId>score-util</artifactId>
-            <version>1.0.1</version>
-        </dependency>
-
     </dependencies>
 
 </project>

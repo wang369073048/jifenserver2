@@ -96,6 +96,12 @@ public interface IGoodsBiz {
      */
     List<GoodsDO> getHotExchangeList(Long shopId, Long limit);
 
+    /**
+     * 查询没有推荐的商品（分页）
+     * @param query 查询对象
+     * @param page 分页参数
+     * @return 查询到的没有推荐的商品
+     */
     Pagenation<GoodsDO> queryGoodsDOListExceptRecommendForPage(GoodsDO query, Pagenation<GoodsDO> page);
 
     /**
@@ -119,4 +125,6 @@ public interface IGoodsBiz {
      * @return
      */
     TrCouponAck checkEid(String eid);
+
+
 }

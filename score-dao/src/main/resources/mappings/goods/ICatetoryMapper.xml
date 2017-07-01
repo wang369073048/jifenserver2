@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.trc.mapper.goods.ICatetoryMapper">
+    <!-- 所有查询字段 -->
+    <sql id="allSelectionColumn">
+        id,
+        pid,
+        code,
+        categoryName,
+        isVirtual,
+        allowUpdates,
+        logoUrl,
+        sort,
+        description,
+        operatorUserId,
+        isDeleted,
+        createTime,
+        updateTime
+    </sql>
+    <!--多条件查询表信息(分页) -->
+    <select id="selectListByParams" parameterType="org.trc.domain.goods.CategoryDO" resultType="org.trc.domain.goods.CategoryDO">
+        SELECT <include refid="allSelectionColumn"/> FROM category
+        WHERE isDeleted = 0
+        <if test="categoryName != null and categoryName != ''">
+            AND categoryName LIKE CONCAT('%',#{categoryName},'%' )
+        </if>
+        ORDER BY sort,updateTime
+    </select>
+</mapper>

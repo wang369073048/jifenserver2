@@ -3,6 +3,7 @@ package org.trc.biz.goods;
 import com.txframework.core.jdbc.PageRequest;
 import org.trc.domain.goods.GoodsRecommendDO;
 import org.trc.domain.goods.GoodsRecommendDTO;
+import org.trc.util.Pagenation;
 
 import java.util.List;
 
@@ -29,7 +30,7 @@ public interface IGoodsRecommendBiz {
      * @param pageRequest 分页参数
      * @return PageRequest<GoodsRecommendDTO>
      */
-    PageRequest<GoodsRecommendDTO> queryGoodsRecommondsForPage(GoodsRecommendDTO query, PageRequest<GoodsRecommendDTO> pageRequest);
+    Pagenation<GoodsRecommendDTO> queryGoodsRecommondsForPage(GoodsRecommendDTO query, Pagenation<GoodsRecommendDTO> pageRequest);
 
     /**
      * 根据用户ID查询

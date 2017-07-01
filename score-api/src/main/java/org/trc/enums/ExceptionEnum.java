@@ -21,7 +21,6 @@ public enum ExceptionEnum {
     ERROR_ILLEGAL_OPERATION("4000102", "操作不合法"),
 
 
-
     DATABASE_DUPLICATE_KEY_EXCEPTION("3000100","数据库主键重复异常"),
     DATABASE_PERMISSION_DENIED_EXCEPTION("3000101","数据库数据访问权限异常"),
     DATABASE_QUERY_TIME_OUT_EXCEPTION("3000102","数据库查询超时异常"),
@@ -60,11 +59,13 @@ public enum ExceptionEnum {
     CATEGORY_UPDATE_EXCEPTION("850102","bannerContent更新异常"),
     CATEGORY_ID_NOT_EXIST("850103","bannerContentId不存在"),
 
-    GOODS_QUERY_EXCEPTION("850100","商品查询异常"),
-    GOODS_SAVE_EXCEPTION("850101","商品保存异常"),
-    GOODS_UPDATE_EXCEPTION("850102","商品更新异常"),
-    GOODS_ID_NOT_EXIST("850103","商品Id不存在"),
-    GOODS_CAN_NOT_BE_DOWNED("850104","商品不允许下架或删除"),
+    GOODS_QUERY_EXCEPTION("860100","商品查询异常"),
+    GOODS_SAVE_EXCEPTION("860101","商品保存异常"),
+    GOODS_UPDATE_EXCEPTION("860102","商品更新异常"),
+    GOODS_ID_NOT_EXIST("860103","商品Id不存在"),
+    GOODS_CAN_NOT_BE_DOWNED("860104","商品不允许下架或删除"),
+
+    GOODSRECOMMEND_QUERY_EXCEPTION("870100","推荐商品查询异常"),
 
     PARAM_CHECK_EXCEPTION("2000100","参数校验错误"),
     PARAM_ERROR_ILLEGAL("2000200", "缺少参数或参数不合法");
