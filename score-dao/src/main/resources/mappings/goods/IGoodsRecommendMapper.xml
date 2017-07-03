@@ -3,8 +3,8 @@
 <mapper namespace="org.trc.mapper.goods.IGoodsRecommendMapper">
 
     <!-- 查询推荐商品列表 -->
-    <select id="selectGoodsRecommendsByPage" resultType="com.trc.mall.model.GoodsRecommendDTO"
-            parameterType="com.trc.mall.model.GoodsRecommendDO">
+    <select id="selectGoodsRecommendsByPage" resultType="org.trc.domain.goods.GoodsRecommendDTO"
+            parameterType="org.trc.domain.goods.GoodsRecommendDO">
         select
         recommend.id as recommendId,
         recommend.goodsId ,

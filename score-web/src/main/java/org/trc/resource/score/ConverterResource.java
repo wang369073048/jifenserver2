@@ -187,7 +187,7 @@ public class ConverterResource {
 
 
     /**
-     * 获取兑换规则
+     * 查询渠道兑换规则列表
      *
      * @return
      */
@@ -199,6 +199,13 @@ public class ConverterResource {
         ScoreConverter scoreConverter = scoreConverterBiz.getScoreConvertByCurrency(auth.getExchangeCurrency());
         return createSucssAppResult("获取兑换规则成功", scoreConverter);
     }
+
+    /**
+     * 查询兑换规则byId
+     * @param id
+     * @param requestContext
+     * @return
+     */
     @GET
     @Path("{id}")
     public AppResult<ScoreConverter> getExchageRuleById(@PathParam("id") String id,
