@@ -104,7 +104,7 @@ public class BannerBiz implements IBannerBiz {
             Date endDate = DateUtils.parseDate(queryModel.getEndDate());
             criteria.andLessThan("updateTime", DateUtils.addDays(endDate, 1));
         }
-        example.orderBy("createTime").desc();
+        example.orderBy("sort").asc();
         page = bannerService.pagination(example,page,queryModel);
         return page;
     }
@@ -127,8 +127,9 @@ public class BannerBiz implements IBannerBiz {
     public int exchangeSort(Banner bannerA, Banner bannerB){
         Assert.notNull(bannerA, "bannerA不能为空!");
         Assert.notNull(bannerB, "bannerB不能为空!");
+        Integer tempSort = bannerA.getSort();
         bannerA.setSort(bannerB.getSort());
-        bannerB.setSort(bannerA.getSort());
+        bannerB.setSort(tempSort);
         int resultA = bannerService.updateByPrimaryKeySelective(bannerA);
         if (resultA != 1) {
             throw new BannerException(ExceptionEnum.BANNER_UPDATE_EXCEPTION, String.format("交换Banner排序BannerIdA=>[%s],BannerIdB=>[%s]异常!",bannerA.getId(),bannerB.getId()));
