@@ -33,7 +33,7 @@ public class GoodsRecommendService extends BaseService<GoodsRecommendDO,Long> im
             pagenation.setResult(list);
             return pagenation;
         }
-        return null;
+        return pagenation;
     }
 
     @Override

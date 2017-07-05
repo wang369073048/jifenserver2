@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="org.trc.mapper.order.ILogisticsMapper" >
+
+    <select id="getLogisticsCodeDOByCode" parameterType="java.lang.String" resultType="org.trc.domain.order.LogisticsCodeDO">
+        SELECT * FROM logistic_code where companyCode = #{code}
+    </select>
+
+    <!-- 根据ID更新信息-->
+    <update id="updateById" parameterType="org.trc.domain.order.LogisticsDO">
+        UPDATE logistics SET
+        <if test="companyName != null and companyName != ''">
+            companyName = #{companyName},
+        </if>
+        <if test="shipperCode != null and shipperCode != ''">
+            shipperCode = #{shipperCode},
+        </if>
+        <if test="logisticsNum != null and logisticsNum != ''">
+            logisticsNum = #{logisticsNum},
+        </if>
+        <if test="freight != null">
+            freight = #{freight},
+        </if>
+        <if test="operatorUserId != null and operatorUserId != ''">
+            operatorUserId = #{operatorUserId},
+        </if>
+        <if test="operatorName != null and operatorName != ''">
+            operatorName = #{operatorName},
+        </if>
+        updateTime = now()
+        WHERE 1=1
+        <if test="id != null ">
+            and id = #{id}
+        </if>
+        <if test="orderId != null ">
+            and orderId = #{orderId}
+        </if>
+    </update>
+
+</mapper>

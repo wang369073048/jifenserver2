@@ -13,4 +13,7 @@
         <property name="exchangeUrl" value="${trc_mall.exchangeUrl}" />
     </bean>
 
+    <bean id="trcExpress100" class="com.trc.mall.externalservice.TrcExpress100">
+        <property name="TRC_EXPRESS_QUERY_URL" value="${kdniao100.url}" />
+    </bean>
 </beans>

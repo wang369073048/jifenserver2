@@ -199,6 +199,8 @@ public class CouponsBiz implements ICouponsBiz{
 
     @Override
     public List<CardItemDO> selectItemByOrderNum(String orderNum) {
-        return null;
+        CardItemDO cardItemDO = new CardItemDO();
+        cardItemDO.setOrderCode(orderNum);
+        return cardItemService.select(cardItemDO);
     }
 }

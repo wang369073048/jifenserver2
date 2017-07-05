@@ -3,9 +3,12 @@ package org.trc.exception;
 import org.trc.enums.ExceptionEnum;
 
 /**
- * Created by wangzhen
+ * author: hzwzhen
+ * JDK-version:  JDK1.8
+ * comments:
+ * since Date： 2017/7/3
  */
-public class BannerContentException extends RuntimeException{
+public class OrderException extends RuntimeException{
 
     /**
      * 异常枚举
@@ -16,7 +19,7 @@ public class BannerContentException extends RuntimeException{
      */
     private String message;
 
-    public BannerContentException(ExceptionEnum exceptionEnum, String message){
+    public OrderException(ExceptionEnum exceptionEnum, String message){
         super(message);
         this.exceptionEnum = exceptionEnum;
         this.message = message;
