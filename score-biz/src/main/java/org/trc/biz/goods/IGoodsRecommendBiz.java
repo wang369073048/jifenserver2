@@ -13,16 +13,9 @@ import java.util.List;
  * comments:
  * since Date： 2017/6/29
  */
-//TODO IGoodsRecommendBiz的实现
 public interface IGoodsRecommendBiz {
 
-    /**
-     * 多条件查询(分页)
-     * @param goodsRecommendDO GoodsRecommendDO
-     * @param pageRequest PageRequest<GoodsRecommendDO>
-     * @return PageRequest<GoodsRecommendDO>
-     */
-    PageRequest<GoodsRecommendDO> queryGoodsRecommendDOListForPage(GoodsRecommendDO goodsRecommendDO, PageRequest<GoodsRecommendDO> pageRequest);
+
 
     /**
      * 多条件查询推荐列表，shopId必填，商品名称选填
@@ -39,12 +32,7 @@ public interface IGoodsRecommendBiz {
      */
     GoodsRecommendDO getGoodsRecommendDOById(Long id);
 
-    /**
-     * 添加
-     * @param goodsRecommendDO GoodsRecommendDO
-     * @return int
-     */
-    int addGoodsRecommendDO(GoodsRecommendDO goodsRecommendDO);
+
 
     /**
      * 批量新增推荐商品
@@ -53,12 +41,6 @@ public interface IGoodsRecommendBiz {
      */
     int batchAddRecommends(List<GoodsRecommendDO> goodsRecommendDOs);
 
-    /**
-     * 修改
-     * @param goodsRecommendDO GoodsRecommendDO
-     * @return int
-     */
-    int modifyGoodsRecommendDO(GoodsRecommendDO goodsRecommendDO);
 
     /**
      * 上下移
@@ -77,10 +59,7 @@ public interface IGoodsRecommendBiz {
      */
     int deleteById(Long id);
 
-    /**
-     * 获取当前最大的序号
-     */
-    int getNextSort();
+
 
     /**
      * 查找商品是否被推荐

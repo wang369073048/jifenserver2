@@ -121,4 +121,17 @@
         </if>
         order by updateTime desc
     </select>
+
+    <!-- 验证多商品ID所属 -->
+    <select id="isOwnerOf" parameterType="java.util.Map" resultType="int">
+        SELECT COUNT(*)
+        FROM goods
+        <where>
+            shopId = #{shopId} and whetherPrizes = 0
+        </where>
+        AND id in
+        <foreach collection="idList" item="item" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </select>
 </mapper>

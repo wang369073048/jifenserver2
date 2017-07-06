@@ -30,9 +30,7 @@ import org.trc.util.Pagenation;
 import tk.mybatis.mapper.entity.Example;
 import tk.mybatis.mapper.util.StringUtil;
 
-import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 import static org.trc.enums.ExceptionEnum.COUPON_QUERY_EXCEPTION;
 
@@ -256,7 +254,25 @@ public class GoodsBiz implements IGoodsBiz{
 
     @Override
     public boolean isOwnerOf(String[] goodsIdArray, Long shopId) {
-        return false;
+        boolean result = false;
+        List<Long> goodsId = new ArrayList<Long>();
+        Map<String,Object> params = new HashMap<String,Object>();
+        try {
+            for(String id : goodsIdArray){
+                goodsId.add(Long.valueOf(id));
+            }
+            params.put("shopId", shopId);
+            params.put("idList", goodsId);
+            if(goodsId != null && goodsId.size() > 0){
+                int goodsSize = goodsService.isOwnerOf(params);
+                if(goodsSize == goodsId.size()){
+                    result = true;
+                }
+            }
+        } catch (Exception e) {
+            logger.error("验证商品权限异常!", e);
+        }
+        return result;
     }
 
     @Override

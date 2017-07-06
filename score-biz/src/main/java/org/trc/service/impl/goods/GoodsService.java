@@ -11,6 +11,7 @@ import org.trc.service.impl.BaseService;
 import org.trc.util.Pagenation;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by hzwzhen on 2017/6/22.
@@ -46,5 +47,10 @@ public class GoodsService extends BaseService<GoodsDO,Long> implements IGoodsSer
             return pagenation;
         }
         return pagenation;
+    }
+
+    @Override
+    public int isOwnerOf(Map<String, Object> params) {
+        return goodsMapper.isOwnerOf(params);
     }
 }

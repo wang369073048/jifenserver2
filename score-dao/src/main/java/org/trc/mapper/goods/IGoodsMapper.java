@@ -4,6 +4,7 @@ import org.trc.domain.goods.GoodsDO;
 import org.trc.util.BaseMapper;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * author: hzwzhen
@@ -28,4 +29,11 @@ public interface IGoodsMapper extends BaseMapper<GoodsDO> {
      * @return 查询到的没有推荐的商品
      */
     List<GoodsDO> selectListExceptRecommendByPage(GoodsDO goodsDO);
+
+    /**
+     * 判定对应shopId下的所属商品个数
+     * @param params
+     * @return
+     */
+    int isOwnerOf(Map<String, Object> params);
 }

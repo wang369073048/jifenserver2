@@ -19,4 +19,10 @@ public interface IGoodsRecommendMapper extends BaseMapper<GoodsRecommendDO>{
      * @return 查询到的推荐列表
      */
     List<GoodsRecommendDTO> selectGoodsRecommendsByPage(GoodsRecommendDTO query);
+
+    /**
+     * 查找当前最大的序号
+     * @return
+     */
+    int getNextSort();
 }

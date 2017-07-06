@@ -31,4 +31,19 @@
         </where>
         order by sort DESC
     </select>
+
+    <select id="getNextSort" resultType="int">
+        SELECT
+        CASE
+        WHEN max(sort) is not NULL THEN
+        max(sort)+1
+        ELSE
+        1
+        END
+        FROM
+        goods_recommend
+        WHERE
+        isDeleted = 0
+    </select>
+
 </mapper>
