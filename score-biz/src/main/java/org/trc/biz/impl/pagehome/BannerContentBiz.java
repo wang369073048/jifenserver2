@@ -114,6 +114,8 @@ public class BannerContentBiz implements IBannerContentBiz{
                 Date endDate = DateUtils.parseDate(queryModel.getEndDate());
                 criteria.andLessThan("updateTime", DateUtils.addDays(endDate, 1));
             }
+            criteria.andEqualTo("type",queryModel.getType());
+            criteria.andEqualTo("isDeleted",false);
             example.orderBy("createTime").desc();
             page = bannerContentService.pagination(example,page,queryModel);
             return page;

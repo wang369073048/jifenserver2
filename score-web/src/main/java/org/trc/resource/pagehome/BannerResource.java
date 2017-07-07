@@ -42,6 +42,7 @@ public class BannerResource{
         Banner banner = new Banner();
         banner.setShopId(form.getShopId());
         banner.setName(form.getName());
+        banner.setType(form.getType());
         String userId= (String) requestContext.getProperty("userId");
         banner.setOperatorUserId(userId);
         bannerBiz.saveBanner(banner);
@@ -104,9 +105,13 @@ public class BannerResource{
      */
     @PUT
     @Path(ScoreAdminConstants.Route.Banner.SETCONTENT + "/{id}")
-    public AppResult setBannerContent(@BeanParam BannerForm form){
+    public AppResult setBannerContent(@BeanParam BannerForm form, @NotNull@FormParam("contentId")Long contentId,@Context ContainerRequestContext requestContext){
         Banner banner = bannerBiz.selectByIdAndShopId(form);
-        return null;
+        banner.setContentId(contentId);
+        String userId= (String) requestContext.getProperty("userId");
+        banner.setOperatorUserId(userId);
+        bannerBiz.updateBanner(banner);
+        return createSucssAppResult("设置成功", "");
     }
 
     /**

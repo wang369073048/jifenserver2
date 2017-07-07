@@ -18,6 +18,11 @@ public class Banner extends CommonDO {
     private String name;
 
     /**
+     * 类型
+     */
+    private String type;
+
+    /**
      * 内容ID
      */
     @Column(name = "contentId")
@@ -58,6 +63,14 @@ public class Banner extends CommonDO {
         this.name = name;
     }
 
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
+
     public Long getContentId() {
         return contentId;
     }
@@ -94,6 +107,7 @@ public class Banner extends CommonDO {
     public String toString() {
         return "Banner{" +
                 "name='" + name + '\'' +
+                ", type='" + type + '\'' +
                 ", contentId=" + contentId +
                 ", isUp=" + isUp +
                 ", sort=" + sort +

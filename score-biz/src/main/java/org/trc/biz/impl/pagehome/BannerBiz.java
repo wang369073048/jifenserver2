@@ -104,6 +104,7 @@ public class BannerBiz implements IBannerBiz {
             Date endDate = DateUtils.parseDate(queryModel.getEndDate());
             criteria.andLessThan("updateTime", DateUtils.addDays(endDate, 1));
         }
+        criteria.andEqualTo("type",queryModel.getType());
         example.orderBy("sort").asc();
         page = bannerService.pagination(example,page,queryModel);
         return page;

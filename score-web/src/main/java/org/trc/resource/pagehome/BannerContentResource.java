@@ -41,6 +41,7 @@ public class BannerContentResource {
      */
     @POST
     public AppResult<JSONObject> createBannerContent(@PathParam("shopId") Long shopId,
+                                        @NotBlank @FormParam("type") String type,
                                         @NotBlank @FormParam("title") String title,
                                         @NotBlank @FormParam("imgUrl") String imgUrl,
                                         @NotBlank @FormParam("targetUrl") String targetUrl,
@@ -48,6 +49,7 @@ public class BannerContentResource {
                                          @Context ContainerRequestContext requestContext) {
         BannerContent bannerContent = new BannerContent();
         bannerContent.setShopId(shopId);
+        bannerContent.setType(type);
         bannerContent.setTitle(title);
         bannerContent.setImgUrl(imgUrl);
         bannerContent.setTargetUrl(targetUrl);
