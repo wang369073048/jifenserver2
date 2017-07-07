@@ -18,6 +18,11 @@ public class BannerContent extends CommonDO{
     private String title;
 
     /**
+     * 类型
+     */
+    private String type;
+
+    /**
      * 图片url
      */
     @Column(name = "imgUrl")
@@ -53,6 +58,14 @@ public class BannerContent extends CommonDO{
         this.title = title;
     }
 
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
+
     public String getImgUrl() {
         return imgUrl;
     }
@@ -81,6 +94,7 @@ public class BannerContent extends CommonDO{
     public String toString() {
         return "BannerContent{" +
                 "title='" + title + '\'' +
+                ", type='" + type + '\'' +
                 ", imgUrl='" + imgUrl + '\'' +
                 ", targetUrl='" + targetUrl + '\'' +
                 ", id=" + id +

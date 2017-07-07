@@ -13,6 +13,8 @@ public class BannerContentForm extends QueryModel{
     private Long shopId; //商铺Id
     @QueryParam("title")
     private String title; //标题
+    @QueryParam("type")
+    private String type; //类型
 
     public Long getShopId() {
         return shopId;
@@ -20,6 +22,14 @@ public class BannerContentForm extends QueryModel{
 
     public void setShopId(Long shopId) {
         this.shopId = shopId;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
     }
 
     public String getTitle() {

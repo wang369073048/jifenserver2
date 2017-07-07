@@ -11,7 +11,7 @@ import org.trc.filter.AuthorizationFilter;
 public class ScoreApplication extends ResourceConfig{
 
     public ScoreApplication(){
-        //register(AuthorizationFilter.class);
+        register(AuthorizationFilter.class);
         register(JacksonJsonProvider.class);
         register(MultiPartFeature.class);
         packages("org.trc.resource");
