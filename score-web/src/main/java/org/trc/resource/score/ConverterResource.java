@@ -59,6 +59,7 @@ public class ConverterResource {
         ScoreConverter scoreConverter = new ScoreConverter();
         //TODO 通过shopId查询channelCode
         //String channel = ChannelUtil.getChannelByShopId(shopId);
+
         String channel = null;
         if (StringUtils.isNotEmpty(channel)) {
             scoreConverter.setChannelCode(channel);
