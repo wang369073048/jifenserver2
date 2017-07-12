@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 import org.trc.biz.auth.IAuthBiz;
 import org.trc.domain.auth.Auth;
+import org.trc.domain.dto.AuthQueryDTO;
 import org.trc.enums.ExceptionEnum;
 import org.trc.exception.AuthException;
 import org.trc.form.auth.AuthForm;
@@ -92,7 +93,7 @@ public class AuthBiz implements IAuthBiz {
     }
 
     @Override
-    public Pagenation<Auth> authPage(AuthForm form, Pagenation<Auth> page) {
+    public Pagenation<Auth> queryAuthListForPage(AuthQueryDTO query, Pagenation<Auth> pageRequest) {
         return null;
     }
 

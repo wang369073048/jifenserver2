@@ -1,12 +1,9 @@
 package org.trc.service.impl.order;
 
 import com.github.pagehelper.PageHelper;
-import com.txframework.core.jdbc.PageRequest;
 import org.springframework.stereotype.Service;
 import org.trc.domain.dto.ExportOrderDTO;
 import org.trc.domain.dto.SettlementQuery;
-import org.trc.domain.goods.GoodsRecommendDTO;
-import org.trc.domain.order.LogisticsDO;
 import org.trc.domain.order.OrdersDO;
 import org.trc.domain.order.SettlementDO;
 import org.trc.mapper.order.IOrderMapper;

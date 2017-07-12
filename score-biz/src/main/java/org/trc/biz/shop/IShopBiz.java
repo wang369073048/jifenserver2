@@ -3,6 +3,7 @@ package org.trc.biz.shop;
 import com.txframework.core.jdbc.PageRequest;
 import org.trc.domain.shop.ManagerDO;
 import org.trc.domain.shop.ShopDO;
+import org.trc.util.Pagenation;
 
 /**
  * author: hzwzhen
@@ -18,7 +19,7 @@ public interface IShopBiz {
      * @param pageRequest PageRequest<ShopDO>
      * @return PageRequest<ShopDO>
      */
-    PageRequest<ShopDO> queryShopDOListForPage(ShopDO shopDO, PageRequest<ShopDO> pageRequest);
+    Pagenation<ShopDO> queryShopDOListForPage(ShopDO shopDO, Pagenation<ShopDO> pageRequest);
 
     /**
      * 根据用户ID查询

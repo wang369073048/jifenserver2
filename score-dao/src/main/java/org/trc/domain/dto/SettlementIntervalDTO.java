@@ -1,4 +1,4 @@
-package org.trc.domain.order;
+package org.trc.domain.dto;
 
 
 

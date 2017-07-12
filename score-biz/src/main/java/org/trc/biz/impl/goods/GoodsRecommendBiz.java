@@ -1,6 +1,5 @@
 package org.trc.biz.impl.goods;
 
-import com.txframework.core.jdbc.PageRequest;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -11,7 +10,7 @@ import org.springframework.transaction.interceptor.TransactionAspectSupport;
 import org.springframework.util.Assert;
 import org.trc.biz.goods.IGoodsRecommendBiz;
 import org.trc.domain.goods.GoodsRecommendDO;
-import org.trc.domain.goods.GoodsRecommendDTO;
+import org.trc.domain.dto.GoodsRecommendDTO;
 import org.trc.enums.ExceptionEnum;
 import org.trc.exception.GoodsRecommendException;
 import org.trc.service.goods.IGoodsRecommendService;

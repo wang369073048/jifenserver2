@@ -15,6 +15,7 @@ import org.trc.domain.shop.ShopDO;
 import org.trc.enums.ExceptionEnum;
 import org.trc.exception.ShopException;
 import org.trc.service.shop.IManagerService;
+import org.trc.util.Pagenation;
 
 /**
  * author: hzwzhen
@@ -31,7 +32,7 @@ public class ShopBiz implements IShopBiz{
 
     private IManagerService managerService;
     @Override
-    public PageRequest<ShopDO> queryShopDOListForPage(ShopDO shopDO, PageRequest<ShopDO> pageRequest) {
+    public Pagenation<ShopDO> queryShopDOListForPage(ShopDO shopDO, Pagenation<ShopDO> pageRequest) {
         return null;
     }
 

@@ -1,8 +1,7 @@
 package org.trc.biz.goods;
 
-import com.txframework.core.jdbc.PageRequest;
 import org.trc.domain.goods.GoodsRecommendDO;
-import org.trc.domain.goods.GoodsRecommendDTO;
+import org.trc.domain.dto.GoodsRecommendDTO;
 import org.trc.util.Pagenation;
 
 import java.util.List;

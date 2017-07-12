@@ -4,7 +4,6 @@ import com.github.pagehelper.PageHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.trc.domain.goods.GoodsDO;
-import org.trc.domain.goods.GoodsRecommendDTO;
 import org.trc.mapper.goods.IGoodsMapper;
 import org.trc.service.goods.IGoodsService;
 import org.trc.service.impl.BaseService;

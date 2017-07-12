@@ -1,4 +1,4 @@
-package org.trc.domain.goods;
+package org.trc.domain.dto;
 
 import java.io.Serializable;
 import java.util.Date;

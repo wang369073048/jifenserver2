@@ -5,7 +5,7 @@ import com.txframework.core.jdbc.PageRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.trc.domain.goods.GoodsRecommendDO;
-import org.trc.domain.goods.GoodsRecommendDTO;
+import org.trc.domain.dto.GoodsRecommendDTO;
 import org.trc.mapper.goods.IGoodsRecommendMapper;
 import org.trc.service.goods.IGoodsRecommendService;
 import org.trc.service.impl.BaseService;

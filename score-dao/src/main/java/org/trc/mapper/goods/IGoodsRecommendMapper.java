@@ -1,7 +1,7 @@
 package org.trc.mapper.goods;
 
 import org.trc.domain.goods.GoodsRecommendDO;
-import org.trc.domain.goods.GoodsRecommendDTO;
+import org.trc.domain.dto.GoodsRecommendDTO;
 import org.trc.util.BaseMapper;
 
 import java.util.List;

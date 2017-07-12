@@ -1,4 +1,4 @@
-package org.trc.resource.goods;
+package org.trc.resource.admin;
 
 import com.alibaba.fastjson.JSONObject;
 import org.hibernate.validator.constraints.NotBlank;

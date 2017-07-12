@@ -1,6 +1,8 @@
 package org.trc.biz.auth;
 
+import com.txframework.core.jdbc.PageRequest;
 import org.trc.domain.auth.Auth;
+import org.trc.domain.dto.AuthQueryDTO;
 import org.trc.domain.pagehome.Banner;
 import org.trc.domain.pagehome.BannerContent;
 import org.trc.form.auth.AuthForm;
@@ -38,11 +40,9 @@ public interface IAuthBiz {
 
     /**
      * Auth分页查询
-     * @param form
-     * @param page
      * @return
      * @throws Exception
      */
-    Pagenation<Auth> authPage(AuthForm form, Pagenation<Auth> page);
+    Pagenation<Auth> queryAuthListForPage(AuthQueryDTO query, Pagenation<Auth> pageRequest);
 
 }
