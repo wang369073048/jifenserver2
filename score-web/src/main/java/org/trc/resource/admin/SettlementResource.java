@@ -50,7 +50,6 @@ public class SettlementResource {
     @Autowired
     private INewOrderBiz newOrderBiz;
     @GET
-    //@Admin
     public Pagenation<SettlementDO> querySettlementList(@NotNull @QueryParam("shopId") Long shopId, @QueryParam("billNum") String billNum,
                                          @BeanParam Pagenation<SettlementDO> page) {
         SettlementDO settlementDO = new SettlementDO();
@@ -60,7 +59,6 @@ public class SettlementResource {
 
     @GET
     @Path(ScoreAdminConstants.Route.Settlement.ORDER)
-    //@Admin
     public AppResult querySettlementOrderList(@QueryParam("shopId") Long shopId,
                                               @QueryParam("phone") String phone,
                                               @QueryParam("orderNum") String orderNum,

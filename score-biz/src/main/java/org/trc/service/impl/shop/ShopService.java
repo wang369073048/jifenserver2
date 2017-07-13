@@ -1,12 +1,15 @@
 package org.trc.service.impl.shop;
 
+import com.github.pagehelper.PageHelper;
 import com.txframework.core.jdbc.PageRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.trc.domain.dto.GoodsRecommendDTO;
 import org.trc.domain.shop.ShopDO;
 import org.trc.mapper.shop.IShopMapper;
 import org.trc.service.impl.BaseService;
 import org.trc.service.shop.IShopService;
+import org.trc.util.Pagenation;
 
 import java.util.List;
 
@@ -26,8 +29,15 @@ public class ShopService extends BaseService<ShopDO,Long> implements IShopServic
     }
 
     @Override
-    public List<ShopDO> selectListByParams(ShopDO shopDO, PageRequest<ShopDO> pageRequest) {
-        return null;
+    public Pagenation<ShopDO> selectListByPage(ShopDO query, Pagenation<ShopDO> pagenation) {
+        List<ShopDO> list = shopMapper.select(query);
+        if (list != null){
+            PageHelper.startPage(pagenation.getPageNo(), pagenation.getPageSize());
+            pagenation.setTotalCount(list.size());
+            pagenation.setResult(list);
+            return pagenation;
+        }
+        return pagenation;
     }
 
     @Override

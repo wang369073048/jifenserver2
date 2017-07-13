@@ -146,6 +146,10 @@ public class ScoreAdminConstants {
             public static final String ROOT = "activityPrizes";
             public static final String ADD = "/add";
         }
+        public static final class Liumi{
+            public static final String ROOT = "/liumi";
+            public static final String ORDER_NOTICE = "/orderNotice";
+        }
     }
 
 }

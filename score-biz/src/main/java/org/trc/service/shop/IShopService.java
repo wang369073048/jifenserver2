@@ -3,6 +3,7 @@ package org.trc.service.shop;
 import com.txframework.core.jdbc.PageRequest;
 import org.trc.IBaseService;
 import org.trc.domain.shop.ShopDO;
+import org.trc.util.Pagenation;
 
 import java.util.List;
 
@@ -26,7 +27,7 @@ public interface IShopService extends IBaseService<ShopDO,Long>{
      * @param pageRequest PageRequest<ShopDO>
      * @return List<ShopDO>
      */
-    List<ShopDO> selectListByParams(ShopDO shopDO, PageRequest<ShopDO> pageRequest);
+    Pagenation<ShopDO> selectListByPage(ShopDO shopDO, Pagenation<ShopDO> pageRequest);
     int selectCountByParams(ShopDO shopDO);
 
     /**

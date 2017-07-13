@@ -94,7 +94,7 @@ public enum ExceptionEnum {
     MANAGER_UPDATE_EXCEPTION("700103","管理员更新异常"),
 
     PARAM_CHECK_EXCEPTION("2000100","参数校验错误"),
-    PARAM_ERROR_ILLEGAL("2000200", "缺少参数或参数不合法");
+    PARAM_ERROR_ILLEGAL("2000200", "参数不合法");
     private String code;
     private String message;
 

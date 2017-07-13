@@ -1,13 +1,9 @@
 package org.trc.resource.admin;
 
-import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.tairanchina.md.account.user.model.UserDO;
 import com.tairanchina.md.account.user.service.UserService;
 import com.tairanchina.md.api.QueryType;
-import com.trc.mall.util.CustomAck;
-import com.txframework.core.jdbc.PageRequest;
-import com.txframework.util.ListUtils;
 import org.apache.commons.lang.StringUtils;
 import org.hibernate.validator.constraints.NotEmpty;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,7 +12,6 @@ import org.trc.biz.shop.IShopBiz;
 import org.trc.constants.ScoreAdminConstants;
 import org.trc.domain.auth.Auth;
 import org.trc.domain.dto.AuthQueryDTO;
-import org.trc.domain.order.OrdersDO;
 import org.trc.domain.shop.ShopDO;
 import org.trc.enums.ExceptionEnum;
 import org.trc.exception.ManagerException;
@@ -24,13 +19,10 @@ import org.trc.util.AppResult;
 import org.trc.util.Pagenation;
 
 import javax.annotation.Resource;
-import javax.swing.undo.AbstractUndoableEdit;
 import javax.validation.constraints.NotNull;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-
-import java.util.List;
 
 import static org.trc.util.ResultUtil.createSucssAppResult;
 
@@ -140,5 +132,18 @@ public class ManagerResource {
             query.setUserKeyword(userKeyWord);
             query.setShopId(shopId);
             return authBiz.queryAuthListForPage(query, page);
+    }
+
+    /**
+     * 根据id查询manager
+     *
+     * @return Response
+     */
+    @GET
+    @Path("/{id}")
+    //@Admin
+    public AppResult getManagerById(@PathParam("id") Long id) {
+        Auth auth = authBiz.getAuthById(id);
+        return createSucssAppResult("查询店铺管理员成功!" ,auth);
     }
 }

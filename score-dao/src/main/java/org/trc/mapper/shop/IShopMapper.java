@@ -3,6 +3,8 @@ package org.trc.mapper.shop;
 import org.trc.domain.shop.ShopDO;
 import org.trc.util.BaseMapper;
 
+import java.util.List;
+
 /**
  * author: hzwzhen
  * JDK-version:  JDK1.8

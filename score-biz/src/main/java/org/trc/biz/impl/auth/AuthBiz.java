@@ -16,6 +16,8 @@ import org.trc.form.pagehome.BannerContentForm;
 import org.trc.service.auth.IAuthService;
 import org.trc.util.Pagenation;
 
+import java.util.List;
+
 /**
  * Created by hzwzhen on 2017/6/14.
  */
@@ -84,7 +86,10 @@ public class AuthBiz implements IAuthBiz {
 
     @Override
     public Auth getAuthById(Long id) {
-        return null;
+        Auth auth = new Auth();
+        auth.setId(id);
+        auth.setIsDeleted(0);
+        return authService.selectOne(auth);
     }
 
     @Override
@@ -94,7 +99,17 @@ public class AuthBiz implements IAuthBiz {
 
     @Override
     public Pagenation<Auth> queryAuthListForPage(AuthQueryDTO query, Pagenation<Auth> pageRequest) {
-        return null;
+        try {
+            Assert.notNull(pageRequest, "分页参数不能为空");
+            Assert.notNull(query, "查询参数不能为空");
+            return authService.queryAuthListByCondition(query, pageRequest);
+        }catch (IllegalArgumentException e) {
+            logger.error("查询权限记录校验参数异常!", e);
+            throw new AuthException(ExceptionEnum.PARAM_CHECK_EXCEPTION, "查询权限记录校验参数异常!");
+        } catch (Exception e) {
+            logger.error("查询权限记录失败", e);
+            throw new AuthException(ExceptionEnum.AUTH_QUERY_EXCEPTION, "查询权限记录失败");
+        }
     }
 
     /**

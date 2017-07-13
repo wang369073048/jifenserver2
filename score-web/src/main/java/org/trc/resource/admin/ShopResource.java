@@ -39,7 +39,6 @@ public class ShopResource {
      * @return
      */
     @POST
-    //@Admin
     public AppResult<JSONObject> createShop(@NotBlank @FormParam("shopName") String shopName,
                                             @NotBlank @FormParam("channelCode") String channelCode,
                                             @FormParam("logo") String logo,

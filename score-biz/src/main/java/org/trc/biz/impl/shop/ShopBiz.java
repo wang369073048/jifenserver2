@@ -15,7 +15,11 @@ import org.trc.domain.shop.ShopDO;
 import org.trc.enums.ExceptionEnum;
 import org.trc.exception.ShopException;
 import org.trc.service.shop.IManagerService;
+import org.trc.service.shop.IShopService;
 import org.trc.util.Pagenation;
+
+import java.util.Calendar;
+import java.util.List;
 
 /**
  * author: hzwzhen
@@ -29,26 +33,98 @@ public class ShopBiz implements IShopBiz{
     Logger logger = LoggerFactory.getLogger(ShopBiz.class);
     @Autowired
     private IAuthBiz authBiz;
-
+    @Autowired
     private IManagerService managerService;
+    @Autowired
+    private IShopService shopService;
     @Override
     public Pagenation<ShopDO> queryShopDOListForPage(ShopDO shopDO, Pagenation<ShopDO> pageRequest) {
-        return null;
+        try {
+            Assert.notNull(pageRequest, "分页参数不能为空");
+            Assert.notNull(shopDO, "传入参数不能为空");
+            return shopService.selectListByPage(shopDO, pageRequest);
+        } catch (IllegalArgumentException e) {
+            logger.error("多条件查询ShopDO校验参数异常!", e);
+            throw new ShopException(ExceptionEnum.PARAM_CHECK_EXCEPTION, "多条件查询ShopDO校验参数异常!");
+        } catch (Exception e) {
+            logger.error("多条件查询ShopDO信息异常!", e);
+            throw new ShopException(ExceptionEnum.SHOP_QUERY_EXCEPTION, "多条件查询ShopDO信息异常!");
+        }
     }
 
     @Override
     public ShopDO getShopDOById(Long id) {
-        return null;
+        try {
+            Assert.isTrue(id != null, "查询Id不能为空!");
+            return shopService.selectById(id);
+        } catch (IllegalArgumentException e) {
+            logger.error("查询ShopDO传入Id为空!", e);
+            throw new ShopException(ExceptionEnum.PARAM_ERROR_ILLEGAL, "查询ShopDO校验参数异常!");
+        } catch (Exception e) {
+            logger.error("根据ID=>[" + id + "]查询ShopDO信息异常!", e);
+            throw new ShopException(ExceptionEnum.SHOP_QUERY_EXCEPTION, "根据ID=>[" + id + "]查询ShopDO信息异常!");
+        }
     }
 
     @Override
     public int addShopDO(ShopDO shopDO) {
-        return 0;
+        try {
+            validateForAdd(shopDO);
+            return shopService.insertSelective(shopDO);
+        } catch (IllegalArgumentException e) {
+            logger.error("新增ShopDO校验参数异常!", e);
+            throw new ShopException(ExceptionEnum.SHOP_SAVE_EXCEPTION, "新增ShopDO校验参数异常!");
+        } catch (Exception e) {
+            logger.error("新增ID=>[" + shopDO.getId() + "]的ShopDO信息异常!", e);
+            throw new ShopException(ExceptionEnum.SHOP_SAVE_EXCEPTION, "新增ID=>[" + shopDO.getId() + "]的ShopDO信息异常!");
+        }
+    }
+
+    /**
+     * Validate Add
+     *
+     * @param shopDO ShopDO
+     */
+    private void validateForAdd(ShopDO shopDO) {
+        Assert.isTrue(shopDO != null, "shopDO不能为空!");
+        Assert.isTrue(StringUtils.isNotEmpty(shopDO.getShopName()), "店铺名称不能为空");
+        Assert.isTrue(StringUtils.isNotEmpty(shopDO.getLogo()), "店铺logo不能为空");
+        Assert.isTrue(StringUtils.isNotEmpty(shopDO.getChannelCode()), "店铺所属渠道不能为空");
+        Assert.isTrue(StringUtils.isNotEmpty(shopDO.getServicePhone()), "店铺客服电话不能为空");
     }
 
     @Override
     public int modifyShopDO(ShopDO shopDO) {
-        return 0;
+        try {
+            validateForUpdate(shopDO);
+            shopDO.setUpdateTime(Calendar.getInstance().getTime());
+            return shopService.updateByPrimaryKey(shopDO);
+        } catch (IllegalArgumentException e) {
+            logger.error("修改ShopDO校验参数异常!", e);
+            throw new ShopException(ExceptionEnum.SHOP_UPDATE_EXCEPTION, "修改ShopDO校验参数异常!");
+        } catch (Exception e) {
+            logger.error("修改ID=>[" + shopDO.getId() + "]的ShopDO信息异常", e);
+            throw new ShopException(ExceptionEnum.SHOP_UPDATE_EXCEPTION, "修改ID=>[" + shopDO.getId() + "]的ShopDO信息异常");
+        }
+    }
+
+    /**
+     * Validate Update
+     *
+     * @param shopDO ShopDO
+     * @return ShopDO
+     */
+    private ShopDO validateForUpdate(ShopDO shopDO) {
+
+        Assert.isTrue(shopDO != null, "ShopDO不能为空!");
+        Assert.isTrue(shopDO.getId() != null, "查询Id不能为空!");
+        Assert.isTrue(StringUtils.isNotEmpty(shopDO.getShopName()), "店铺名称不能为空");
+        Assert.isTrue(StringUtils.isNotEmpty(shopDO.getLogo()), "店铺logo不能为空");
+        Assert.isTrue(StringUtils.isNotEmpty(shopDO.getChannelCode()), "店铺所属渠道不能为空");
+        Assert.isTrue(StringUtils.isNotEmpty(shopDO.getServicePhone()), "店铺客服电话不能为空");
+        ShopDO oldShopDO = shopService.selectById(shopDO.getId());
+        Assert.isTrue(oldShopDO != null, "查询不到ID=>[" + shopDO.getId() + "]的信息!");
+        return oldShopDO;
     }
 
     @Override
