@@ -49,6 +49,8 @@ public class SettlementResource {
     private UserService userService;
     @Autowired
     private INewOrderBiz newOrderBiz;
+
+
     @GET
     public Pagenation<SettlementDO> querySettlementList(@NotNull @QueryParam("shopId") Long shopId, @QueryParam("billNum") String billNum,
                                          @BeanParam Pagenation<SettlementDO> page) {
@@ -116,4 +118,5 @@ public class SettlementResource {
             JSONUtil.putParam(jsonArray, result, jsonObject);
             return createSucssAppResult("查询成功!", jsonObject);
     }
+    //TODO 导出
 }

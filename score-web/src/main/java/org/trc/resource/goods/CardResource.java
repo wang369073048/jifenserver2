@@ -37,9 +37,9 @@ import static org.trc.util.ResultUtil.createSucssAppResult;
 @Component
 @Produces(MediaType.APPLICATION_JSON)
 @Path(ScoreAdminConstants.Route.CardCoupuns.ROOT)
-public class CardCouponsResource {
+public class CardResource {
 
-    private Logger logger = LoggerFactory.getLogger(CardCouponsResource.class);
+    private Logger logger = LoggerFactory.getLogger(CardResource.class);
     @Autowired
     private ICouponsBiz couponsBiz;
     @Autowired
