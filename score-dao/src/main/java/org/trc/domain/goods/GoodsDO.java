@@ -167,6 +167,11 @@ public class GoodsDO extends CommonDO{
     @Column(name = "snapshotTime")
     private Date snapshotTime;
 
+    /**
+     * 是否奖品
+     */
+    private Integer whetherPrizes;
+
     public void calMainImg(){
         if(StringUtils.isEmpty(this.mainImg)){
             if(StringUtils.hasText(this.mediumImg)){
@@ -174,6 +179,14 @@ public class GoodsDO extends CommonDO{
                 this.mainImg = ((JSONObject)array.get(0)).toJSONString();
             }
         }
+    }
+
+    public Integer getWhetherPrizes() {
+        return whetherPrizes;
+    }
+
+    public void setWhetherPrizes(Integer whetherPrizes) {
+        this.whetherPrizes = whetherPrizes;
     }
 
     public Long getCategory() {

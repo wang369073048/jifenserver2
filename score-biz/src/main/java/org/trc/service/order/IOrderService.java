@@ -39,7 +39,7 @@ public interface IOrderService extends IBaseService<OrdersDO,Long>{
      * @param pageRequest PageRequest<OrdersDO>
      * @return List<OrdersDO>
      */
-    List<OrdersDO> selectOrdersByParams(SettlementQuery settlementQuery, Pagenation<OrdersDO> pageRequest);
+    Pagenation<OrdersDO> selectOrdersByParams(SettlementQuery settlementQuery, Pagenation<OrdersDO> pageRequest);
 
     int selectCountByParams(OrdersDO ordersDO);
 

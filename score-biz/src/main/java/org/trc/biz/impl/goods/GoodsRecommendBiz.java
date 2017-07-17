@@ -31,7 +31,7 @@ public class GoodsRecommendBiz implements IGoodsRecommendBiz{
     @Autowired
     private IGoodsRecommendService goodsRecommendService;
 
-    @Override //TODO 分页测试
+    @Override
     public Pagenation<GoodsRecommendDTO> queryGoodsRecommondsForPage(GoodsRecommendDTO query, Pagenation<GoodsRecommendDTO> pageRequest) {
         try {
             Assert.notNull(pageRequest, "分页参数不能为空");

@@ -302,7 +302,9 @@ public class NewOrderBiz implements INewOrderBiz {
 
     @Override
     public Pagenation<OrdersDO> queryOrdersByParams(SettlementQuery settlementQuery, Pagenation<OrdersDO> pageRequest) {
-        return null;
+        Assert.notNull(pageRequest, "分页参数不能为空");
+        Assert.notNull(settlementQuery, "传入参数不能为空");
+        return orderService.selectOrdersByParams(settlementQuery,pageRequest);
     }
 
     @Override

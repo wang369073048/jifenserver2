@@ -1,9 +1,11 @@
 package org.trc.service.goods;
 
+import com.txframework.core.jdbc.PageRequest;
 import org.trc.IBaseService;
 import org.trc.domain.goods.GoodsDO;
 import org.trc.util.Pagenation;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -31,6 +33,14 @@ public interface IGoodsService extends IBaseService<GoodsDO,Long>{
      * @return int
      */
     int upOrDownById(GoodsDO goodsDO);
+
+    /**
+     * 多条件查询表信息(分页)
+     * @param goodsDO GoodsDO
+     * @param pageRequest PageRequest<GoodsDO>
+     * @return List<GoodsDO>
+     */
+    Pagenation<GoodsDO> selectListByParams(GoodsDO goodsDO, Pagenation<GoodsDO> pageRequest);
 
     /**
      * 查询没有推荐的商品（分页）

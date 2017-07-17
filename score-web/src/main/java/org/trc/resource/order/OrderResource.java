@@ -6,6 +6,7 @@ import com.tairanchina.md.account.user.service.UserService;
 import com.tairanchina.md.api.QueryType;
 import com.trc.mall.externalservice.LogisticAck;
 import com.trc.mall.externalservice.TrcExpressAck;
+import com.txframework.util.ListUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -16,6 +17,7 @@ import org.trc.biz.order.ISettlementBiz;
 import org.trc.biz.shop.IShopBiz;
 import org.trc.constants.ScoreAdminConstants;
 import org.trc.domain.auth.Auth;
+import org.trc.domain.dto.OrderDTO;
 import org.trc.domain.dto.SettlementQuery;
 import org.trc.domain.order.LogisticsDO;
 import org.trc.domain.order.OrdersDO;
@@ -25,6 +27,7 @@ import org.trc.enums.ExceptionEnum;
 import org.trc.exception.OrderException;
 import org.trc.exception.ShopException;
 import org.trc.util.AppResult;
+import org.trc.util.FatherToChildUtils;
 import org.trc.util.Pagenation;
 
 import javax.annotation.Resource;
@@ -35,6 +38,7 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 
 import static org.trc.util.ResultUtil.createFailAppResult;
 import static org.trc.util.ResultUtil.createSucssAppResult;
@@ -299,8 +303,23 @@ public class OrderResource {
         settlementQuery.setGoodsName(goodsName);
         settlementQuery.setStartTime(new Date(startTime));
         settlementQuery.setEndTime(new Date(endTime));
-        //TODO 分页查询
-        return newOrderBiz.queryOrdersByParams(settlementQuery, page);
+        Pagenation<OrdersDO> orderPage = newOrderBiz.queryOrdersByParams(settlementQuery, page);
+        if (orderPage != null && ListUtils.isNotEmpty(orderPage.getResult()) && orderPage.getResult().size() > 0) {
+            List<OrdersDO> ordersDOList = orderPage.getResult();
+            for (int i= 0; i < ordersDOList.size();i++) {
+                OrdersDO ordersDO = ordersDOList.get(i);
+                if(ordersDO.getOrderAddressDO()!=null) {
+                    OrderDTO orderDTO = new OrderDTO();
+                    FatherToChildUtils.fatherToChild(ordersDO,orderDTO);
+                    orderDTO.setAddress(ordersDO.getOrderAddressDO().getAddress());
+                    orderDTO.setReceiverName(ordersDO.getOrderAddressDO().getReceiverName());
+                    orderDTO.setReceiverPhone(ordersDO.getOrderAddressDO().getPhone());
+                    ordersDOList.set(i,orderDTO);
+                }
+
+            }
+        }
+        return orderPage;
     }
 
     /**

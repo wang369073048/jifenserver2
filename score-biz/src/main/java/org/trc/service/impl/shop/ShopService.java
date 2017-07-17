@@ -1,5 +1,6 @@
 package org.trc.service.impl.shop;
 
+import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import com.txframework.core.jdbc.PageRequest;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,13 +31,10 @@ public class ShopService extends BaseService<ShopDO,Long> implements IShopServic
 
     @Override
     public Pagenation<ShopDO> selectListByPage(ShopDO query, Pagenation<ShopDO> pagenation) {
+        Page page = PageHelper.startPage(pagenation.getPageNo(), pagenation.getPageSize());
         List<ShopDO> list = shopMapper.select(query);
-        if (list != null){
-            PageHelper.startPage(pagenation.getPageNo(), pagenation.getPageSize());
-            pagenation.setTotalCount(list.size());
-            pagenation.setResult(list);
-            return pagenation;
-        }
+        pagenation.setTotalCount(page.getTotal());
+        pagenation.setResult(list);
         return pagenation;
     }
 

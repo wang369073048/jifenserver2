@@ -1,5 +1,6 @@
 package org.trc.service.impl.auth;
 
+import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -7,6 +8,7 @@ import org.springframework.stereotype.Service;
 import org.trc.domain.auth.Auth;
 import org.trc.domain.dto.AuthQueryDTO;
 
+import org.trc.domain.dto.GoodsRecommendDTO;
 import org.trc.mapper.auth.IAuthMapper;
 import org.trc.service.auth.IAuthService;
 import org.trc.service.impl.BaseService;
@@ -24,13 +26,10 @@ public class AuthService extends BaseService<Auth,Long> implements IAuthService{
     private IAuthMapper authMapper;
     @Override
     public Pagenation<Auth> queryAuthListByCondition(AuthQueryDTO query, Pagenation<Auth> pagenation) {
+        Page page = PageHelper.startPage(pagenation.getPageNo(), pagenation.getPageSize());
         List<Auth> list = authMapper.queryAuthListByCondition(query);
-        if (list != null){
-            PageHelper.startPage(pagenation.getPageNo(), pagenation.getPageSize());
-            pagenation.setTotalCount(list.size());
-            pagenation.setResult(list);
-            return pagenation;
-        }
+        pagenation.setTotalCount(page.getTotal());
+        pagenation.setResult(list);
         return pagenation;
     }
 }

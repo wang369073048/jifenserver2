@@ -12,148 +12,148 @@ import java.util.Date;
  */
 public class OrdersDO implements Serializable{
     @Transient
-    private OrderAddressDO orderAddressDO;
+    public OrderAddressDO orderAddressDO;
     @Transient
-    private LogisticsDO logisticsDO;
+    public LogisticsDO logisticsDO;
 
     /**
      * 主键ID
      */
-    private Long id;
+    public Long id;
 
     /**
      * 订单编号
      */
-    private String orderNum;
+    public String orderNum;
 
     /**
      * 店铺id
      */
-    private Long shopId;
+    public Long shopId;
 
     /**
      * 非持久化属性，店铺名称
      */
-    private String shopName;
+    public String shopName;
 
     /**
      * 商品Id
      */
-    private Long goodsId;
+    public Long goodsId;
 
     /**
      * 商品条码
      */
-    private String barcode;
+    public String barcode;
 
     /**
      * 商品货号
      */
-    private String goodsNo;
+    public String goodsNo;
 
     /**
      * 商品名称
      */
-    private String goodsName;
+    public String goodsName;
     /**
      * 商品version
      */
-    private Integer goodsVersion;
+    public Integer goodsVersion;
 
     /**
      *
      */
-    private Integer goodsCount;
+    public Integer goodsCount;
 
     /**
      *
      */
-    private String minImg;
+    public String minImg;
 
     /**
      *
      */
-    private String userId;
+    public String userId;
 
     /**
      *
      */
-    private String username;
+    public String username;
 
     /**
      * 1未发货(已兑换);2已发货;3已完成(已收货);4已取消
      */
-    private Integer orderState;
+    public Integer orderState;
 
     /**
      * 1实物订单;2虚拟订单
      */
-    private Integer orderType;
+    public Integer orderType;
 
     /**
      * 1-积分兑换；2-积分抽奖
      */
-    private Integer source;
+    public Integer source;
 
     /**
      * 单价
      */
-    private Integer price;
+    public Integer price;
 
     /**
      * 实际付款价格
      */
-    private Integer payment;
+    public Integer payment;
 
     /**
      * 物流费用
      */
-    private Integer freight;
+    public Integer freight;
 
     /**
      *
      */
-    private Integer versionLock;
+    public Integer versionLock;
 
     /**
      * 0 正常 ;1 已删除
      */
-    private boolean isDeleted;
+    public boolean isDeleted;
 
     /**
      * 发货时间
      */
-    private Date deliveryTime;
+    public Date deliveryTime;
 
     /**
      * 确认收货时间
      */
-    private Date confirmTime;
+    public Date confirmTime;
 
     /**
      * 创建时间
      */
-    private Date createTime;
+    public Date createTime;
 
     /**
      * 修改时间
      */
-    private Date updateTime;
+    public Date updateTime;
 
     /**
      *  操作时间最小值 非持久化属性
      */
-    private Date operateTimeMin;
+    public Date operateTimeMin;
 
     /**
      *  操作时间最大值 非持久化属性
      */
-    private Date operateTimeMax;
+    public Date operateTimeMax;
 
     /**
      * 卡券编码，tab键分隔，临时属性
      */
-    private String couponCode;
+    public String couponCode;
 
     public Long getId() {
         return id;
@@ -331,11 +331,11 @@ public class OrdersDO implements Serializable{
         this.versionLock = versionLock;
     }
 
-    public boolean isDeleted() {
+    public boolean getIsDeleted() {
         return isDeleted;
     }
 
-    public void setDeleted(boolean deleted) {
+    public void setIsDeleted(boolean deleted) {
         isDeleted = deleted;
     }
 

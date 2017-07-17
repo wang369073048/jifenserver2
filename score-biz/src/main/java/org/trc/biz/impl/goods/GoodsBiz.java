@@ -129,7 +129,17 @@ public class GoodsBiz implements IGoodsBiz{
 
     @Override
     public Pagenation<GoodsDO> queryGoodsDOListForPage(GoodsDO goodsDO, Pagenation<GoodsDO> page) {
-        return null;
+        try {
+            Assert.notNull(page, "分页参数不能为空");
+            Assert.notNull(goodsDO, "传入参数不能为空");
+            return goodsService.selectListByParams(goodsDO, page);
+        } catch (IllegalArgumentException e) {
+            logger.error("多条件查询GoodsDO校验参数异常!",e);
+            throw new GoodsException(ExceptionEnum.GOODS_QUERY_EXCEPTION,e.getMessage());
+        } catch (Exception e) {
+            logger.error("多条件查询GoodsDO信息异常!", e);
+            throw new GoodsException(ExceptionEnum.GOODS_QUERY_EXCEPTION,"多条件查询GoodsDO信息异常!");
+        }
     }
 
     @Override

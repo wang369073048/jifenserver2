@@ -1,5 +1,6 @@
 package org.trc.mapper.order;
 
+import org.trc.domain.dto.SettlementQuery;
 import org.trc.domain.order.OrdersDO;
 import org.trc.util.BaseMapper;
 import org.trc.util.Pagenation;
@@ -21,4 +22,12 @@ public interface IOrderMapper extends BaseMapper<OrdersDO>{
      * @return List<OrdersDO>
      */
     List<OrdersDO> selectListByParams(OrdersDO ordersDO, Pagenation<OrdersDO> pageRequest);
+
+    /**
+     * 多条件查询表信息(分页)
+     * @param settlementQuery SettlementQuery
+     * @param pageRequest PageRequest<OrdersDO>
+     * @return List<OrdersDO>
+     */
+    List<OrdersDO> selectOrdersByParams(SettlementQuery settlementQuery, Pagenation<OrdersDO> pageRequest);
 }

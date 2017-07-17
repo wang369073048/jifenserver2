@@ -1,5 +1,6 @@
 package org.trc.service.impl.order;
 
+import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import org.springframework.stereotype.Service;
 import org.trc.domain.dto.ExportOrderDTO;
@@ -31,19 +32,20 @@ public class OrderService extends BaseService<OrdersDO,Long> implements IOrderSe
 
     @Override
     public Pagenation<OrdersDO> selectListByParams(OrdersDO ordersDO, Pagenation<OrdersDO> pagenation) {
+        Page page = PageHelper.startPage(pagenation.getPageNo(), pagenation.getPageSize());
         List<OrdersDO> list = orderMapper.selectListByParams(ordersDO,pagenation);
-        if (list != null){
-            PageHelper.startPage(pagenation.getPageNo(), pagenation.getPageSize());
-            pagenation.setTotalCount(list.size());
-            pagenation.setResult(list);
-            return pagenation;
-        }
+        pagenation.setTotalCount(page.getTotal());
+        pagenation.setResult(list);
         return pagenation;
     }
 
     @Override
-    public List<OrdersDO> selectOrdersByParams(SettlementQuery settlementQuery, Pagenation<OrdersDO> pageRequest) {
-        return null;
+    public Pagenation<OrdersDO> selectOrdersByParams(SettlementQuery settlementQuery, Pagenation<OrdersDO> pagenation) {
+        Page page = PageHelper.startPage(pagenation.getPageNo(), pagenation.getPageSize());
+        List<OrdersDO> list = orderMapper.selectOrdersByParams(settlementQuery,pagenation);
+        pagenation.setTotalCount(page.getTotal());
+        pagenation.setResult(list);
+        return pagenation;
     }
 
     @Override

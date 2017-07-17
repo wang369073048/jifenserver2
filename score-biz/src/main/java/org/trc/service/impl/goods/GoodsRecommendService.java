@@ -1,11 +1,13 @@
 package org.trc.service.impl.goods;
 
+import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import com.txframework.core.jdbc.PageRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.trc.domain.goods.GoodsRecommendDO;
 import org.trc.domain.dto.GoodsRecommendDTO;
+import org.trc.domain.shop.ShopDO;
 import org.trc.mapper.goods.IGoodsRecommendMapper;
 import org.trc.service.goods.IGoodsRecommendService;
 import org.trc.service.impl.BaseService;
@@ -41,13 +43,10 @@ public class GoodsRecommendService extends BaseService<GoodsRecommendDO,Long> im
 
     @Override
     public Pagenation<GoodsRecommendDTO> selectGoodsRecommendsByPage(GoodsRecommendDTO query, Pagenation<GoodsRecommendDTO> pagenation) {
+        Page page = PageHelper.startPage(pagenation.getPageNo(), pagenation.getPageSize());
         List<GoodsRecommendDTO> list = goodsRecommendMapper.selectGoodsRecommendsByPage(query);
-        if (list != null){
-            PageHelper.startPage(pagenation.getPageNo(), pagenation.getPageSize());
-            pagenation.setTotalCount(list.size());
-            pagenation.setResult(list);
-            return pagenation;
-        }
+        pagenation.setTotalCount(page.getTotal());
+        pagenation.setResult(list);
         return pagenation;
     }
 

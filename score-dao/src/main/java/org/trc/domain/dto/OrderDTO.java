@@ -1,68 +1,99 @@
 package org.trc.domain.dto;
 
-import java.io.Serializable;
+import org.trc.domain.order.OrdersDO;
+
 
 /**
  * author: hzwzhen
  * JDK-version:  JDK1.8
  * since Date： 2017/7/3
  */
-public class OrderDTO implements Serializable{
+public class OrderDTO extends OrdersDO{
 
     /**
      * 商品id
      */
-    private Long goodsId;
+    public Long goodsId;
 
     /**
      *  用户id
      */
-    private String userId;
+    public String userId;
 
     /**
      *  商家userId
      */
-    private String sellerUserId;
+    public String sellerUserId;
 
     /**
      * 用户姓名
      */
-    private String username;
+    public String username;
 
     /**
      * 商家姓名
      */
-    private String sellerUsername;
+    public String sellerUsername;
     
     /**
      * 用户头像
      */
-    private String avatar;
+    public String avatar;
 
     /**
      * 商品数量
      */
-    private Integer quantity;
+    public Integer quantity;
 
     /**
      * 单价
      */
-    private Integer price;
+    public Integer price;
 
     /**
      * 实际付款价格
      */
-    private Integer payment;
+    public Integer payment;
 
     /**
      * 1未发货(已兑换);2已发货;3已完成(已收货);4已取消
      */
-    private Integer orderState;
+    public Integer orderState;
 
     /**
      *  收货地址Id
      */
-    private Long addressId;
+    public Long addressId;
+
+    public String address;
+
+    public String receiverName;
+
+    public String receiverPhone;
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
+
+    public String getReceiverName() {
+        return receiverName;
+    }
+
+    public void setReceiverName(String receiverName) {
+        this.receiverName = receiverName;
+    }
+
+    public String getReceiverPhone() {
+        return receiverPhone;
+    }
+
+    public void setReceiverPhone(String receiverPhone) {
+        this.receiverPhone = receiverPhone;
+    }
 
     public Long getGoodsId() {
         return goodsId;

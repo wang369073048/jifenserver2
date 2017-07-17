@@ -67,4 +67,37 @@
         order by createTime desc
     </select>
 
+    <!--多条件查询表信息(分页) -->
+    <select id="selectOrdersByParams" parameterType="org.trc.domain.dto.SettlementQuery" resultType="org.trc.domain.order.OrdersDO">
+        SELECT <include refid="allSelectionColumn"/>
+        FROM orders
+        <where>
+            <if test="shopId != null">
+                and shopId = #{shopId}
+            </if>
+            <if test="userId != null">
+                and userId = #{userId}
+            </if>
+            <if test="orderStates != null and orderStates.size() > 0">
+                and orderState in
+                <foreach item="item" index="index" collection="orderStates" open="(" separator="," close=")">
+                    #{orderStates[${index}]}
+                </foreach>
+            </if>
+            <if test="orderNum != null and orderNum != ''">
+                and orderNum = #{orderNum}
+            </if>
+            <if test="goodsName != null and goodsName != ''">
+                and goodsName like concat(#{goodsName},'%')
+            </if>
+            <if test="startTime != null">
+                AND createTime >= #{startTime}
+            </if>
+            <if test="endTime != null">
+                AND <![CDATA[createTime < #{endTime}]]>
+            </if>
+            and source = 1
+        </where>
+        order by shopId asc, createTime desc
+    </select>
 </mapper>

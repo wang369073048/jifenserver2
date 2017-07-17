@@ -36,4 +36,11 @@ public interface IGoodsMapper extends BaseMapper<GoodsDO> {
      * @return
      */
     int isOwnerOf(Map<String, Object> params);
+
+    /**
+     * 多条件查询表信息(分页)
+     * @param goodsDO GoodsDO
+     * @return List<GoodsDO>
+     */
+    List<GoodsDO> selectListByParams(GoodsDO goodsDO);
 }
