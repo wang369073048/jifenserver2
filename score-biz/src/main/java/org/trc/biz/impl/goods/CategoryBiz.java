@@ -25,9 +25,19 @@ public class CategoryBiz implements ICategoryBiz {
     @Autowired
     private ICategoryService categoryService;
 
-    @Override //TODO 分页查询
+    @Override
     public Pagenation<CategoryDO> queryCategoryDOListForPage(CategoryDO categoryDO, Pagenation<CategoryDO> pageRequest) {
-        return null;
+        try {
+            Assert.notNull(pageRequest, "分页参数不能为空");
+            Assert.notNull(categoryDO, "传入参数不能为空");
+            return categoryService.selectListByParams(categoryDO, pageRequest);
+        } catch (IllegalArgumentException e) {
+            logger.error("多条件查询CategoryDO校验参数异常!", e);
+            throw new CategoryException(ExceptionEnum.CATEGORY_QUERY_EXCEPTION, "多条件查询CategoryDO校验参数异常!");
+        } catch (Exception e) {
+            logger.error("多条件查询CategoryDO信息异常!", e);
+            throw new CategoryException(ExceptionEnum.CATEGORY_QUERY_EXCEPTION, "多条件查询CategoryDO信息异常!");
+        }
     }
 
     @Override
