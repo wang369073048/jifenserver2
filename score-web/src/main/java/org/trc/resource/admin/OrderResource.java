@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.StringUtils;
 import org.trc.biz.order.INewOrderBiz;
 import org.trc.constants.ScoreAdminConstants;
+import org.trc.domain.dto.OrderDTO;
 import org.trc.domain.order.LogisticsDO;
 import org.trc.domain.order.OrdersDO;
 import org.trc.enums.ExceptionEnum;
@@ -56,7 +57,7 @@ public class OrderResource {
                                     @QueryParam("phone") String phone,
                                     @QueryParam("orderState") Integer orderState,
                                     @BeanParam Pagenation<OrdersDO> page) {
-        OrdersDO order = new OrdersDO();
+        OrderDTO order = new OrderDTO();
         order.setOrderNum(orderNum);
         order.setUsername(phone);
         if (org.apache.commons.lang3.StringUtils.isNotBlank(phone)) {

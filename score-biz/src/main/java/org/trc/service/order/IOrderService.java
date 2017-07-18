@@ -3,6 +3,7 @@ package org.trc.service.order;
 import com.txframework.core.jdbc.PageRequest;
 import org.trc.IBaseService;
 import org.trc.domain.dto.ExportOrderDTO;
+import org.trc.domain.dto.OrderDTO;
 import org.trc.domain.dto.SettlementQuery;
 import org.trc.domain.order.OrdersDO;
 import org.trc.domain.order.SettlementDO;
@@ -31,7 +32,7 @@ public interface IOrderService extends IBaseService<OrdersDO,Long>{
      * @param pageRequest PageRequest<OrdersDO>
      * @return List<OrdersDO>
      */
-    Pagenation<OrdersDO> selectListByParams(OrdersDO ordersDO, Pagenation<OrdersDO> pageRequest);
+    Pagenation<OrdersDO> selectListByParams(OrderDTO ordersDO, Pagenation<OrdersDO> pageRequest);
 
     /**
      * 多条件查询表信息(分页)

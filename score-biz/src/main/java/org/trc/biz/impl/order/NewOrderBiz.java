@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 import org.trc.biz.goods.ICouponsBiz;
+import org.trc.biz.order.IAreaBiz;
 import org.trc.biz.order.INewOrderBiz;
 import org.trc.constants.OrderStatus;
 import org.trc.constants.OrderType;
@@ -26,6 +27,7 @@ import org.trc.enums.ExceptionEnum;
 import org.trc.exception.GoodsException;
 import org.trc.exception.OrderException;
 import org.trc.service.order.ILogisticsService;
+import org.trc.service.order.IOrderAddressService;
 import org.trc.service.order.IOrderLocusService;
 import org.trc.service.order.IOrderService;
 import org.trc.service.shop.IShopService;
@@ -60,9 +62,23 @@ public class NewOrderBiz implements INewOrderBiz {
     private IOrderLocusService orderLocusService;
     @Resource
     private LogisticTrace logisticTrace;
+    @Autowired
+    private IOrderAddressService orderAddressService;
+    @Autowired
+    private IAreaBiz areaBiz;
     @Override
     public OrderAddressDO getOrderAddressByOrderId(Long orderId) {
-        return null;
+        OrderAddressDO orderAddress = new OrderAddressDO();
+        orderAddress.setOrderId(orderId);
+        OrderAddressDO orderAddressDO = orderAddressService.selectOne(orderAddress);
+        if(null!=orderAddressDO){
+            orderAddressDO.setProvince(areaBiz.getAreaByCode(orderAddressDO.getProvinceCode()).getProvince());
+            orderAddressDO.setCity(areaBiz.getAreaByCode(orderAddressDO.getCityCode()).getCity());
+            if(StringUtils.isNotBlank(orderAddressDO.getAreaCode())){
+                orderAddressDO.setArea(areaBiz.getAreaByCode(orderAddressDO.getAreaCode()).getDistrict());
+            }
+        }
+        return orderAddressDO;
     }
 
     @Override
@@ -88,7 +104,7 @@ public class NewOrderBiz implements INewOrderBiz {
      * @return
      */
     @Override
-    public Pagenation<OrdersDO> queryOrdersDOListForPage(OrdersDO ordersDO, Pagenation<OrdersDO> page) {
+    public Pagenation<OrdersDO> queryOrdersDOListForPage(OrderDTO ordersDO, Pagenation<OrdersDO> page) {
         try {
             Assert.notNull(page, "分页参数不能为空");
             Assert.notNull(ordersDO, "传入参数不能为空");

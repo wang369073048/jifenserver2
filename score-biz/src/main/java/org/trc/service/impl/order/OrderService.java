@@ -2,8 +2,10 @@ package org.trc.service.impl.order;
 
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.trc.domain.dto.ExportOrderDTO;
+import org.trc.domain.dto.OrderDTO;
 import org.trc.domain.dto.SettlementQuery;
 import org.trc.domain.order.OrdersDO;
 import org.trc.domain.order.SettlementDO;
@@ -12,6 +14,7 @@ import org.trc.service.impl.BaseService;
 import org.trc.service.order.IOrderService;
 import org.trc.util.Pagenation;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -24,6 +27,7 @@ import java.util.Map;
 @Service(value = "orderService")
 public class OrderService extends BaseService<OrdersDO,Long> implements IOrderService{
 
+    @Autowired
     private IOrderMapper orderMapper;
     @Override
     public OrdersDO selectByParams(OrdersDO ordersDO) {
@@ -31,9 +35,9 @@ public class OrderService extends BaseService<OrdersDO,Long> implements IOrderSe
     }
 
     @Override
-    public Pagenation<OrdersDO> selectListByParams(OrdersDO ordersDO, Pagenation<OrdersDO> pagenation) {
+    public Pagenation<OrdersDO> selectListByParams(OrderDTO ordersDO, Pagenation<OrdersDO> pagenation) {
         Page page = PageHelper.startPage(pagenation.getPageNo(), pagenation.getPageSize());
-        List<OrdersDO> list = orderMapper.selectListByParams(ordersDO,pagenation);
+        List<OrdersDO> list = orderMapper.selectListByParams(ordersDO);
         pagenation.setTotalCount(page.getTotal());
         pagenation.setResult(list);
         return pagenation;

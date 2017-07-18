@@ -1,6 +1,7 @@
 package org.trc.service.impl.order;
 
 import com.txframework.core.jdbc.PageRequest;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.trc.domain.order.LogisticsCodeDO;
 import org.trc.domain.order.LogisticsDO;
@@ -18,7 +19,7 @@ import java.util.List;
  */
 @Service(value = "logisticsService")
 public class LogisticsService extends BaseService<LogisticsDO,Long> implements ILogisticsService{
-
+    @Autowired
     private ILogisticsMapper logisticsMapper;
     @Override
     public LogisticsDO selectByParams(LogisticsDO logisticsDO) {

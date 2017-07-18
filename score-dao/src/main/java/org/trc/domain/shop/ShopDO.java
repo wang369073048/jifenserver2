@@ -1,5 +1,6 @@
 package org.trc.domain.shop;
 
+import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Date;
 
@@ -8,18 +9,22 @@ import java.util.Date;
  * JDK-version:  JDK1.8
  * since Date： 2017/7/3
  */
+@Table(name = "shop")
 public class ShopDO implements Serializable{
 
 	private static final long serialVersionUID = 1L;
 
-	/**
-    * 主键ID
-    */
+    /**
+     * 主键ID
+     */
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
 	/**
 	 * 预警电话
 	 */
+	@Column(name = "warnPhone")
 	private String warnPhone;
 	
     /**
@@ -30,16 +35,19 @@ public class ShopDO implements Serializable{
 	/**
      *  所有者userId
      */
+    @Column(name = "userId")
     private String userId;
 
 	/**
     * 店铺名称
     */
+    @Column(name = "shopName")
 	private String shopName;
 
 	/**
     * 渠道编码
     */
+    @Column(name = "channelCode")
 	private String channelCode;
 
     /**
@@ -51,6 +59,7 @@ public class ShopDO implements Serializable{
 	/**
     * 客服电话
     */
+    @Column(name = "servicePhone")
 	private String servicePhone;
 
 	/**
@@ -61,16 +70,19 @@ public class ShopDO implements Serializable{
 	/**
     * 0 正常 ;1 已删除
     */
+    @Column(name = "isDeleted")
 	private boolean isDeleted;
 
 	/**
     * 创建时间
     */
+    @Column(name = "createTime")
 	private Date createTime;
 
 	/**
     * 修改时间
     */
+    @Column(name = "updateTime")
 	private Date updateTime;
 
     public Long getId() {

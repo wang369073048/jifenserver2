@@ -1,5 +1,6 @@
 package org.trc.domain.order;
 
+import javax.persistence.Table;
 import java.io.Serializable;
 
 /**
@@ -7,6 +8,7 @@ import java.io.Serializable;
  * JDK-version:  JDK1.8
  * since Date： 2017/7/3
  */
+@Table(name = "orderAddressDO")
 public class OrderAddressDO implements Serializable{
 
 	/**

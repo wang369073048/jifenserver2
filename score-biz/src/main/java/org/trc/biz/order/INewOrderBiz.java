@@ -35,7 +35,7 @@ public interface INewOrderBiz {
      * @param page
      * @return PageRequest<OrdersDO>
      */
-    Pagenation<OrdersDO> queryOrdersDOListForPage(OrdersDO ordersDO, Pagenation<OrdersDO> page);
+    Pagenation<OrdersDO> queryOrdersDOListForPage(OrderDTO ordersDO, Pagenation<OrdersDO> page);
 
     /**
      * 查询订单

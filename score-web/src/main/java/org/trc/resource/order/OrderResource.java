@@ -18,6 +18,7 @@ import org.trc.biz.shop.IShopBiz;
 import org.trc.constants.ScoreAdminConstants;
 import org.trc.domain.auth.Auth;
 import org.trc.domain.dto.OrderDTO;
+import org.trc.domain.dto.OrderQuery;
 import org.trc.domain.dto.SettlementQuery;
 import org.trc.domain.order.LogisticsDO;
 import org.trc.domain.order.OrdersDO;
@@ -192,7 +193,7 @@ public class OrderResource {
         String userId = (String) requestContext.getProperty("userId");
         //取该用户的权限
         ManagerDO manager = shopBiz.getManagerByUserId(userId);
-        OrdersDO order = new OrdersDO();
+        OrderDTO order = new OrderDTO();
         order.setOrderNum(orderNum);
         order.setUsername(phone);
         if (StringUtils.isNotBlank(phone)) {
@@ -308,12 +309,12 @@ public class OrderResource {
             for (int i= 0; i < ordersDOList.size();i++) {
                 OrdersDO ordersDO = ordersDOList.get(i);
                 if(ordersDO.getOrderAddressDO()!=null) {
-                    OrderDTO orderDTO = new OrderDTO();
-                    FatherToChildUtils.fatherToChild(ordersDO,orderDTO);
-                    orderDTO.setAddress(ordersDO.getOrderAddressDO().getAddress());
-                    orderDTO.setReceiverName(ordersDO.getOrderAddressDO().getReceiverName());
-                    orderDTO.setReceiverPhone(ordersDO.getOrderAddressDO().getPhone());
-                    ordersDOList.set(i,orderDTO);
+                    OrderQuery orderQuery = new OrderQuery();
+                    FatherToChildUtils.fatherToChild(ordersDO,orderQuery);
+                    orderQuery.setAddress(ordersDO.getOrderAddressDO().getAddress());
+                    orderQuery.setReceiverName(ordersDO.getOrderAddressDO().getReceiverName());
+                    orderQuery.setReceiverPhone(ordersDO.getOrderAddressDO().getPhone());
+                    ordersDOList.set(i,orderQuery);
                 }
 
             }

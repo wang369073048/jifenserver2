@@ -1,5 +1,7 @@
 package org.trc.domain.order;
 
+import org.apache.ibatis.annotations.Param;
+
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Date;
@@ -22,162 +24,162 @@ public class OrdersDO implements Serializable{
      */
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    public Long id;
+    private Long id;
 
     /**
      * 订单编号
      */
     @Column(name = "orderNum")
-    public String orderNum;
+    private String orderNum;
 
     /**
      * 店铺id
      */
     @Column(name = "shopId")
-    public Long shopId;
+    private Long shopId;
 
     /**
      * 非持久化属性，店铺名称
      */
     @Column(name = "shopName")
-    public String shopName;
+    private String shopName;
 
     /**
      * 商品Id
      */
     @Column(name = "goodsId")
-    public Long goodsId;
+    private Long goodsId;
 
     /**
      * 商品条码
      */
-    public String barcode;
+    private String barcode;
 
     /**
      * 商品货号
      */
     @Column(name = "goodsNo")
-    public String goodsNo;
+    private String goodsNo;
 
     /**
      * 商品名称
      */
     @Column(name = "goodsName")
-    public String goodsName;
+    private String goodsName;
     /**
      * 商品version
      */
     @Column(name = "goodsVersion")
-    public Integer goodsVersion;
+    private Integer goodsVersion;
 
     /**
      *
      */
     @Column(name = "goodsCount")
-    public Integer goodsCount;
+    private Integer goodsCount;
 
     /**
      *
      */
     @Column(name = "minImg")
-    public String minImg;
+    private String minImg;
 
     /**
      *
      */
     @Column(name = "userId")
-    public String userId;
+    private String userId;
 
     /**
      *
      */
-    public String username;
+    private String username;
 
     /**
      * 1未发货(已兑换);2已发货;3已完成(已收货);4已取消
      */
     @Column(name = "orderState")
-    public Integer orderState;
+    private Integer orderState;
 
     /**
      * 1实物订单;2虚拟订单
      */
     @Column(name = "orderType")
-    public Integer orderType;
+    private Integer orderType;
 
     /**
      * 1-积分兑换；2-积分抽奖
      */
-    public Integer source;
+    private Integer source;
 
     /**
      * 单价
      */
-    public Integer price;
+    private Integer price;
 
     /**
      * 实际付款价格
      */
-    public Integer payment;
+    private Integer payment;
 
     /**
      * 物流费用
      */
-    public Integer freight;
+    private Integer freight;
 
     /**
      *
      */
     @Column(name = "versionLock")
-    public Integer versionLock;
+    private Integer versionLock;
 
     /**
      * 0 正常 ;1 已删除
      */
     @Column(name = "isDeleted")
-    public boolean isDeleted;
+    private boolean isDeleted;
 
     /**
      * 发货时间
      */
     @Column(name = "deliveryTime")
-    public Date deliveryTime;
+    private Date deliveryTime;
 
     /**
      * 确认收货时间
      */
     @Column(name = "confirmTime")
-    public Date confirmTime;
+    private Date confirmTime;
 
     /**
      * 创建时间
      */
     @Column(name = "createTime")
-    public Date createTime;
+    private Date createTime;
 
     /**
      * 修改时间
      */
     @Column(name = "updateTime")
-    public Date updateTime;
+    private Date updateTime;
 
     /**
      *  操作时间最小值 非持久化属性
      */
     @Transient
-    public Date operateTimeMin;
+    private Date operateTimeMin;
 
     /**
      *  操作时间最大值 非持久化属性
      */
     @Transient
-    public Date operateTimeMax;
+    private Date operateTimeMax;
 
     /**
      * 卡券编码，tab键分隔，临时属性
      */
     @Transient
-    public String couponCode;
+    private String couponCode;
 
     public Long getId() {
         return id;
