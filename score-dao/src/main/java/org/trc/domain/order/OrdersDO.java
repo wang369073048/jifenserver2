@@ -1,6 +1,6 @@
 package org.trc.domain.order;
 
-import javax.persistence.Transient;
+import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Date;
 
@@ -10,6 +10,7 @@ import java.util.Date;
  * comments:
  * since Date： 2017/7/3
  */
+@Table(name = "orders")
 public class OrdersDO implements Serializable{
     @Transient
     public OrderAddressDO orderAddressDO;
@@ -19,26 +20,32 @@ public class OrdersDO implements Serializable{
     /**
      * 主键ID
      */
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     public Long id;
 
     /**
      * 订单编号
      */
+    @Column(name = "orderNum")
     public String orderNum;
 
     /**
      * 店铺id
      */
+    @Column(name = "shopId")
     public Long shopId;
 
     /**
      * 非持久化属性，店铺名称
      */
+    @Column(name = "shopName")
     public String shopName;
 
     /**
      * 商品Id
      */
+    @Column(name = "goodsId")
     public Long goodsId;
 
     /**
@@ -49,30 +56,36 @@ public class OrdersDO implements Serializable{
     /**
      * 商品货号
      */
+    @Column(name = "goodsNo")
     public String goodsNo;
 
     /**
      * 商品名称
      */
+    @Column(name = "goodsName")
     public String goodsName;
     /**
      * 商品version
      */
+    @Column(name = "goodsVersion")
     public Integer goodsVersion;
 
     /**
      *
      */
+    @Column(name = "goodsCount")
     public Integer goodsCount;
 
     /**
      *
      */
+    @Column(name = "minImg")
     public String minImg;
 
     /**
      *
      */
+    @Column(name = "userId")
     public String userId;
 
     /**
@@ -83,11 +96,13 @@ public class OrdersDO implements Serializable{
     /**
      * 1未发货(已兑换);2已发货;3已完成(已收货);4已取消
      */
+    @Column(name = "orderState")
     public Integer orderState;
 
     /**
      * 1实物订单;2虚拟订单
      */
+    @Column(name = "orderType")
     public Integer orderType;
 
     /**
@@ -113,46 +128,55 @@ public class OrdersDO implements Serializable{
     /**
      *
      */
+    @Column(name = "versionLock")
     public Integer versionLock;
 
     /**
      * 0 正常 ;1 已删除
      */
+    @Column(name = "isDeleted")
     public boolean isDeleted;
 
     /**
      * 发货时间
      */
+    @Column(name = "deliveryTime")
     public Date deliveryTime;
 
     /**
      * 确认收货时间
      */
+    @Column(name = "confirmTime")
     public Date confirmTime;
 
     /**
      * 创建时间
      */
+    @Column(name = "createTime")
     public Date createTime;
 
     /**
      * 修改时间
      */
+    @Column(name = "updateTime")
     public Date updateTime;
 
     /**
      *  操作时间最小值 非持久化属性
      */
+    @Transient
     public Date operateTimeMin;
 
     /**
      *  操作时间最大值 非持久化属性
      */
+    @Transient
     public Date operateTimeMax;
 
     /**
      * 卡券编码，tab键分隔，临时属性
      */
+    @Transient
     public String couponCode;
 
     public Long getId() {
