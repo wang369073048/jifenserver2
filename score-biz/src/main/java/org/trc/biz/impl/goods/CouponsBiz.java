@@ -123,7 +123,7 @@ public class CouponsBiz implements ICouponsBiz{
         } catch (CardCouponException e) {
             throw e;
         }catch (Exception e) {
-            logger.error("新增卡券异常!请求参数为 :" + cardCoupons);
+            logger.error("新增卡券异常!请求参数为 :" + cardCoupons + ",异常信息为" + e.getMessage());
             throw new CardCouponException(ExceptionEnum.COUPON_SAVE_EXCEPTION, "新增卡券异常!");
         }
 
@@ -157,6 +157,7 @@ public class CouponsBiz implements ICouponsBiz{
                 Date endDate = DateUtils.parseDate(queryModel.getEndDate());
                 criteria.andLessThan("createTime", DateUtils.addDays(endDate, 1));
             }
+            criteria.andEqualTo("isDeleted",0);
             example.orderBy("createTime").desc();
             page = couponsService.pagination(example,page,queryModel);
             return page;

@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="org.trc.mapper.order.ISettlementMapper" >
+
+    <!-- 所有查询字段 -->
+    <sql id="allSelectionColumn">
+        id,
+        shopId,
+        balance,
+        previousBalance,
+        accountDay,
+        billNum,
+        shopName,
+        quantity,
+        totalAmount,
+        totalFreight,
+        startTime,
+        endTime,
+        settlementTime,
+        settlementState,
+        createTime
+    </sql>
+
+    <!--多条件查询表信息(分页) -->
+    <select id="selectListByParams" parameterType="org.trc.domain.order.SettlementDO" resultType="org.trc.domain.order.SettlementDO">
+        SELECT <include refid="allSelectionColumn"/> FROM settlement
+        <where>
+            <if test="shopId != null ">
+                shopId = #{shopId}
+            </if>
+        </where>
+        order by createTime desc
+    </select>
+
+</mapper>

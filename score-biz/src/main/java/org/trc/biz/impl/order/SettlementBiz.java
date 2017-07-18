@@ -1,7 +1,9 @@
 package org.trc.biz.impl.order;
 
+import org.springframework.stereotype.Service;
 import org.trc.biz.order.ISettlementBiz;
 import org.trc.domain.order.SettlementDO;
+import org.trc.service.order.ISettlementService;
 import org.trc.util.Pagenation;
 
 /**
@@ -10,7 +12,11 @@ import org.trc.util.Pagenation;
  * comments:
  * since Date： 2017/7/5
  */
+@Service("settlementBiz")
 public class SettlementBiz implements ISettlementBiz{
+
+    private ISettlementService settlementService;
+
     @Override
     public SettlementDO getLastSettlement(Long shopId) {
         return null;
@@ -23,7 +29,7 @@ public class SettlementBiz implements ISettlementBiz{
 
     @Override
     public Pagenation<SettlementDO> queryListByParams(SettlementDO settlementDO, Pagenation<SettlementDO> pageRequest) {
-        return null;
+        return settlementService.selectListByParams(settlementDO,pageRequest);
     }
 
     @Override

@@ -54,7 +54,7 @@ public class GoodsBiz implements IGoodsBiz{
     @Autowired
     private IGoodsRecommendBiz goodsRecommendBiz;
 
-    @Autowired //TODO 注入失败
+    @Autowired
     private TrCouponOperation trCouponOperation;
 
     @Override

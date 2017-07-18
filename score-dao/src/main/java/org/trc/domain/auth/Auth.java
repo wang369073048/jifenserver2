@@ -2,15 +2,21 @@ package org.trc.domain.auth;
 
 import org.trc.domain.CommonDO;
 
-import javax.persistence.Column;
-import javax.persistence.Table;
+import javax.persistence.*;
+import java.io.Serializable;
+import java.util.Date;
 
 /**
  * Created by hzwzhen on 2017/6/14.
  */
 @Table(name = "score_auth")
-public class Auth extends CommonDO{
+public class Auth implements Serializable{
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    protected Long id; //主键
+    @Column(name = "shopId")
+    protected Long shopId; //业务方ID
     @Column(name = "channelCode")
     private String channelCode; //平台code
     @Column(name = "exchangeCurrency")
@@ -20,8 +26,36 @@ public class Auth extends CommonDO{
     private String phone; //用户账号
     @Column(name = "contactsUser")
     private String contactsUser; //用户姓名
+    @Column(name = "createTime")
+    protected Date createTime; //创建时间
     @Column(name = "isDeleted")
     private Integer isDeleted;
+
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public Long getShopId() {
+        return shopId;
+    }
+
+    public void setShopId(Long shopId) {
+        this.shopId = shopId;
+    }
+
+    public Date getCreateTime() {
+        return createTime;
+    }
+
+    public void setCreateTime(Date createTime) {
+        this.createTime = createTime;
+    }
+
     public String getChannelCode() {
         return channelCode;
     }

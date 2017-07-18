@@ -281,7 +281,6 @@ public class OrderResource {
         Auth auth = authBiz.getAuthByUserId(userId);
         SettlementDO settlementDO = new SettlementDO();
         settlementDO.setShopId(auth.getShopId());
-        //TODO settleemnt分页查询
         return settlementBiz.queryListByParams(settlementDO, page);
     }
 

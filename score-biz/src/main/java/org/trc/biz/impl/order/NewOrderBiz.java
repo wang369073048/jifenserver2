@@ -9,6 +9,7 @@ import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 import org.trc.biz.goods.ICouponsBiz;
@@ -41,6 +42,7 @@ import java.util.List;
  * comments:
  * since Date： 2017/7/3
  */
+@Service("newOrderBiz")
 public class NewOrderBiz implements INewOrderBiz {
     Logger logger = LoggerFactory.getLogger(NewOrderBiz.class);
 
@@ -56,7 +58,7 @@ public class NewOrderBiz implements INewOrderBiz {
     private ICouponsBiz couponsBiz;
     @Autowired
     private IOrderLocusService orderLocusService;
-    @Resource//TODO 注入
+    @Resource
     private LogisticTrace logisticTrace;
     @Override
     public OrderAddressDO getOrderAddressByOrderId(Long orderId) {
@@ -328,8 +330,38 @@ public class NewOrderBiz implements INewOrderBiz {
     }
 
     @Override
+    @Transactional(rollbackFor=Exception.class)//TODO
     public void returnGoods(String orderNum, String userId, String remark) {
-
+//        //查找对应的订单
+//        OrdersDO orders = new OrdersDO();
+//        orders.setOrderNum(orderNum);
+//        orders.setUserId(userId);
+//        OrdersDO originalOrder = orderService.selectByParams(orders);
+//        if(null == originalOrder){
+//            throw new OrderException(ExceptionEnum.ORDER_QUERY_EXCEPTION, "订单:"+orderNum+"不存在!");
+//        }else if(OrderStatus.RETURN_GOODS == originalOrder.getOrderState().intValue()){
+//            throw new OrderException(ExceptionEnum.ORDER_QUERY_EXCEPTION, "订单:"+orderNum+"已退回!");
+//        }/*else if(OrderStatus.TRANSACTION_SUCCESS == originalOrder.getOrderState().intValue() || OrderStatus.SYSTEM_CONFIRM_SUCCESS == originalOrder.getOrderState().intValue()){
+//            throw new OrderException(OrderException.OPERATION_NOT_VALID, "订单:"+orderNum+"已完结，不允许退回!");
+//        }*/else{
+//            //1、退积分
+//            Date time = Calendar.getInstance().getTime();
+//            scoreService.returnScore(orderNum, time);
+//            //2、更新订单状态，
+//            OrdersDO order = new OrdersDO();
+//            order.setId(originalOrder.getId());
+//            order.setOrderState(OrderStatus.RETURN_GOODS);
+//            ordersMapper.updateById(order);
+//            //3、更新退货时间，备注信息
+//            OrdersExtendDO ordersExtend = new OrdersExtendDO();
+//            ordersExtend.setOrderId(originalOrder.getId());
+//            ordersExtend.setOrderNum(originalOrder.getOrderNum());
+//            ordersExtend.setRemark(remark);
+//            ordersExtend.setReturnTime(time);
+//            ordersExtend.setCreateTime(time);
+//            ordersExtend.setUpdateTime(time);
+//            ordersExtendMapper.insert(ordersExtend);
+            //4、TODO 库存更新 待明确
     }
 
     @Override

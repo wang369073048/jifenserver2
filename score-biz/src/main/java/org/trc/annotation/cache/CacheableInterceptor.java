@@ -12,7 +12,6 @@ import java.lang.reflect.Method;
 /**
  * author: hzwzhen
  * JDK-version:  JDK1.8
- * comments:
  * since Date： 2017/6/30
  */
 @Component
@@ -51,6 +50,7 @@ public class CacheableInterceptor extends BaseInterceptor{
             //到达这一步证明参数正确，没有exception，应该放入缓存
             shouldSet = true;
         }catch(Exception e){
+            e.printStackTrace();
             //出exception了,继续即可,不需要处理
         }finally{
             //没有缓存执行结果

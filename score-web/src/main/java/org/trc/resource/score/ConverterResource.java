@@ -8,10 +8,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.trc.biz.auth.IAuthBiz;
 import org.trc.biz.score.IScoreConverterBiz;
+import org.trc.biz.shop.IShopBiz;
 import org.trc.constants.ScoreAdminConstants;
 import org.trc.constants.ScoreCst;
 import org.trc.domain.auth.Auth;
 import org.trc.domain.score.ScoreConverter;
+import org.trc.domain.shop.ShopDO;
 import org.trc.enums.ExceptionEnum;
 import org.trc.exception.ConverterException;
 import org.trc.util.AppResult;
@@ -40,13 +42,16 @@ public class ConverterResource {
     @Autowired
     private IScoreConverterBiz scoreConverterBiz;
 
+    private IShopBiz shopBiz;
+
     /**
      * 设置兑换规则
      *
      * @return
      */
     @POST
-    public AppResult setExchageRule(@NotNull @FormParam("amount") Integer amount,
+    public AppResult setExchageRule(@PathParam("shopId") Long shopId,
+                                    @NotNull @FormParam("amount") Integer amount,
                                     @NotNull @FormParam("score") Integer score,
                                     @NotEmpty @FormParam("direction") String direction,
                                     @FormParam("personEverydayInLimit") Long personEverydayInLimit,
@@ -57,13 +62,15 @@ public class ConverterResource {
         String userId = (String) requestContext.getProperty("userId");
         Auth auth = authBiz.getAuthByUserId(userId);
         ScoreConverter scoreConverter = new ScoreConverter();
-        //TODO 通过shopId查询channelCode
-        //String channel = ChannelUtil.getChannelByShopId(shopId);
-
+        ShopDO shopDO = shopBiz.getShopDOById(shopId);
         String channel = null;
-        if (StringUtils.isNotEmpty(channel)) {
-            scoreConverter.setChannelCode(channel);
+        if(shopDO != null) {
+            channel = shopDO.getChannelCode();
         }
+        if(StringUtils.isBlank(channel)){
+            throw new ConverterException(ExceptionEnum.PARAM_ERROR_ILLEGAL, "参数shopId不合法");
+        }
+        scoreConverter.setChannelCode(channel);
         if (amount <= 0 || score <= 0) {
             throw new ConverterException(ExceptionEnum.PARAM_ERROR_ILLEGAL, "参数不合法");
         }

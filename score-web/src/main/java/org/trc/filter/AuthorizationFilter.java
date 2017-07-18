@@ -52,6 +52,7 @@ public class AuthorizationFilter implements ContainerRequestFilter {
                         requestContext.setProperty("userId",userId);
                     }
                 } catch (AuthenticateException e) {
+                    log.error(e.getMessage());
                     //token失效需要用户重新登录
                     AppResult appResult = new AppResult(ResultEnum.FAILURE.getCode(), "用户未登录", Response.Status.FORBIDDEN.getStatusCode());
                     requestContext.abortWith(Response.status(Response.Status.FORBIDDEN).entity(appResult).type(MediaType.APPLICATION_JSON).encoding("UTF-8").build());

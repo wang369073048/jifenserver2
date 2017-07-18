@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSONObject;
 import org.hibernate.validator.constraints.NotBlank;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.trc.annotation.cache.Cacheable;
 import org.trc.biz.pagehome.IBannerBiz;
 import org.trc.constants.ScoreAdminConstants;
 import org.trc.domain.pagehome.Banner;
@@ -81,6 +82,7 @@ public class BannerResource{
      * @throws Exception
      */
     @GET
+    @Cacheable(isList = true,key = "#form.shopId+#page.pageNo+#page.pageSize")
     public Pagenation<Banner> bannerPage(@BeanParam BannerForm form,@BeanParam Pagenation<Banner> page){
         return bannerBiz.bannerPage(form,page);
     }
