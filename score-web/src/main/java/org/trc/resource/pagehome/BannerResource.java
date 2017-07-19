@@ -82,7 +82,7 @@ public class BannerResource{
      * @throws Exception
      */
     @GET
-    @Cacheable(isList = true,key = "#form.shopId+#page.pageNo+#page.pageSize")
+    //@Cacheable(isList = true,key = "#form.shopId+#page.pageNo+#page.pageSize")
     public Pagenation<Banner> bannerPage(@BeanParam BannerForm form,@BeanParam Pagenation<Banner> page){
         return bannerBiz.bannerPage(form,page);
     }

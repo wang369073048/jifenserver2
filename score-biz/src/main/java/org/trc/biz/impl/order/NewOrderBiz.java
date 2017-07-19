@@ -337,7 +337,25 @@ public class NewOrderBiz implements INewOrderBiz {
 
     @Override
     public List<ExportOrderDTO> queryOrderAndAddressForExport(SettlementQuery settlementQuery) {
-        return null;
+        List<ExportOrderDTO> result = orderService.queryOrderAndAddressForExport(settlementQuery);
+        if(result != null){
+            for(ExportOrderDTO exportOrderDTO : result){
+                OrderAddressDO orderAddress = new OrderAddressDO();
+                orderAddress.setOrderId(exportOrderDTO.getOrderId());
+                OrderAddressDO orderAddressDO = orderAddressService.selectOne(orderAddress);
+                if(null != orderAddressDO) {
+                    exportOrderDTO.setReceiverName(orderAddressDO.getReceiverName());
+                    exportOrderDTO.setPhone(orderAddressDO.getPhone());
+                    exportOrderDTO.setProvince(areaBiz.getAreaByCode(orderAddressDO.getProvinceCode()).getProvince());
+                    exportOrderDTO.setCity(areaBiz.getAreaByCode(orderAddressDO.getCityCode()).getCity());
+                    if(StringUtils.isNotBlank(orderAddressDO.getAreaCode())) {
+                        exportOrderDTO.setArea(areaBiz.getAreaByCode(orderAddressDO.getAreaCode()).getDistrict());
+                    }
+                    exportOrderDTO.setAddress(orderAddressDO.getAddress());
+                }
+            }
+        }
+        return result;
     }
 
     @Override

@@ -1,6 +1,7 @@
 package org.trc.mapper.order;
 
 import org.apache.ibatis.annotations.Param;
+import org.trc.domain.dto.ExportOrderDTO;
 import org.trc.domain.dto.OrderDTO;
 import org.trc.domain.dto.SettlementQuery;
 import org.trc.domain.order.OrdersDO;
@@ -31,4 +32,6 @@ public interface IOrderMapper extends BaseMapper<OrdersDO>{
      * @return List<OrdersDO>
      */
     List<OrdersDO> selectOrdersByParams(SettlementQuery settlementQuery, Pagenation<OrdersDO> pageRequest);
+
+    List<ExportOrderDTO> queryOrderAndAddressForExport(SettlementQuery settlementQuery);
 }

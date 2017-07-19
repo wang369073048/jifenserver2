@@ -100,4 +100,31 @@
         </where>
         order by shopId asc, createTime desc
     </select>
+
+
+    <select id="queryOrderAndAddressForExport" parameterType="org.trc.domain.dto.SettlementQuery" resultType="org.trc.domain.dto.ExportOrderDTO">
+        select id as orderId, createTime as orderDate, orderNum, barcode, goodsName, goodsCount, price, payment from orders
+        <where>
+            <if test="orderNum != null">
+                and orderNum = #{orderNum}
+            </if>
+            <if test="shopId != null">
+                and shopId = #{shopId}
+            </if>
+            <if test="userId != null">
+                and userId = #{userId}
+            </if>
+            <if test="orderState != null">
+                and orderState = #{orderState}
+            </if>
+            <if test="orderType != null">
+                and orderType = #{orderType}
+            </if>
+            AND <![CDATA[createTime >= #{startTime}
+            AND createTime < #{endTime}]]>
+            and source = 1
+        </where>
+        ORDER BY
+        shopId ASC,createTime desc
+    </select>
 </mapper>
