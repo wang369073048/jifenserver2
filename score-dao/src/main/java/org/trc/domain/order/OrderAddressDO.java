@@ -1,56 +1,67 @@
 package org.trc.domain.order;
 
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.io.Serializable;
+import java.util.Date;
 
 /**
  * author: hzwzhen
  * JDK-version:  JDK1.8
  * since Date： 2017/7/3
  */
-@Table(name = "orderAddressDO")
+@Table(name = "order_address")
 public class OrderAddressDO implements Serializable{
 
 	/**
     * 主键ID
     */
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
 	/**
     * 
     */
+	@Column(name = "orderId")
 	private Long orderId;
 
 	/**
-	 *
+	 *非持久化属性
 	 */
+	@Transient
 	private String orderNum;
 
+	@Column(name = "provinceCode")
 	private String provinceCode;
 
 	/**
 	 * 非持久化属性，省
 	 */
+	@Transient
 	private String province;
 
 	/**
     * 城市
     */
+	@Column(name = "cityCode")
 	private String cityCode;
 
 	/**
 	 * 非持久化属性，市
 	 */
+	@Transient
 	private String city;
 
 	/**
     * 地区
     */
+	@Column(name = "areaCode")
 	private String areaCode;
 
 	/**
 	 * 非持久化属性，地区
 	 */
+	@Transient
 	private String area;
 
 	/**
@@ -61,6 +72,7 @@ public class OrderAddressDO implements Serializable{
 	/**
     * 收货人姓名
     */
+	@Column(name = "receiverName")
 	private String receiverName;
 
 	/**
@@ -72,6 +84,16 @@ public class OrderAddressDO implements Serializable{
     * 邮编
     */
 	private String postcode;
+    @Column(name = "createTime")
+	private Date createTime;
+
+	public Date getCreateTime() {
+		return createTime;
+	}
+
+	public void setCreateTime(Date createTime) {
+		this.createTime = createTime;
+	}
 
 	public OrderAddressDO() {
 	}

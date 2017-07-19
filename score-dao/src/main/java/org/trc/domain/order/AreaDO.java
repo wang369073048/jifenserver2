@@ -1,12 +1,18 @@
 package org.trc.domain.order;
 
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Table;
 import java.io.Serializable;
 
 /**
  * Created by george on 2016/12/23.
  */
+@Table(name = "area")
 public class AreaDO implements Serializable {
-
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     private String code;

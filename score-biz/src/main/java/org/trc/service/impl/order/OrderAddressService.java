@@ -1,6 +1,7 @@
 package org.trc.service.impl.order;
 
 import com.txframework.core.jdbc.PageRequest;
+import org.springframework.stereotype.Service;
 import org.trc.domain.order.OrderAddressDO;
 import org.trc.service.impl.BaseService;
 import org.trc.service.order.IOrderAddressService;
@@ -13,6 +14,7 @@ import java.util.List;
  * comments:
  * since Date： 2017/7/18
  */
+@Service("orderAddressService")
 public class OrderAddressService extends BaseService<OrderAddressDO,Long> implements IOrderAddressService{
     @Override
     public OrderAddressDO getOrderAddressDOByParams(OrderAddressDO orderAddress) {

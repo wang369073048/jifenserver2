@@ -1,5 +1,6 @@
 package org.trc.domain.order;
 
+import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Date;
 
@@ -9,6 +10,7 @@ import java.util.Date;
  * comments: AddressDO模型
  * since Date： 2017/7/3
  */
+@Table(name = "address")
 public class AddressDO implements Serializable{
 
 	private static final long serialVersionUID = 1L;
@@ -16,16 +18,20 @@ public class AddressDO implements Serializable{
 	/**
     * 主键ID
     */
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
 	/**
     * 用户ID
     */
+	@Column(name = "userId")
 	private String userId;
 
 	/**
     * 省行政编码
     */
+	@Column(name = "provinceCode")
 	private String provinceCode;
 
 	/**
@@ -36,6 +42,7 @@ public class AddressDO implements Serializable{
 	/**
     * 城市行政编码
     */
+	@Column(name = "cityCode")
 	private String cityCode;
 
 	/**
@@ -46,6 +53,7 @@ public class AddressDO implements Serializable{
 	/**
     * 地区行政编码
     */
+	@Column(name = "areaCode")
 	private String areaCode;
 
 	/**
@@ -61,6 +69,7 @@ public class AddressDO implements Serializable{
 	/**
     * 收货人姓名
     */
+	@Column(name = "receiverName")
 	private String receiverName;
 
 	/**
@@ -76,21 +85,25 @@ public class AddressDO implements Serializable{
 	/**
 	 * 是否默认地址
 	 */
+	@Column(name = "isDefault")
 	private boolean isDefault;
 
 	/**
     * 0 正常 ;1 已删除
     */
+	@Column(name = "isDeleted")
 	private boolean isDeleted;
 
 	/**
     * 创建时间
     */
+	@Column(name = "createTime")
 	private Date createTime;
 
 	/**
     * 修改时间
     */
+	@Column(name = "updateTime")
 	private Date updateTime;
 
 

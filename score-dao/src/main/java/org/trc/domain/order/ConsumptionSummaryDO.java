@@ -3,34 +3,30 @@ package org.trc.domain.order;
 
 import org.trc.constants.TemporaryContext;
 
+import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Date;
 
 
+@Table(name = "consumption_summary")
 public class ConsumptionSummaryDO implements Serializable {
-
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
+    @Column(name = "userId")
     private String userId;
-
+    @Column(name = "accountDay")
     private String accountDay;
-
-    /**
-     * 非持久化字段
-     */
+    @Column(name = "exchangeCurrency")
     private String exchangeCurrency;
-
-    /**
-     * 非持久化字段
-     */
+    @Column(name = "shopId")
     private Long shopId;
-
     private String phone;
-
+    @Column(name = "exchangeInNum")
     private Long exchangeInNum;
-
+    @Column(name = "consumeNum")
     private Long consumeNum;
-
+    @Column(name = "createTime")
     private Date createTime;
 
     public Long getId() {
