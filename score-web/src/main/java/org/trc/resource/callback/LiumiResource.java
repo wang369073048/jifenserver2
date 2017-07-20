@@ -3,6 +3,7 @@ package org.trc.resource.callback;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import org.trc.biz.auth.IAuthBiz;
 import org.trc.constants.ScoreAdminConstants;
 import org.trc.domain.auth.Auth;
@@ -26,6 +27,7 @@ import static org.trc.util.ResultUtil.createSucssAppResult;
  * JDK-version:  JDK1.8
  * since Date： 2017/7/12
  */
+@Component
 @Produces(MediaType.APPLICATION_JSON)
 @Path(ScoreAdminConstants.Route.Liumi.ROOT)
 //@TxAop

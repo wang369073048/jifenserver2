@@ -9,6 +9,7 @@ import com.trc.mall.externalservice.TrcExpressAck;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 import org.trc.biz.order.INewOrderBiz;
 import org.trc.constants.ScoreAdminConstants;
@@ -33,6 +34,7 @@ import static org.trc.util.ResultUtil.*;
  * comments:
  * since Date： 2017/7/3
  */
+@Component
 @Produces(MediaType.APPLICATION_JSON)
 @Path(ScoreAdminConstants.Route.Order.ROOT)
 public class OrderResource {

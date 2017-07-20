@@ -5,15 +5,34 @@ import com.alibaba.fastjson.JSONObject;
 import org.springframework.util.StringUtils;
 import org.trc.domain.CommonDO;
 
-import javax.persistence.Column;
-import javax.persistence.Table;
+import javax.persistence.*;
+import java.io.Serializable;
 import java.util.Date;
 
 /**
  * Created by hzwzhen on 2017/6/22.
  */
 @Table(name = "goods")
-public class GoodsDO extends CommonDO{
+public class GoodsDO implements Serializable{
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    protected Long id; //主键
+    /**
+     * 业务方ID
+     */
+    @Column(name = "shopId")
+    protected Long shopId;
+    /**
+     * 创建时间
+     */
+    @Column(name = "createTime")
+    protected Date createTime;
+    /**
+     * 更新时间
+     */
+    @Column(name = "updateTime")
+    protected Date updateTime;
 
     /**
      * 所属类目
@@ -170,6 +189,7 @@ public class GoodsDO extends CommonDO{
     /**
      * 是否奖品
      */
+    @Column(name = "whetherPrizes")
     private Integer whetherPrizes;
 
     public void calMainImg(){
@@ -395,6 +415,38 @@ public class GoodsDO extends CommonDO{
 
     public void setIsDeleted(Integer isDeleted) {
         this.isDeleted = isDeleted;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public Long getShopId() {
+        return shopId;
+    }
+
+    public void setShopId(Long shopId) {
+        this.shopId = shopId;
+    }
+
+    public Date getCreateTime() {
+        return createTime;
+    }
+
+    public void setCreateTime(Date createTime) {
+        this.createTime = createTime;
+    }
+
+    public Date getUpdateTime() {
+        return updateTime;
+    }
+
+    public void setUpdateTime(Date updateTime) {
+        this.updateTime = updateTime;
     }
 
     @Override

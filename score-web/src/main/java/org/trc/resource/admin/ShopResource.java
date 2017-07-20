@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSONObject;
 import org.hibernate.validator.constraints.NotBlank;
 import org.hibernate.validator.constraints.NotEmpty;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import org.trc.biz.shop.IShopBiz;
 import org.trc.constants.ScoreAdminConstants;
 import org.trc.domain.shop.ShopDO;
@@ -21,6 +22,7 @@ import static org.trc.util.ResultUtil.createSucssAppResult;
  * comments:店铺管理
  * since Date： 2017/7/1
  */
+@Component
 @Produces(MediaType.APPLICATION_JSON)
 @Path(ScoreAdminConstants.Route.Shop.ROOT)
 //@TxAop

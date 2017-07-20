@@ -9,6 +9,7 @@ import com.txframework.util.ListUtils;
 import com.txframework.util.ObjectUtils;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import org.trc.biz.auth.IAuthBiz;
 import org.trc.biz.score.IScoreChangeRecordBiz;
 import org.trc.biz.shop.IShopBiz;
@@ -33,6 +34,7 @@ import java.util.List;
 /**
  * Created by hzwzhen on 2017/6/16.
  */
+@Component
 @Produces(MediaType.APPLICATION_JSON)
 @Path("{shopId}/" + ScoreAdminConstants.Route.Flow.ROOT)
 public class FlowResource {

@@ -29,13 +29,13 @@ public class JerseyServiceAop {
     @Autowired
     private BeanValidator beanValidator;
 
-//    @Pointcut("within(@javax.ws.rs.Path *)")
-//    public void jerseyService() {
-//    }
-
-    @Pointcut("@within(javax.ws.rs.Path)")
+    @Pointcut("within(@javax.ws.rs.Path *)")
     public void jerseyService() {
     }
+
+//    @Pointcut("@within(javax.ws.rs.Path)")
+//    public void jerseyService() {
+//    }
 
     @Around("jerseyService()")
     public Object invoke(ProceedingJoinPoint point) throws Throwable {

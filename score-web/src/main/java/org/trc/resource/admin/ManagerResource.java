@@ -7,6 +7,7 @@ import com.tairanchina.md.api.QueryType;
 import org.apache.commons.lang.StringUtils;
 import org.hibernate.validator.constraints.NotEmpty;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import org.trc.biz.auth.IAuthBiz;
 import org.trc.biz.shop.IShopBiz;
 import org.trc.constants.ScoreAdminConstants;
@@ -32,6 +33,7 @@ import static org.trc.util.ResultUtil.createSucssAppResult;
  * comments:  店铺管理员管理
  * since Date： 2017/7/5
  */
+@Component
 @Produces(MediaType.APPLICATION_JSON)
 @Path(ScoreAdminConstants.Route.Manager.ROOT)
 //@TxAop

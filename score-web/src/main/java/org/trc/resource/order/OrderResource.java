@@ -14,6 +14,7 @@ import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import org.trc.biz.auth.IAuthBiz;
 import org.trc.biz.order.INewOrderBiz;
 import org.trc.biz.order.ISettlementBiz;
@@ -59,6 +60,7 @@ import static org.trc.util.ResultUtil.createSucssAppResult;
  * comments:
  * since Date： 2017/7/1
  */
+@Component
 @Produces(MediaType.APPLICATION_JSON)
 @Path(ScoreAdminConstants.Route.Order.ROOT)
 public class OrderResource {
@@ -189,8 +191,7 @@ public class OrderResource {
      * @return
      */
     @GET
-    @Path("/list")
-    //@Manager TODO 缺少注解
+    @Path(ScoreAdminConstants.Route.Order.LIST)
     public Pagenation<OrdersDO> queryOrderList(@QueryParam("orderNum") String orderNum,
                                                @QueryParam("phone") String phone,
                                                @QueryParam("orderType") Integer orderType,

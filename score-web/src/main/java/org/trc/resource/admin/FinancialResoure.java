@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.txframework.util.ListUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import org.trc.biz.order.IFinancialSettlementBiz;
 import org.trc.constants.ScoreAdminConstants;
 import org.trc.domain.dto.SettlementQuery;
@@ -28,6 +29,7 @@ import static org.trc.util.ResultUtil.createSucssAppResult;
  * JDK-version:  JDK1.8
  * since Date： 2017/7/7
  */
+@Component
 @Produces(MediaType.APPLICATION_JSON)
 @Path(ScoreAdminConstants.Route.Financial.ROOT)
 public class FinancialResoure {

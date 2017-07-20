@@ -134,6 +134,7 @@ public class ScoreAdminConstants {
             public static final String ROOT = "order";
             public static final String LOGISTICSTRACKING = "/logisticsTracking";
             public static final String PULL = "/pull";
+            public static final String LIST = "/list";
         }
 
         public static final class Financial{

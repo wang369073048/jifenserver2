@@ -11,6 +11,7 @@ import com.txframework.util.ListUtils;
 import com.txframework.util.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import org.trc.biz.auth.IAuthBiz;
 import org.trc.biz.score.IScoreChangeRecordBiz;
 import org.trc.constants.ScoreAdminConstants;
@@ -37,6 +38,7 @@ import java.util.List;
  * JDK-version:  JDK1.8
  * since Date： 2017/7/13
  */
+@Component
 @Produces(MediaType.APPLICATION_JSON)
 @Path(ScoreAdminConstants.Route.Flow.ROOT)
 public class FlowResource {

@@ -5,6 +5,7 @@ import com.alibaba.dubbo.common.logger.LoggerFactory;
 import com.alibaba.fastjson.JSONArray;
 import org.hibernate.validator.constraints.NotEmpty;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import org.trc.biz.auth.IAuthBiz;
 import org.trc.biz.goods.IGoodsBiz;
 import org.trc.biz.goods.IGoodsRecommendBiz;
@@ -35,6 +36,7 @@ import static org.trc.util.ResultUtil.createSucssAppResult;
  * comments:
  * since Date： 2017/7/1
  */
+@Component
 @Path("{shopId}/" + ScoreAdminConstants.Route.Recommand.ROOT)
 public class GoodsRecommendResource {
 
