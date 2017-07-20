@@ -41,7 +41,7 @@ import java.util.List;
 @Component
 @Produces(MediaType.APPLICATION_JSON)
 @Path(ScoreAdminConstants.Route.Flow.ROOT)
-public class FlowResource {
+public class FlowAdminResource {
     @Autowired
     private UserService userService;
     @Autowired

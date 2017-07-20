@@ -37,9 +37,9 @@ import static org.trc.util.ResultUtil.*;
 @Component
 @Produces(MediaType.APPLICATION_JSON)
 @Path(ScoreAdminConstants.Route.Order.ROOT)
-public class OrderResource {
+public class OrderAdminResource {
 
-    private Logger logger = LoggerFactory.getLogger(OrderResource.class);
+    private Logger logger = LoggerFactory.getLogger(OrderAdminResource.class);
     @Resource
     private UserService userService;
     @Autowired

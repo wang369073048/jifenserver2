@@ -1,5 +1,6 @@
 package org.trc.biz.impl.score;
 
+import org.springframework.stereotype.Service;
 import org.trc.biz.score.IScoreChangeRecordBiz;
 import org.trc.constants.ScoreCst;
 import org.trc.domain.dto.FlowDTO;
@@ -15,6 +16,7 @@ import java.util.List;
  * comments:
  * since Date： 2017/7/13
  */
+@Service("scoreChangeRecordBiz")
 public class ScoreChangeRecordBiz implements IScoreChangeRecordBiz{
     @Override
     public int getTotalAmountByCurrency(String exchangeCurrency, ScoreCst.BusinessCode businessCode) {
