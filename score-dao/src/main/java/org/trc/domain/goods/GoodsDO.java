@@ -119,13 +119,13 @@ public class GoodsDO implements Serializable{
      * 兑换数量
      */
     @Column(name = "exchangeQuantity")
-    private Integer exchangeQuantity = 0;
+    private Integer exchangeQuantity;
 
     /**
      * 虚拟兑换量
      */
     @Column(name = "virtualExchangeQuantity")
-    private Integer virtualExchangeQuantity = 0;
+    private Integer virtualExchangeQuantity;
 
     /**
      * 是否上架,0上架,1下架
@@ -142,7 +142,7 @@ public class GoodsDO implements Serializable{
      *
      */
     @Column(name = "versionLock")
-    private Integer versionLock = 1;
+    private Integer versionLock;
 
     /**
      * 0 正常 ;1 已删除

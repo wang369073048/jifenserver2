@@ -34,7 +34,7 @@ public class GoodsService extends BaseService<GoodsDO,Long> implements IGoodsSer
 
     @Override
     public int upOrDownById(GoodsDO goodsDO) {
-        return goodsMapper.updateByPrimaryKey(goodsDO);
+        return goodsMapper.updateByPrimaryKeySelective(goodsDO);
     }
 
     @Override

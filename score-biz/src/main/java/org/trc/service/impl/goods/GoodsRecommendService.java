@@ -58,7 +58,7 @@ public class GoodsRecommendService extends BaseService<GoodsRecommendDO,Long> im
     @Override
     public int updateById(GoodsRecommendDO goodsRecommendDO) {
         goodsRecommendDO.setUpdateTime(Calendar.getInstance().getTime());
-        return goodsRecommendMapper.updateByPrimaryKey(goodsRecommendDO);
+        return goodsRecommendMapper.updateByPrimaryKeySelective(goodsRecommendDO);
     }
 
     @Override
@@ -67,7 +67,7 @@ public class GoodsRecommendService extends BaseService<GoodsRecommendDO,Long> im
         goodsRecommendDO.setId(id);
         goodsRecommendDO.setIsDeleted(true);
         goodsRecommendDO.setUpdateTime(Calendar.getInstance().getTime());
-        return goodsRecommendMapper.updateByPrimaryKey(goodsRecommendDO);
+        return goodsRecommendMapper.updateByPrimaryKeySelective(goodsRecommendDO);
     }
 
     @Override

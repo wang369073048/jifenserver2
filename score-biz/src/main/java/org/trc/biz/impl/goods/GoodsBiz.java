@@ -152,7 +152,9 @@ public class GoodsBiz implements IGoodsBiz{
         try {
             Assert.isTrue(id != null,"查询Id不能为空!");
             GoodsDO param = new GoodsDO();
-            param.setIsUp(isUp);
+            if(isUp != null){
+                param.setIsUp(isUp);
+            }
             param.setId(id);
             GoodsDO goodsDO = goodsService.selectOne(param);
             if (null == goodsDO) {
