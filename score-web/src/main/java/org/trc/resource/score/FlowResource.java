@@ -16,11 +16,13 @@ import org.trc.biz.shop.IShopBiz;
 import org.trc.constants.ScoreAdminConstants;
 import org.trc.constants.ScoreCst;
 import org.trc.domain.auth.Auth;
+import org.trc.domain.dto.ScoreChangeDTO;
 import org.trc.domain.dto.ScoreChangeRecordQueryDTO;
 import org.trc.domain.score.ScoreChange;
 import org.trc.domain.shop.ManagerDO;
 import org.trc.enums.ExceptionEnum;
 import org.trc.exception.FlowException;
+import org.trc.util.FatherToChildUtils;
 import org.trc.util.Pagenation;
 
 import javax.ws.rs.*;
@@ -49,7 +51,7 @@ public class FlowResource {
     private IScoreChangeRecordBiz scoreChangeRecordBiz;
     @GET
     //@CustomerService
-    public Response queryChangeRecord(@PathParam("shopId") Long shopId,
+    public Pagenation<ScoreChange> queryChangeRecord(@PathParam("shopId") Long shopId,
                                       @QueryParam("flowType") String flowType,
                                       @QueryParam("businessCode") String businessCodes,
                                       @QueryParam("userPhone") String userPhone,
@@ -84,52 +86,23 @@ public class FlowResource {
         }
         Pagenation<ScoreChange> scoreChangePge = scoreChangeRecordBiz.queryScoreChangeForShopAdmin(queryDto, page);
         List<ScoreChange> scoreChanges = scoreChangePge.getResult();
-        JSONArray jsonArray = new JSONArray();
         if (ListUtils.isNotEmpty(scoreChanges)) {
-            if (ScoreCst.BusinessCode.income.name().equals(businessCodes)) {
-                for (ScoreChange scoreChange : scoreChanges) {
-                    JSONObject json = new JSONObject();
-                    json.put("orderCode", scoreChange.getOrderCode());
-                    UserDO userDO = userService.getUserDO(QueryType.UserId, scoreChange.getTheOtherUserId());
-                    if (null != userDO) {
-                        json.put("userPhone", userDO.getPhone());
+                for (int i= 0 ; i < scoreChanges.size();i++) {
+                    ScoreChange scoreChange = scoreChanges.get(i);
+                    ScoreChangeDTO scoreChangeDTO = new ScoreChangeDTO();
+                    FatherToChildUtils.fatherToChild(scoreChange,scoreChangeDTO);
+                    UserDO userDO = null;
+                    if(ScoreCst.BusinessCode.income.name().equals(businessCodes)){
+                        userDO = userService.getUserDO(QueryType.UserId, scoreChange.getTheOtherUserId());
+                    }else {
+                        userDO = userService.getUserDO(QueryType.UserId, scoreChange.getUserId());
                     }
-                    json.put("scoreId", scoreChange.getScoreId());
-                    json.put("score", scoreChange.getScore());
-                    json.put("scoreBalance", scoreChange.getScoreBalance());
-                    json.put("freezingScoreBalance", scoreChange.getFreezingScoreBalance());
-                    json.put("channelCode", scoreChange.getChannelCode());
-                    json.put("shopId", scoreChange.getShopId());
-                    json.put("businessCode", scoreChange.getBusinessCode());
-                    json.put("flowType", scoreChange.getFlowType());
-                    json.put("remark", ObjectUtils.convertVal(scoreChange.getRemark(), ""));
-                    json.put("operationTime", scoreChange.getOperationTime());
-                    json.put("expirationTime", ObjectUtils.convertVal(scoreChange.getExpirationTime(), 0));
-                    jsonArray.add(json);
-                }
-            } else {
-                for (ScoreChange scoreChange : scoreChanges) {
-                    JSONObject json = new JSONObject();
-                    json.put("orderCode", scoreChange.getOrderCode());
-                    UserDO userDO = userService.getUserDO(QueryType.UserId, scoreChange.getUserId());
                     if (null != userDO) {
-                        json.put("userPhone", userDO.getPhone());
+                        scoreChangeDTO.setUserPhone(userDO.getPhone());
                     }
-                    json.put("scoreId", scoreChange.getScoreId());
-                    json.put("score", scoreChange.getScore());
-                    json.put("scoreBalance", scoreChange.getScoreBalance());
-                    json.put("freezingScoreBalance", scoreChange.getFreezingScoreBalance());
-                    json.put("channelCode", scoreChange.getChannelCode());
-                    json.put("shopId", scoreChange.getShopId());
-                    json.put("businessCode", scoreChange.getBusinessCode());
-                    json.put("flowType", scoreChange.getFlowType());
-                    json.put("remark", ObjectUtils.convertVal(scoreChange.getRemark(), ""));
-                    json.put("operationTime", scoreChange.getOperationTime());
-                    json.put("expirationTime", ObjectUtils.convertVal(scoreChange.getExpirationTime(), 0));
-                    jsonArray.add(json);
+                    scoreChanges.set(i,scoreChangeDTO);
                 }
-            }
         }
-        return null;
+        return scoreChangePge;
     }
 }
