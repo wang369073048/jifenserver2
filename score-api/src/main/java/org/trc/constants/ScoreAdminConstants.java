@@ -172,6 +172,16 @@ public class ScoreAdminConstants {
             public static final String ORDER_NOTICE = "/orderNotice";
         }
         /**
+         * 授权
+         */
+        public static final class Authorization{
+            //用户ID
+            public static final String USER_ID = "userId";
+            //用户授权列表
+            public static final String ACL_USER_ACCREDIT_INFO = "aclUserAccreditInfo";
+
+        }
+        /**
          * 资源（权限）
          */
         public static final class Jurisdiction {

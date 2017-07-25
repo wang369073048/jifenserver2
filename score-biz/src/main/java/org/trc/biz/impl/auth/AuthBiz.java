@@ -94,7 +94,10 @@ public class AuthBiz implements IAuthBiz {
 
     @Override
     public Auth getAuthByShopId(Long shopId) {
-        return null;
+        Auth auth = new Auth();
+        auth.setShopId(shopId);
+        auth.setIsDeleted(0);
+        return authService.selectOne(auth);
     }
 
     @Override

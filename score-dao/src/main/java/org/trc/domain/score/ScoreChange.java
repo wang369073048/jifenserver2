@@ -1,53 +1,54 @@
 package org.trc.domain.score;
 
+import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Date;
 
 /**
- * Created by george on 2016/11/9.
+ * 积分变更表
  */
+@Table(name = "score_change")
 public class ScoreChange implements Serializable {
-
-    private static final long serialVersionUID = -5059865405304412719L;
-
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;                       //主键id;
-
+    @Column(name = "userId")
     private String userId;                //唯一用户标示
-
+    @Column(name = "userName")
     private String userName;             //用户名
-
+    @Column(name = "theOtherUserId")
     private String theOtherUserId;       //对方用户标示
-
+    @Column(name = "theOtherUserName")
     private String theOtherUserName;             //对方名
-
+    @Column(name = "scoreId")
     private Long scoreId;                 //积分账户id
-
+    @Column(name = "foreignCurrency")
     private Long foreignCurrency;        //外币变更数量
 
     private Long score;                   //积分变更数量
-
+    @Column(name = "scoreBalance")
     private Long scoreBalance;           //积分余额
-
+    @Column(name = "freezingScoreBalance")
     private Long freezingScoreBalance;  //冻结积分余额
-
+    @Column(name = "orderCode")
     private String orderCode;            //单据编码
-
+    @Column(name = "shopId")
     private Long shopId;                //店铺Id
-
+    @Column(name = "channelCode")
     private String channelCode;          //渠道编码
-
+    @Column(name = "businessCode")
     private String businessCode;         //业务编码
-
+    @Column(name = "flowType")
     private String flowType;             //变更类型(income:收入，expenditure:支出)
-
+    @Column(name = "exchangeCurrency")
     private String exchangeCurrency;    //外币
 
     private String remark;               //备注
-
+    @Column(name = "operationTime")
     private Date operationTime;         //操作时间
-
+    @Column(name = "expirationTime")
     private Date expirationTime;        //过期时间
-
+    @Column(name = "createTime")
     private Date createTime;               //创建时间
 
     public ScoreChange() {

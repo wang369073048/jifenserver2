@@ -8,10 +8,15 @@ import org.apache.commons.lang3.StringUtils;
 import org.glassfish.jersey.server.ContainerRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
+import org.trc.biz.impl.impower.AclResourceBiz;
+import org.trc.constants.ScoreAdminConstants;
+import org.trc.domain.impower.AclUserAccreditInfo;
 import org.trc.enums.ExceptionEnum;
 import org.trc.enums.ResultEnum;
+import org.trc.service.impower.IAclUserAccreditInfoService;
 import org.trc.util.AppResult;
 
 import javax.annotation.Resource;
@@ -35,12 +40,18 @@ public class AuthorizationFilter implements ContainerRequestFilter {
     private String appKey;
     @Resource
     private BeegoService beegoService;
+    @Autowired
+    private AclResourceBiz jurisdictionBiz;
+    @Autowired
+    private IAclUserAccreditInfoService userAccreditInfoService;
     //放行url
     private final static String PASS_API_URL = "/api";
     @Override
     public void filter(ContainerRequestContext requestContext) throws IOException {
         String url = ((ContainerRequest)requestContext).getPath(true);
-        //"/api"开头的给外部调用的接口直接放行
+        //1.判断该url是用户内部url还是api接口，api接口直接放行不验证
+        //2.需要拦截的url判断用户是否登录，登录token是否过期，用户是否被停用
+        //3.对url进行验证，如果在权限列表中，则需要验证，不在则直接放行
         if (!url.startsWith(PASS_API_URL)) {
             String token = _getToken(requestContext);
             if (StringUtils.isNotBlank(token)) {
@@ -49,7 +60,26 @@ public class AuthorizationFilter implements ContainerRequestFilter {
                     BeegoToken beegoToken = beegoService.authenticationBeegoToken(beegoAuthRequest);
                     if (null != beegoToken) {
                         String userId = beegoToken.getUserId();
-                        requestContext.setProperty("userId",userId);
+                        requestContext.setProperty(ScoreAdminConstants.Authorization.USER_ID,userId);
+
+//                        AclUserAccreditInfo aclUserAccreditInfo = userAccreditInfoService.selectOneById(userId);
+//                        if (aclUserAccreditInfo == null) {
+//                            //说明用户已经被禁用或者失效需要将用户退出要求重新登录或者联系管理员处理问题
+//                            AppResult appResult = new AppResult(ResultEnum.FAILURE.getCode(), ExceptionEnum.USER_BE_FORBIDDEN.getMessage(), null);
+//                            requestContext.abortWith(Response.status(Response.Status.FORBIDDEN).entity(appResult).type(MediaType.APPLICATION_JSON).encoding("UTF-8").build());
+//                        } else {
+//                            requestContext.setProperty(ScoreAdminConstants.Authorization.USER_ID, userId);
+//                            requestContext.setProperty(ScoreAdminConstants.Authorization.ACL_USER_ACCREDIT_INFO, aclUserAccreditInfo);
+//                            String method = ((ContainerRequest) requestContext).getMethod();
+//                            //验证是否在需要验证的权限列表中，需要则验证，不需要url直接放行
+//                            if (jurisdictionBiz.urlCheck(url)) {
+//                                //验证权限
+//                                if (!jurisdictionBiz.authCheck(userId, url, method)) {
+//                                    AppResult appResult = new AppResult(ResultEnum.FAILURE.getCode(), "用户无此权限", null);
+//                                    requestContext.abortWith(Response.status(Response.Status.UNAUTHORIZED).entity(appResult).type(MediaType.APPLICATION_JSON).encoding("UTF-8").build());
+//                                }
+//                            }
+//                        }
                     }
                 } catch (AuthenticateException e) {
                     log.error(e.getMessage());

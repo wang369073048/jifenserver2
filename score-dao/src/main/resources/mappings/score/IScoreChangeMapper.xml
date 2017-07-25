@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.trc.mapper.score.IScoreChangeMapper" >
+    <select id="queryScoreChangeForShopAdmin" parameterType="org.trc.domain.dto.ScoreChangeRecordQueryDTO"
+            resultType="org.trc.domain.score.ScoreChange">
+        select * from score_change
+        <where>
+            <if test="userId!=null">
+                and userId = #{userId}
+            </if>
+            <if test="businessCodeList != null and businessCodeList.size() > 0">
+                and businessCode in
+                <foreach item="item" index="index" collection="businessCodeList" open="(" separator="," close=")">
+                    #{businessCodeList[${index}]}
+                </foreach>
+            </if>
+            <if test="shopId!=null">
+                and (
+                shopId = #{shopId}
+                <if test="exchangeCurrency!=null">
+                    or (exchangeCurrency = #{exchangeCurrency})
+                </if>
+                )
+            </if>
+            <if test="operateTimeMin!=null">
+                and operationTime <![CDATA[>=]]> #{operateTimeMin}
+            </if>
+            <if test="operateTimeMax!=null">
+                and operationTime <![CDATA[<]]> #{operateTimeMax}
+            </if>
+            and state = 0
+        </where>
+        order by createTime desc
+    </select>
+</mapper>
