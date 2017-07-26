@@ -11,6 +11,28 @@ public class ScoreChangeDTO extends ScoreChange{
 
     public String userPhone;
 
+    public String exchangeCurrency;
+
+    public String shopName;
+
+    public String getShopName() {
+        return shopName;
+    }
+
+    public void setShopName(String shopName) {
+        this.shopName = shopName;
+    }
+
+    @Override
+    public String getExchangeCurrency() {
+        return exchangeCurrency;
+    }
+
+    @Override
+    public void setExchangeCurrency(String exchangeCurrency) {
+        this.exchangeCurrency = exchangeCurrency;
+    }
+
     public String getUserPhone() {
         return userPhone;
     }

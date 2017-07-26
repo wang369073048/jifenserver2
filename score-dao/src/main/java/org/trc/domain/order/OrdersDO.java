@@ -24,162 +24,162 @@ public class OrdersDO implements Serializable{
      */
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    public Long id;
 
     /**
      * 订单编号
      */
     @Column(name = "orderNum")
-    private String orderNum;
+    public String orderNum;
 
     /**
      * 店铺id
      */
     @Column(name = "shopId")
-    private Long shopId;
+    public Long shopId;
 
     /**
      * 非持久化属性，店铺名称
      */
     @Column(name = "shopName")
-    private String shopName;
+    public String shopName;
 
     /**
      * 商品Id
      */
     @Column(name = "goodsId")
-    private Long goodsId;
+    public Long goodsId;
 
     /**
      * 商品条码
      */
-    private String barcode;
+    public String barcode;
 
     /**
      * 商品货号
      */
     @Column(name = "goodsNo")
-    private String goodsNo;
+    public String goodsNo;
 
     /**
      * 商品名称
      */
     @Column(name = "goodsName")
-    private String goodsName;
+    public String goodsName;
     /**
      * 商品version
      */
     @Column(name = "goodsVersion")
-    private Integer goodsVersion;
+    public Integer goodsVersion;
 
     /**
      *
      */
     @Column(name = "goodsCount")
-    private Integer goodsCount;
+    public Integer goodsCount;
 
     /**
      *
      */
     @Column(name = "minImg")
-    private String minImg;
+    public String minImg;
 
     /**
      *
      */
     @Column(name = "userId")
-    private String userId;
+    public String userId;
 
     /**
      *
      */
-    private String username;
+    public String username;
 
     /**
      * 1未发货(已兑换);2已发货;3已完成(已收货);4已取消
      */
     @Column(name = "orderState")
-    private Integer orderState;
+    public Integer orderState;
 
     /**
      * 1实物订单;2虚拟订单
      */
     @Column(name = "orderType")
-    private Integer orderType;
+    public Integer orderType;
 
     /**
      * 1-积分兑换；2-积分抽奖
      */
-    private Integer source;
+    public Integer source;
 
     /**
      * 单价
      */
-    private Integer price;
+    public Integer price;
 
     /**
      * 实际付款价格
      */
-    private Integer payment;
+    public Integer payment;
 
     /**
      * 物流费用
      */
-    private Integer freight;
+    public Integer freight;
 
     /**
      *
      */
     @Column(name = "versionLock")
-    private Integer versionLock;
+    public Integer versionLock;
 
     /**
      * 0 正常 ;1 已删除
      */
     @Column(name = "isDeleted")
-    private boolean isDeleted;
+    public boolean isDeleted;
 
     /**
      * 发货时间
      */
     @Column(name = "deliveryTime")
-    private Date deliveryTime;
+    public Date deliveryTime;
 
     /**
      * 确认收货时间
      */
     @Column(name = "confirmTime")
-    private Date confirmTime;
+    public Date confirmTime;
 
     /**
      * 创建时间
      */
     @Column(name = "createTime")
-    private Date createTime;
+    public Date createTime;
 
     /**
      * 修改时间
      */
     @Column(name = "updateTime")
-    private Date updateTime;
+    public Date updateTime;
 
     /**
      *  操作时间最小值 非持久化属性
      */
     @Transient
-    private Date operateTimeMin;
+    public Date operateTimeMin;
 
     /**
      *  操作时间最大值 非持久化属性
      */
     @Transient
-    private Date operateTimeMax;
+    public Date operateTimeMax;
 
     /**
      * 卡券编码，tab键分隔，临时属性
      */
     @Transient
-    private String couponCode;
+    public String couponCode;
 
     public Long getId() {
         return id;

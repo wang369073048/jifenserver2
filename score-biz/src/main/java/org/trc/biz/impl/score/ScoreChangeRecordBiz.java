@@ -61,7 +61,17 @@ public class ScoreChangeRecordBiz implements IScoreChangeRecordBiz{
 
     @Override
     public Pagenation<ScoreChange> queryScoreChangeForPlatAdmin(ScoreChangeRecordQueryDTO queryDto, Pagenation<ScoreChange> pageRequest) {
-        return null;
+        try {
+            Assert.notNull(pageRequest, "分页参数不能为空");
+            Assert.notNull(queryDto, "查询参数不能为空");
+            return scoreChangeRecordService.queryScoreChangeForPlatAdmin(queryDto, pageRequest);
+        } catch (IllegalArgumentException e){
+            logger.error("查询积分流水校验参数异常!", e);
+            throw new ScoreChangeRecordException(ExceptionEnum.PARAM_CHECK_EXCEPTION, "查询积分流水校验参数异常!");
+        } catch (Exception e) {
+            logger.error("查询积分流水失败!", e);
+            throw new ScoreChangeRecordException(ExceptionEnum.SCORECHANGGE_QUERY_EXCEPTION, "查询积分流水失败!");
+        }
     }
 
     @Override

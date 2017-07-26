@@ -71,8 +71,12 @@ public class ScoreChangeRecordService extends BaseService<ScoreChange,Long> impl
     }
 
     @Override
-    public Pagenation<ScoreChange> queryScoreChangeForPlatAdmin(ScoreChangeRecordQueryDTO queryDto, Pagenation<ScoreChange> pageRequest) {
-        return null;
+    public Pagenation<ScoreChange> queryScoreChangeForPlatAdmin(ScoreChangeRecordQueryDTO queryDto, Pagenation<ScoreChange> pagenation) {
+        Page page = PageHelper.startPage(pagenation.getPageNo(), pagenation.getPageSize());
+        List<ScoreChange> list = scoreChangeMapper.queryScoreChangeForPlatAdmin(queryDto);
+        pagenation.setTotalCount(page.getTotal());
+        pagenation.setResult(list);
+        return pagenation;
     }
 
     @Override

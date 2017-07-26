@@ -12,9 +12,12 @@ import org.trc.domain.order.ConsumptionSummaryDO;
 import org.trc.domain.dto.ConsumptionSummaryStatisticalDataDTO;
 import org.trc.domain.order.MembershipScoreDailyDetailsDO;
 import org.trc.domain.dto.SettlementIntervalDTO;
+import org.trc.enums.ExceptionEnum;
+import org.trc.exception.BusinessException;
 import org.trc.util.AppResult;
 import org.trc.util.JSONUtil;
 import org.trc.util.Pagenation;
+import org.trc.validation.VerifyDate;
 
 import javax.validation.constraints.NotNull;
 import javax.ws.rs.*;
@@ -152,14 +155,16 @@ public class FinancialResoure {
 
     @GET
     @Path(ScoreAdminConstants.Route.Financial.MEMBERSHIP_SCORE_DAILY_DETAILS)
-    //@Admin
     public AppResult queryMembershipScoreDailyDetail(@QueryParam("userId") String userId,
-                                                    @NotNull @QueryParam("startTime") Long startTime,
-                                                    @NotNull @QueryParam("endTime") Long endTime,
+                                                    @VerifyDate @QueryParam("startTime") Long startTime,
+                                                    @VerifyDate @QueryParam("endTime") Long endTime,
                                                     @BeanParam Pagenation<MembershipScoreDailyDetailsDO> page) {
 
         SettlementQuery settlementQuery = new SettlementQuery();
         settlementQuery.setUserId(userId);
+        if(startTime == null || endTime == null) {
+            throw new BusinessException(ExceptionEnum.PARAM_CHECK_EXCEPTION,"起止时间不能为空");
+        }
         settlementQuery.setStartTime(new Date(startTime));
         settlementQuery.setEndTime(new Date(endTime));
 

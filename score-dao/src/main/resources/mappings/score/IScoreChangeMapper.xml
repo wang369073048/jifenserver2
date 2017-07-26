@@ -32,4 +32,41 @@
         </where>
         order by createTime desc
     </select>
+
+    <select id="queryScoreChangeForPlatAdmin" parameterType="org.trc.domain.dto.ScoreChangeRecordQueryDTO"
+            resultType="org.trc.domain.score.ScoreChange">
+        select * from score_change
+        <where>
+            <if test="userId!=null">
+                and userId = #{userId}
+            </if>
+            <if test="businessCodeList != null and businessCodeList.size() > 0">
+                and businessCode in
+                <foreach item="item" index="index" collection="businessCodeList" open="(" separator="," close=")">
+                    #{businessCodeList[${index}]}
+                </foreach>
+            </if>
+            <choose>
+                <when test="shopId != null">
+                    and (
+                    shopId = #{shopId}
+                    <if test="exchangeCurrency!=null">
+                        or (exchangeCurrency = #{exchangeCurrency})
+                    </if>
+                    )
+                </when>
+                <otherwise>
+                    and (shopId is not null or exchangeCurrency is not null)
+                </otherwise>
+            </choose>
+            <if test="operateTimeMin!=null">
+                and operationTime <![CDATA[>=]]> #{operateTimeMin}
+            </if>
+            <if test="operateTimeMax!=null">
+                and operationTime <![CDATA[<]]> #{operateTimeMax}
+            </if>
+            and state = 0
+        </where>
+        order by createTime desc
+    </select>
 </mapper>

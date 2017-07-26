@@ -95,4 +95,17 @@ public class AclResourceResource {
         jurisdictionBiz.updateJurisdiction(jurisdictionTreeNode);
         return ResultUtil.createSucssAppResult("更新权限资源成功", "");
     }
+
+    /**
+     * 查询用户html页面权限
+     * @param requestContext
+     * @return
+     */
+    @GET
+    @Path(ScoreAdminConstants.Route.Jurisdiction.JURISDICTION_HTML)
+    @Produces(MediaType.APPLICATION_JSON)
+    public AppResult<JSONArray> updateJurisdiction(@Context ContainerRequestContext requestContext){
+        String userId= (String) requestContext.getProperty(ScoreAdminConstants.Route.Authorization.USER_ID);
+        return ResultUtil.createSucssAppResult("查询用户html页面权限成功", jurisdictionBiz.getHtmlJurisdiction(userId));
+    }
 }

@@ -20,7 +20,7 @@ import java.util.Set;
 public class CommonBiz {
 
     public void handleUserName(IAclUserAccreditInfoService userAccreditInfoService, List list) {
-        if(AssertUtil.CollectionIsEmpty(list)){
+        if(AssertUtil.collectionIsEmpty(list)){
             return;
         }
         Set<String> userIdsSet=new HashSet<>();

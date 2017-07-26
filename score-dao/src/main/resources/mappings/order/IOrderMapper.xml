@@ -72,10 +72,10 @@
         SELECT <include refid="allSelectionColumn"/>
         FROM orders
         <where>
-            <if test="shopId != null">
+            <if test="shopId != null and shopId != ''">
                 and shopId = #{shopId}
             </if>
-            <if test="userId != null">
+            <if test="userId != null and userId != ''">
                 and userId = #{userId}
             </if>
             <if test="orderStates != null and orderStates.size() > 0">
@@ -105,19 +105,19 @@
     <select id="queryOrderAndAddressForExport" parameterType="org.trc.domain.dto.SettlementQuery" resultType="org.trc.domain.dto.ExportOrderDTO">
         select id as orderId, createTime as orderDate, orderNum, barcode, goodsName, goodsCount, price, payment from orders
         <where>
-            <if test="orderNum != null">
+            <if test="orderNum != null and orderNum != ''">
                 and orderNum = #{orderNum}
             </if>
-            <if test="shopId != null">
+            <if test="shopId != null and shopId != ''">
                 and shopId = #{shopId}
             </if>
-            <if test="userId != null">
+            <if test="userId != null and userId != ''">
                 and userId = #{userId}
             </if>
-            <if test="orderState != null">
+            <if test="orderState != null and orderState != ''">
                 and orderState = #{orderState}
             </if>
-            <if test="orderType != null">
+            <if test="orderType != null and orderType != ''">
                 and orderType = #{orderType}
             </if>
             AND <![CDATA[createTime >= #{startTime}

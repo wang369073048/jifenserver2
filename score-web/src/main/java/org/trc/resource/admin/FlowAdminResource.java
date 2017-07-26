@@ -18,10 +18,12 @@ import org.trc.constants.ScoreAdminConstants;
 import org.trc.constants.ScoreCst;
 import org.trc.constants.TemporaryContext;
 import org.trc.domain.auth.Auth;
+import org.trc.domain.dto.ScoreChangeDTO;
 import org.trc.domain.dto.ScoreChangeRecordQueryDTO;
 import org.trc.domain.score.ScoreChange;
 import org.trc.enums.ExceptionEnum;
 import org.trc.exception.FlowException;
+import org.trc.util.FatherToChildUtils;
 import org.trc.util.JSONUtil;
 import org.trc.util.Pagenation;
 
@@ -50,7 +52,7 @@ public class FlowAdminResource {
     private IAuthBiz authBiz;
     @GET
     @Path(ScoreAdminConstants.Route.Flow.RECORD)
-    public Response queryChangeRecord(@QueryParam("shopId") Long shopId,
+    public Pagenation<ScoreChange> queryChangeRecord(@QueryParam("shopId") Long shopId,
                                       @QueryParam("userPhone") String userPhone,
                                       @QueryParam("businessCode") String businessCodes,
                                       @QueryParam("startTime") Long startTime,
@@ -81,41 +83,24 @@ public class FlowAdminResource {
             }
             Pagenation<ScoreChange> scoreChangePage = scoreChangeRecordBiz.queryScoreChangeForPlatAdmin(queryDto, page);
             List<ScoreChange> scoreChanges = scoreChangePage.getResult();
-            JSONObject jsonObject = new JSONObject();
-            JSONArray jsonArray = new JSONArray();
             if (ListUtils.isNotEmpty(scoreChanges)) {
-                for (ScoreChange scoreChange : scoreChanges) {
-                    JSONObject json = new JSONObject();
+                for(int i = 0; i < scoreChanges.size(); i++){
+                    ScoreChange scoreChange = scoreChanges.get(i);
+                    ScoreChangeDTO scoreChangeDTO = new ScoreChangeDTO();
+                    FatherToChildUtils.fatherToChild(scoreChange,scoreChangeDTO);
                     UserDO userDO = userService.getUserDO(QueryType.UserId, scoreChange.getUserId());
                     if(null!=userDO) {
-                        json.put("userPhone", userDO.getPhone());
+                        scoreChangeDTO.setUserPhone(userDO.getPhone());
                     }
-                    json.put("id", scoreChange.getId());
-                    json.put("userId", scoreChange.getUserId());
-                    json.put("userName", scoreChange.getUserName());
-                    json.put("scoreId", scoreChange.getScoreId());
-                    json.put("foreignCurrency", scoreChange.getForeignCurrency());
                     if(null!=scoreChange.getExchangeCurrency()) {
                         ScoreCst.ExchangeCurrency exchangeCurrency = Enum.valueOf(ScoreCst.ExchangeCurrency.class, scoreChange.getExchangeCurrency());
-                        json.put("exchangeCurrency", exchangeCurrency.getValue());
+                        scoreChangeDTO.setExchangeCurrency(exchangeCurrency.getValue());
                     }
-                    json.put("score", scoreChange.getScore());
-                    json.put("scoreBalance", scoreChange.getScoreBalance());
-                    json.put("freezingScoreBalance", scoreChange.getFreezingScoreBalance());
-                    json.put("orderCode", scoreChange.getOrderCode());
-                    json.put("channelCode", scoreChange.getChannelCode());
-                    json.put("shopId", scoreChange.getShopId());
-                    json.put("shopName", TemporaryContext.getShopNameByExchangeCurrency(scoreChange.getExchangeCurrency()));
-                    json.put("businessCode", scoreChange.getBusinessCode());
-                    json.put("flowType", scoreChange.getFlowType());
-                    json.put("remark", ObjectUtils.convertVal(scoreChange.getRemark(), ""));
-                    json.put("operationTime", scoreChange.getOperationTime().getTime());
-                    json.put("expirationTime", ObjectUtils.convertVal(scoreChange.getExpirationTime(), 0));
-                    json.put("createTime", scoreChange.getCreateTime().getTime());
-                    jsonArray.add(json);
+                    scoreChangeDTO.setShopName(TemporaryContext.getShopNameByExchangeCurrency(scoreChange.getExchangeCurrency()));
+                    scoreChanges.set(i,scoreChangeDTO);
                 }
             }
-            return null;
+            return scoreChangePage;
     }
     //TODO 导出
 }

@@ -31,7 +31,7 @@ public interface IOrderMapper extends BaseMapper<OrdersDO>{
      * @param pageRequest PageRequest<OrdersDO>
      * @return List<OrdersDO>
      */
-    List<OrdersDO> selectOrdersByParams(SettlementQuery settlementQuery, Pagenation<OrdersDO> pageRequest);
+    List<OrdersDO> selectOrdersByParams(SettlementQuery settlementQuery);
 
     List<ExportOrderDTO> queryOrderAndAddressForExport(SettlementQuery settlementQuery);
 }

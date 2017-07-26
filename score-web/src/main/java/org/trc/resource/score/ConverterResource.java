@@ -41,7 +41,7 @@ public class ConverterResource {
     private IAuthBiz authBiz;
     @Autowired
     private IScoreConverterBiz scoreConverterBiz;
-
+    @Autowired
     private IShopBiz shopBiz;
 
     /**

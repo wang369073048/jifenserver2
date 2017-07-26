@@ -6,6 +6,7 @@ import org.trc.form.impower.JurisdictionTreeNode;
 import javax.ws.rs.BeanParam;
 import javax.ws.rs.container.ContainerRequestContext;
 import java.util.List;
+import java.util.Map;
 
 
 /**
@@ -90,4 +91,6 @@ public interface IAclResourceBiz {
      * @throws Exception
      */
     void updateJurisdiction(JurisdictionTreeNode jurisdictionTreeNode);
+
+    List<Map<String,Object>> getHtmlJurisdiction(String userId);
 }
