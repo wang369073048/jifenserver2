@@ -11,4 +11,15 @@
             AND UNIX_TIMESTAMP(accountDay) < unix_timestamp(#{endTime})]]>
         </where>
     </select>
+
+    <select id="queryMembershipScoreDailyDetailForExport" parameterType="org.trc.domain.dto.SettlementQuery" resultType="org.trc.domain.order.MembershipScoreDailyDetailsDO">
+        select * from membership_score_daily_details
+        <where>
+            <if test="userId != null ">
+                AND userId = #{userId}
+            </if>
+            AND <![CDATA[ UNIX_TIMESTAMP(accountDay) >= unix_timestamp(#{startTime})
+            AND UNIX_TIMESTAMP(accountDay) < unix_timestamp(#{endTime})]]>
+        </where>
+    </select>
 </mapper>

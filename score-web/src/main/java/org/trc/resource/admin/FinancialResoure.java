@@ -2,26 +2,33 @@ package org.trc.resource.admin;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.txframework.util.DateUtils;
 import com.txframework.util.ListUtils;
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.trc.biz.order.IFinancialSettlementBiz;
 import org.trc.constants.ScoreAdminConstants;
+import org.trc.domain.dto.ConsumptionSummaryStatisticalDataDTO;
+import org.trc.domain.dto.SettlementIntervalDTO;
 import org.trc.domain.dto.SettlementQuery;
 import org.trc.domain.order.ConsumptionSummaryDO;
-import org.trc.domain.dto.ConsumptionSummaryStatisticalDataDTO;
 import org.trc.domain.order.MembershipScoreDailyDetailsDO;
-import org.trc.domain.dto.SettlementIntervalDTO;
 import org.trc.enums.ExceptionEnum;
 import org.trc.exception.BusinessException;
-import org.trc.util.AppResult;
-import org.trc.util.JSONUtil;
-import org.trc.util.Pagenation;
+import org.trc.util.*;
 import org.trc.validation.VerifyDate;
 
 import javax.validation.constraints.NotNull;
 import javax.ws.rs.*;
+import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
+import java.io.ByteArrayOutputStream;
+import java.net.URLEncoder;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -37,6 +44,7 @@ import static org.trc.util.ResultUtil.createSucssAppResult;
 @Path(ScoreAdminConstants.Route.Financial.ROOT)
 public class FinancialResoure {
 
+    Logger logger = LoggerFactory.getLogger(FinancialResoure.class);
     @Autowired
     private IFinancialSettlementBiz financialSettlementBiz;
 
@@ -95,7 +103,42 @@ public class FinancialResoure {
         return createSucssAppResult("查询成功!", jsonObject);
     }
 
-    //TODO 导出 @Path(ScoreAdminConstants.Route.Financial.CONSUMPTION_SUMMARY_EXPORT)
+    @GET
+    @Path(ScoreAdminConstants.Route.Financial.CONSUMPTION_SUMMARY_EXPORT)
+    public Response exportConsumptionSummary(@QueryParam("shopId") Long shopId,
+                                             @QueryParam("phone") String phone,
+                                             @NotNull @QueryParam("startTime") Long startTime,
+                                             @NotNull @QueryParam("endTime") Long endTime) throws Exception {
+        SettlementQuery settlementQuery = new SettlementQuery();
+        settlementQuery.setShopId(shopId);
+        settlementQuery.setPhone(phone);
+        settlementQuery.setStartTime(new Date(startTime));
+        settlementQuery.setEndTime(new Date(endTime));
+        List<ConsumptionSummaryDO> consumptionSummaryList = financialSettlementBiz.queryConsumptionSummaryForExport(settlementQuery);
+        //导出文件
+        CellDefinition userId = new CellDefinition("userId", "用户Id", CellDefinition.TEXT, 13000);
+        CellDefinition accountDay = new CellDefinition("accountDay", "日期", CellDefinition.TEXT, 4000);
+        CellDefinition shopName = new CellDefinition("shopName", "店铺名称", CellDefinition.TEXT, 4000);
+        CellDefinition phoneCell = new CellDefinition("phone", "会员手机号", CellDefinition.TEXT, 4000);
+        CellDefinition exchangeInNum = new CellDefinition("exchangeInNum", "兑入积分数量", CellDefinition.NUM_0, 4000);
+        CellDefinition consumeNum = new CellDefinition("consumeNum", "消费积分数量", CellDefinition.NUM_0, 4000);
+        List<CellDefinition> cellDefinitionList = new ArrayList<>();
+        cellDefinitionList.add(userId);
+        cellDefinitionList.add(accountDay);
+        cellDefinitionList.add(shopName);
+        cellDefinitionList.add(phoneCell);
+        cellDefinitionList.add(exchangeInNum);
+        cellDefinitionList.add(consumeNum);
+        String sheetName = "用户消费明细";
+        String fileName = "用户消费明细-" + DateUtils.formatDate(settlementQuery.getStartTime(), DateUtils.DATE_PATTERN) + "-" + DateUtils.formatDate(settlementQuery.getEndTime(), DateUtils.DATE_PATTERN) + ".xls";
+        fileName = URLEncoder.encode(fileName, "UTF-8");
+        HSSFWorkbook hssfWorkbook = ExportExcel.generateExcel(consumptionSummaryList, cellDefinitionList, sheetName);
+        ByteArrayOutputStream stream = new ByteArrayOutputStream();
+        hssfWorkbook.write(stream);
+        /**模拟数据结束*/
+        return Response.ok(stream.toByteArray()).header(HttpHeaders.CONTENT_DISPOSITION, "attachment;filename*=utf-8'zh_cn'" + fileName).type(MediaType.APPLICATION_OCTET_STREAM)
+                .header("Cache-Control", "no-cache").build();
+    }
 
     @GET
     @Path(ScoreAdminConstants.Route.Financial.MONTH_CONSUMPTION_SUMMARY)
@@ -151,7 +194,43 @@ public class FinancialResoure {
         return createSucssAppResult("查询成功!", jsonObject);
     }
 
-    //TODO 导出 @Path(ScoreAdminConstants.Route.Financial.MONTH_CONSUMPTION_SUMMARY_EXPORT)
+    @GET
+    @Path(ScoreAdminConstants.Route.Financial.MONTH_CONSUMPTION_SUMMARY_EXPORT)
+    public Response exportMonthConsumptionSummary(@QueryParam("shopId") Long shopId,
+                                                  @QueryParam("phone") String phone,
+                                                  @NotNull @QueryParam("startTime") Long startTime,
+                                                  @NotNull @QueryParam("endTime") Long endTime) throws Exception {
+        SettlementQuery settlementQuery = new SettlementQuery();
+        settlementQuery.setShopId(shopId);
+        settlementQuery.setPhone(phone);
+        settlementQuery.setStartTime(new Date(startTime));
+        settlementQuery.setEndTime(new Date(endTime));
+        List<ConsumptionSummaryDO> consumptionSummaryList = financialSettlementBiz.queryMonthConsumptionSummaryForExport(settlementQuery);
+        //导出文件
+        CellDefinition userId = new CellDefinition("userId", "用户Id", CellDefinition.TEXT, 13000);
+        CellDefinition accountDay = new CellDefinition("accountDay", "日期", CellDefinition.TEXT, 4000);
+        CellDefinition shopName = new CellDefinition("shopName", "店铺名称", CellDefinition.TEXT, 4000);
+        CellDefinition phoneCell = new CellDefinition("phone", "会员手机号", CellDefinition.TEXT, 4000);
+        CellDefinition exchangeInNum = new CellDefinition("exchangeInNum", "兑入积分数量", CellDefinition.NUM_0, 4000);
+        CellDefinition consumeNum = new CellDefinition("consumeNum", "消费积分数量", CellDefinition.NUM_0, 4000);
+        List<CellDefinition> cellDefinitionList = new ArrayList<>();
+        cellDefinitionList.add(userId);
+        cellDefinitionList.add(accountDay);
+        cellDefinitionList.add(shopName);
+        cellDefinitionList.add(phoneCell);
+        cellDefinitionList.add(exchangeInNum);
+        cellDefinitionList.add(consumeNum);
+        String sheetName = "月度消费明细";
+        String fileName = "月度消费明细-" + DateUtils.formatDate(settlementQuery.getStartTime(), DateUtils.DATE_PATTERN) + "-" + DateUtils.formatDate(settlementQuery.getEndTime(), DateUtils.DATE_PATTERN) + ".xls";
+        fileName = URLEncoder.encode(fileName, "UTF-8");
+        HSSFWorkbook hssfWorkbook = ExportExcel.generateExcel(consumptionSummaryList, cellDefinitionList, sheetName);
+        ByteArrayOutputStream stream = new ByteArrayOutputStream();
+        hssfWorkbook.write(stream);
+        /**模拟数据结束*/
+        return Response.ok(stream.toByteArray()).header(HttpHeaders.CONTENT_DISPOSITION, "attachment;filename*=utf-8'zh_cn'" + fileName).type(MediaType.APPLICATION_OCTET_STREAM)
+                .header("Cache-Control", "no-cache").build();
+
+    }
 
     @GET
     @Path(ScoreAdminConstants.Route.Financial.MEMBERSHIP_SCORE_DAILY_DETAILS)
@@ -207,5 +286,37 @@ public class FinancialResoure {
         return createSucssAppResult("查询成功!", jsonObject);
     }
 
-    //TODO 导出 @Path(ScoreAdminConstants.Route.Financial.MEMBERSHIP_SCORE_DAILY_DETAILS_EXPORT)
+    @GET
+    @Path(ScoreAdminConstants.Route.Financial.MEMBERSHIP_SCORE_DAILY_DETAILS_EXPORT)
+    public Response exportMembershipScoreDailyDetail(@QueryParam("userId") String userId,
+                                                     @NotNull @QueryParam("startTime") Long startTime,
+                                                     @NotNull @QueryParam("endTime") Long endTime) throws Exception{
+        SettlementQuery settlementQuery = new SettlementQuery();
+        settlementQuery.setUserId(userId);
+        settlementQuery.setStartTime(new Date(startTime));
+        settlementQuery.setEndTime(new Date(endTime));
+        List<MembershipScoreDailyDetailsDO> consumptionSummaryList = financialSettlementBiz.queryMembershipScoreDailyDetailForExport(settlementQuery);
+        //导出文件
+        CellDefinition userIdCell = new CellDefinition("userId", "用户Id", CellDefinition.TEXT, 13000);
+        CellDefinition accountDay = new CellDefinition("accountDay", "日期", CellDefinition.TEXT, 4000);
+        CellDefinition exchangeInNum = new CellDefinition("exchangeInNum", "兑入积分数量", CellDefinition.NUM_0, 4000);
+        CellDefinition consumeNum = new CellDefinition("consumeNum", "消费积分数量", CellDefinition.NUM_0, 4000);
+        CellDefinition balance = new CellDefinition("balance", "结余积分数量", CellDefinition.NUM_0, 4000);
+        List<CellDefinition> cellDefinitionList = new ArrayList<>();
+        cellDefinitionList.add(userIdCell);
+        cellDefinitionList.add(accountDay);
+        cellDefinitionList.add(exchangeInNum);
+        cellDefinitionList.add(consumeNum);
+        cellDefinitionList.add(balance);
+        String sheetName = "会员积分日结明细";
+        String fileName = "会员积分日结明细-" + DateUtils.formatDate(settlementQuery.getStartTime(), DateUtils.DATE_PATTERN) + "-" + DateUtils.formatDate(settlementQuery.getEndTime(), DateUtils.DATE_PATTERN) + ".xls";
+        fileName = URLEncoder.encode(fileName, "UTF-8");
+        HSSFWorkbook hssfWorkbook = ExportExcel.generateExcel(consumptionSummaryList, cellDefinitionList, sheetName);
+        ByteArrayOutputStream stream = new ByteArrayOutputStream();
+        hssfWorkbook.write(stream);
+        /**模拟数据结束*/
+        return Response.ok(stream.toByteArray()).header(HttpHeaders.CONTENT_DISPOSITION, "attachment;filename*=utf-8'zh_cn'" + fileName).type(MediaType.APPLICATION_OCTET_STREAM)
+                .header("Cache-Control", "no-cache").build();
+
+    }
 }

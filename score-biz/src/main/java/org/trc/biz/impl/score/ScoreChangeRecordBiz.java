@@ -76,6 +76,6 @@ public class ScoreChangeRecordBiz implements IScoreChangeRecordBiz{
 
     @Override
     public List<FlowDTO> queryScoreChangeForExport(ScoreChangeRecordQueryDTO queryDto) {
-        return null;
+        return scoreChangeRecordService.queryScoreChangeForExport(queryDto);
     }
 }

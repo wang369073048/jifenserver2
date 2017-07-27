@@ -28,10 +28,11 @@ public interface IOrderMapper extends BaseMapper<OrdersDO>{
     /**
      * 多条件查询表信息(分页)
      * @param settlementQuery SettlementQuery
-     * @param pageRequest PageRequest<OrdersDO>
      * @return List<OrdersDO>
      */
     List<OrdersDO> selectOrdersByParams(SettlementQuery settlementQuery);
 
     List<ExportOrderDTO> queryOrderAndAddressForExport(SettlementQuery settlementQuery);
+
+    List<ExportOrderDTO> queryOrdersForExport(SettlementQuery settlementQuery);
 }

@@ -17,4 +17,33 @@ mp(#{endTime})]]>
         group by userId, shopId, phone, left(accountDay,7)
         order by userId desc, shopId desc, phone desc, left(accountDay,7) desc
     </select>
+
+    <select id="queryConsumptionSummaryForExport" parameterType="org.trc.domain.dto.SettlementQuery" resultType="org.trc.domain.order.ConsumptionSummaryDO">
+        select * from consumption_summary
+        <where>
+            <if test="shopId != null ">
+                AND shopId = #{shopId}
+            </if>
+            <if test="phone != null ">
+                AND phone = #{phone}
+            </if>
+            AND <![CDATA[ UNIX_TIMESTAMP(accountDay) >= unix_timestamp(#{startTime})
+            AND UNIX_TIMESTAMP(accountDay) < unix_timestamp(#{endTime})]]>
+        </where>
+    </select>
+    <select id="queryMonthConsumptionSummaryForExport" parameterType="org.trc.domain.dto.SettlementQuery" resultType="org.trc.domain.order.ConsumptionSummaryDO">
+        select userId, shopId, phone, left(accountDay,7) as accountDay, SUM(exchangeInNum) as exchangeInNum, SUM(consumeNum) as consumeNum  from consumption_summary
+        <where>
+            <if test="shopId != null ">
+                AND shopId = #{shopId}
+            </if>
+            <if test="phone != null ">
+                AND phone = #{phone}
+            </if>
+            AND <![CDATA[ UNIX_TIMESTAMP(accountDay) >= unix_timestamp(#{startTime})
+            AND UNIX_TIMESTAMP(accountDay) < unix_timestamp(#{endTime})]]>
+        </where>
+        group by userId, shopId, phone, left(accountDay,7)
+        order by userId desc, shopId desc, phone desc, left(accountDay,7) desc
+    </select>
 </mapper>

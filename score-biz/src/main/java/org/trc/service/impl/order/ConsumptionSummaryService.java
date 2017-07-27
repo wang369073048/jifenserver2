@@ -75,7 +75,7 @@ public class ConsumptionSummaryService extends BaseService<ConsumptionSummaryDO,
 
     @Override
     public List<ConsumptionSummaryDO> queryConsumptionSummaryForExport(SettlementQuery settlementQuery) {
-        return null;
+        return consumptionSummaryMapper.queryConsumptionSummaryForExport(settlementQuery);
     }
 
     @Override
@@ -89,7 +89,7 @@ public class ConsumptionSummaryService extends BaseService<ConsumptionSummaryDO,
 
     @Override
     public List<ConsumptionSummaryDO> queryMonthConsumptionSummaryForExport(SettlementQuery settlementQuery) {
-        return null;
+        return consumptionSummaryMapper.queryMonthConsumptionSummaryForExport(settlementQuery);
     }
 
     @Override

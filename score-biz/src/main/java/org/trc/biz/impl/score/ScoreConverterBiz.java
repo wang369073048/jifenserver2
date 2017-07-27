@@ -11,9 +11,13 @@ import org.springframework.util.Assert;
 import org.trc.biz.score.IScoreConverterBiz;
 import org.trc.constants.ScoreCst;
 import org.trc.domain.score.ScoreConverter;
+import org.trc.domain.score.ScoreConverterFlow;
 import org.trc.enums.ExceptionEnum;
 import org.trc.exception.ConverterException;
+import org.trc.exception.ScoreConverterException;
+import org.trc.service.score.IScoreConverterFlowService;
 import org.trc.service.score.IScoreConverterService;
+import org.trc.util.ConvertUtil;
 
 /**
  * Created by hzwzhen on 2017/6/14.
@@ -25,6 +29,8 @@ public class ScoreConverterBiz implements IScoreConverterBiz{
 
     @Autowired
     private IScoreConverterService scoreConverterService;
+    @Autowired
+    private IScoreConverterFlowService scoreConverterFlowService;
     @Override
     @Transactional(propagation= Propagation.REQUIRED,rollbackFor=Exception.class)
     public int saveScoreConverter(ScoreConverter scoreConverter) {
@@ -44,7 +50,7 @@ public class ScoreConverterBiz implements IScoreConverterBiz{
             //插入配置规则
             int result = scoreConverterService.insertSelective(scoreConverter);
             //TODO 插入流水
-            //insertScoreConverterFlow(scoreConverter);
+            insertScoreConverterFlow(scoreConverter);
             return result;
         }catch (IllegalArgumentException e) {
             logger.error("新增ScoreConverter参数校验异常!",e);
@@ -54,6 +60,22 @@ public class ScoreConverterBiz implements IScoreConverterBiz{
         } catch (Exception e) {
             logger.error("新增"+scoreConverter.getExchangeCurrency()+"兑换规则失败!",e);
             throw new ConverterException(ExceptionEnum.CONVERTER_SAVE_EXCEPTION, "新增"+scoreConverter.getExchangeCurrency()+"兑换规则失败!");
+        }
+    }
+
+    private void insertScoreConverterFlow(ScoreConverter scoreConverter) {
+        try {
+            //插入流水
+            ScoreConverterFlow flow = ConvertUtil.convert(scoreConverter, new ScoreConverterFlow());
+            scoreConverter.setIsDeleted(0);
+            ScoreConverter converter = scoreConverterService.selectOne(scoreConverter);
+            flow.setConverterId(converter.getId());
+            flow.setOperatedBy(converter.getCreateBy());
+            flow.setOperatedTime(converter.getCreateTime());
+            scoreConverterFlowService.insertSelective(flow);
+        } catch (Exception e) {
+            logger.error("新增"+scoreConverter.getExchangeCurrency()+"ScoreConverterFlow失败!",e);
+            throw new ScoreConverterException(ExceptionEnum.INSERT_EXCEPTION, "新增"+scoreConverter.getExchangeCurrency()+"ScoreConverterFlow失败!");
         }
     }
 
@@ -69,7 +91,7 @@ public class ScoreConverterBiz implements IScoreConverterBiz{
                 throw new ConverterException(ExceptionEnum.CONVERTER_UPDATE_EXCEPTION, "根据ID=>[" + scoreConverter.getId() + "]修改兑换规则失败!");
             }
             // TODO 插入流水
-            //insertScoreConverterFlow(scoreConverter);
+            insertScoreConverterFlow(scoreConverter);
             return result;
         } catch (IllegalArgumentException e) {
             logger.error("根据ID=>[" + scoreConverter.getId() + "]修改兑换规则参数校验失败!",e);
@@ -117,7 +139,7 @@ public class ScoreConverterBiz implements IScoreConverterBiz{
                 throw new ConverterException(ExceptionEnum.CONVERTER_UPDATE_EXCEPTION, "根据ID=>[" + scoreConverter.getId() + "]删除兑换规则失败!");
             }
             //TODO 插入流水
-            //insertScoreConverterFlow(scoreConverter);
+            insertScoreConverterFlow(scoreConverter);
             return result;
         } catch (IllegalArgumentException e) {
             logger.error("根据ID=>[" + scoreConverter.getId() + "]删除兑换规则参数校验失败!",e);

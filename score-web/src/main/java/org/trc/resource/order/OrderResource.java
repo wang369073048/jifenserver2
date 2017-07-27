@@ -225,7 +225,6 @@ public class OrderResource {
         return newOrderBiz.queryOrdersDOListForPage(order, page);
     }
 
-    //TODO 发货订单导出
     @GET
     @Path("/list/export")
     public Response exportOrder(@QueryParam("orderNum") String orderNum,

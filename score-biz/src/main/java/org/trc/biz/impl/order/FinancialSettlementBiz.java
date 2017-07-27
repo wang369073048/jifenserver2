@@ -59,12 +59,12 @@ public class FinancialSettlementBiz implements IFinancialSettlementBiz{
 
     @Override
     public List<ConsumptionSummaryDO> queryConsumptionSummaryForExport(SettlementQuery settlementQuery) {
-        return null;
+        return consumptionSummaryService.queryConsumptionSummaryForExport(settlementQuery);
     }
 
     @Override
     public List<MembershipScoreDailyDetailsDO> queryMembershipScoreDailyDetailForExport(SettlementQuery settlementQuery) {
-        return null;
+        return membershipDcoreDailyDetailsService.queryMembershipScoreDailyDetailForExport(settlementQuery);
     }
 
     @Override
@@ -84,7 +84,7 @@ public class FinancialSettlementBiz implements IFinancialSettlementBiz{
 
     @Override
     public List<ConsumptionSummaryDO> queryMonthConsumptionSummaryForExport(SettlementQuery settlementQuery) {
-        return null;
+        return consumptionSummaryService.queryMonthConsumptionSummaryForExport(settlementQuery);
     }
 
     @Override

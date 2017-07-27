@@ -2,7 +2,11 @@ package org.trc.resource.goods;
 
 
 import com.alibaba.fastjson.JSONObject;
+import com.trc.mall.util.CustomAck;
 import org.apache.commons.lang.RandomStringUtils;
+import org.apache.commons.lang3.time.DateFormatUtils;
+import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
+import org.glassfish.jersey.media.multipart.FormDataParam;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +26,8 @@ import javax.ws.rs.*;
 import javax.ws.rs.container.ContainerRequestContext;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
+import java.io.InputStream;
 import java.util.Calendar;
 import java.util.Date;
 
@@ -151,6 +157,36 @@ public class CardResource {
     }
 
     //TODO 上传Excel
+//    @POST
+//    @Path("/uploadExcel")
+//    @Logined
+//    @Consumes(MediaType.MULTIPART_FORM_DATA)
+//    public Response uploadExcel(@Context ContainerRequestContext requestContext,
+//                                @QueryParam("batchNumber") String batchNumber,
+//                                @FormDataParam("file") InputStream fileInputStream,
+//                                @FormDataParam("file") FormDataContentDisposition disposition) {
+//        if(null == disposition){
+//            return TxJerseyTools.returnSuccess("未找到导入文件!");
+//        }
+//        String dirName = DateFormatUtils.format(Calendar.getInstance(), DateFormatUtils.ISO_DATE_FORMAT.getPattern());
+//        try {
+//            String fileName = Calendar.getInstance().getTimeInMillis() + "-" + new String( disposition.getFileName().getBytes("ISO8859-1"), "UTF-8").toLowerCase();
+//            if( !fileName.endsWith(".xls") && !fileName.endsWith(".xlsx")){
+//                return CustomAck.customError("只支持文件类型为.xls的文件上传!");
+//            }
+//            //获取userId
+//            String userId = TxJerseyRestContextFactory.getInstance().getUserId();
+//            Auth auth = ScoreProvider.authService.getAuthByUserId(userId);
+//            XlsProcessing.getInstance().dealFile(batchNumber, auth.getShopId(), dirName, fileName, fileInputStream);
+//            return TxJerseyTools.returnSuccess("导入成功!");
+//        } catch (CardCouponException e) {
+//            logger.error("====>CardResource.uploadExcel exception", e);
+//            return CustomAck.customError(e.getMessage());
+//        } catch (Exception e) {
+//            logger.error("====>CardResource.uploadExcel exception", e);
+//            return TxJerseyTools.returnAbort(CommonConstants.ErrorCode.ERROR_SERVICE_IN_REST);
+//        }
+//    }
 
     /**
      * 查询卡券明细

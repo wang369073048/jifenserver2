@@ -2,14 +2,11 @@ package org.trc.service.impl.order;
 
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
-import com.txframework.core.jdbc.PageRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.trc.IBaseService;
 import org.trc.domain.dto.SettlementIntervalDTO;
 import org.trc.domain.dto.SettlementQuery;
 import org.trc.domain.order.MembershipScoreDailyDetailsDO;
-import org.trc.domain.order.OrdersDO;
 import org.trc.mapper.order.IMembershipDcoreDailyDetailsMapper;
 import org.trc.service.impl.BaseService;
 import org.trc.service.order.IMembershipDcoreDailyDetailsService;
@@ -59,7 +56,7 @@ public class MembershipDcoreDailyDetailsService extends BaseService<MembershipSc
 
     @Override
     public List<MembershipScoreDailyDetailsDO> queryMembershipScoreDailyDetailForExport(SettlementQuery settlementQuery) {
-        return null;
+        return membershipDcoreDailyDetailsMapper.queryMembershipScoreDailyDetailForExport(settlementQuery);
     }
 
     @Override

@@ -1,9 +1,9 @@
 package org.trc.mapper.score;
 
+import org.trc.domain.dto.FlowDTO;
 import org.trc.domain.dto.ScoreChangeRecordQueryDTO;
 import org.trc.domain.score.ScoreChange;
 import org.trc.util.BaseMapper;
-import org.trc.util.Pagenation;
 
 import java.util.List;
 
@@ -20,5 +20,7 @@ public interface IScoreChangeMapper extends BaseMapper<ScoreChange>{
     List<ScoreChange> queryScoreChangeForShopAdmin(ScoreChangeRecordQueryDTO queryDto);
 
     List<ScoreChange> queryScoreChangeForPlatAdmin(ScoreChangeRecordQueryDTO queryDto);
+
+    List<FlowDTO> queryScoreChangeForExport(ScoreChangeRecordQueryDTO queryDto);
 
 }

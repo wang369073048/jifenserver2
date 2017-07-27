@@ -79,7 +79,7 @@ public class OrderService extends BaseService<OrdersDO,Long> implements IOrderSe
 
     @Override
     public List<ExportOrderDTO> queryOrdersForExport(SettlementQuery settlementQuery) {
-        return null;
+        return orderMapper.queryOrdersForExport(settlementQuery);
     }
 
     @Override

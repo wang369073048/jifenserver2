@@ -332,7 +332,7 @@ public class NewOrderBiz implements INewOrderBiz {
 
     @Override
     public List<ExportOrderDTO> queryOrdersForExport(SettlementQuery settlementQuery) {
-        return null;
+        return orderService.queryOrdersForExport(settlementQuery);
     }
 
     @Override

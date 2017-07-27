@@ -81,6 +81,6 @@ public class ScoreChangeRecordService extends BaseService<ScoreChange,Long> impl
 
     @Override
     public List<FlowDTO> queryScoreChangeForExport(ScoreChangeRecordQueryDTO queryDto) {
-        return null;
+        return scoreChangeMapper.queryScoreChangeForExport(queryDto);
     }
 }
