@@ -1,5 +1,6 @@
 package org.trc.service.impl.score;
 
+import org.springframework.stereotype.Service;
 import org.trc.domain.score.ScoreConverterFlow;
 import org.trc.service.impl.BaseService;
 import org.trc.service.score.IScoreConverterFlowService;
@@ -10,5 +11,6 @@ import org.trc.service.score.IScoreConverterFlowService;
  * comments:
  * since Date： 2017/7/26
  */
+@Service("scoreConverterFlowService")
 public class ScoreConverterFlowService extends BaseService<ScoreConverterFlow,Long> implements IScoreConverterFlowService{
 }
