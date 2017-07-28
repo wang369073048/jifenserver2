@@ -2,7 +2,7 @@ package org.trc.service.order;
 
 import org.trc.IBaseService;
 import org.trc.domain.dto.SettlementIntervalDTO;
-import org.trc.domain.dto.SettlementQuery;
+import org.trc.domain.query.SettlementQuery;
 import org.trc.domain.order.MembershipScoreDailyDetailsDO;
 import org.trc.util.Pagenation;
 

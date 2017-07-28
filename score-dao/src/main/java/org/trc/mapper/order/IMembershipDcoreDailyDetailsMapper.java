@@ -1,10 +1,9 @@
 package org.trc.mapper.order;
 
 import org.trc.domain.dto.SettlementIntervalDTO;
-import org.trc.domain.dto.SettlementQuery;
+import org.trc.domain.query.SettlementQuery;
 import org.trc.domain.order.MembershipScoreDailyDetailsDO;
 import org.trc.util.BaseMapper;
-import org.trc.util.Pagenation;
 
 import java.util.List;
 import java.util.Map;

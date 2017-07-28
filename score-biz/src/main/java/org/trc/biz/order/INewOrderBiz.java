@@ -2,10 +2,9 @@ package org.trc.biz.order;
 
 import com.trc.mall.externalservice.LogisticAck;
 import com.trc.mall.externalservice.TrcExpressAck;
-import com.txframework.core.jdbc.PageRequest;
 import org.trc.domain.dto.ExportOrderDTO;
 import org.trc.domain.dto.OrderDTO;
-import org.trc.domain.dto.SettlementQuery;
+import org.trc.domain.query.SettlementQuery;
 import org.trc.domain.order.*;
 import org.trc.util.Pagenation;
 

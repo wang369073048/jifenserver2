@@ -54,7 +54,6 @@ public class OrderAdminResource {
      * @return
      */
     @GET
-    //@Admin TODO 缺少注解
     public Pagenation<OrdersDO> queryOrderList(@QueryParam("orderNum") String orderNum,
                                     @QueryParam("phone") String phone,
                                     @QueryParam("orderState") Integer orderState,

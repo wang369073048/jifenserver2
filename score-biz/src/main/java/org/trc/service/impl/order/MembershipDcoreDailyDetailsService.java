@@ -5,7 +5,7 @@ import com.github.pagehelper.PageHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.trc.domain.dto.SettlementIntervalDTO;
-import org.trc.domain.dto.SettlementQuery;
+import org.trc.domain.query.SettlementQuery;
 import org.trc.domain.order.MembershipScoreDailyDetailsDO;
 import org.trc.mapper.order.IMembershipDcoreDailyDetailsMapper;
 import org.trc.service.impl.BaseService;

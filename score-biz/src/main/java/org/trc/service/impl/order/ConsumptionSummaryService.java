@@ -6,7 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.trc.domain.dto.ConsumptionSummaryStatisticalDataDTO;
 import org.trc.domain.dto.SettlementIntervalDTO;
-import org.trc.domain.dto.SettlementQuery;
+import org.trc.domain.query.SettlementQuery;
 import org.trc.domain.order.ConsumptionSummaryDO;
 import org.trc.mapper.order.IConsumptionSummaryMapper;
 import org.trc.service.impl.BaseService;

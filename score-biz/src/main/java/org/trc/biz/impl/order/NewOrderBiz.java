@@ -1,6 +1,5 @@
 package org.trc.biz.impl.order;
 
-import com.sun.javafx.binding.StringFormatter;
 import com.trc.mall.externalservice.LogisticAck;
 import com.trc.mall.externalservice.LogisticTrace;
 import com.trc.mall.externalservice.TrcExpress100;
@@ -19,17 +18,17 @@ import org.trc.constants.OrderStatus;
 import org.trc.constants.OrderType;
 import org.trc.domain.dto.ExportOrderDTO;
 import org.trc.domain.dto.OrderDTO;
-import org.trc.domain.dto.SettlementQuery;
+import org.trc.domain.query.SettlementQuery;
 import org.trc.domain.goods.CardItemDO;
+import org.trc.domain.luckydraw.WinningRecordDO;
 import org.trc.domain.order.*;
 import org.trc.domain.shop.ShopDO;
 import org.trc.enums.ExceptionEnum;
+import org.trc.exception.BusinessException;
 import org.trc.exception.GoodsException;
 import org.trc.exception.OrderException;
-import org.trc.service.order.ILogisticsService;
-import org.trc.service.order.IOrderAddressService;
-import org.trc.service.order.IOrderLocusService;
-import org.trc.service.order.IOrderService;
+import org.trc.service.luckydraw.IWinningRecordService;
+import org.trc.service.order.*;
 import org.trc.service.shop.IShopService;
 import org.trc.util.Pagenation;
 
@@ -66,6 +65,10 @@ public class NewOrderBiz implements INewOrderBiz {
     private IOrderAddressService orderAddressService;
     @Autowired
     private IAreaBiz areaBiz;
+    @Autowired
+    private IWinningRecordService winningRecordService;
+    @Autowired
+    private IOrdersExtendService ordersExtendService;
     @Override
     public OrderAddressDO getOrderAddressByOrderId(Long orderId) {
         OrderAddressDO orderAddress = new OrderAddressDO();
@@ -211,7 +214,12 @@ public class NewOrderBiz implements INewOrderBiz {
         }
 
     }
-
+    /**
+     * 发货->发货后订单交易成功
+     *
+     * @param logistics
+     * @return LogisticsDO
+     */
     @Override
     @Transactional(rollbackFor=Exception.class)
     public LogisticsDO shipOrder(LogisticsDO logistics) {
@@ -262,9 +270,41 @@ public class NewOrderBiz implements INewOrderBiz {
         Assert.isTrue(StringUtils.isNotBlank(logistics.getLogisticsNum()), "logisticsNum不能为空");
         Assert.isTrue(logistics.getOperatorUserId() != null, "operatorUserId不能为空");
     }
+    /**
+     * 奖品发放
+     * @param orderNum
+     * @param remark
+     * @param logistics
+     * @return LogisticsDO
+     */
     @Override
+    @Transactional(rollbackFor=Exception.class)
     public LogisticsDO shipPrizes(String orderNum, String remark, LogisticsDO logistics) {
-        return null;
+        WinningRecordDO param = new WinningRecordDO();
+        param.setOrderNum(orderNum);
+        WinningRecordDO oldEntity = winningRecordService.selectOneForUpdate(param);
+        param.setState(1);
+        param.setId(oldEntity.getId());
+        param.setVersion(oldEntity.getVersion());
+        int result = winningRecordService.updateState(param);
+        if(0 == result){
+            throw new BusinessException(ExceptionEnum.UPDATE_EXCEPTION, "奖品发放失败!");
+        }
+        if(StringUtils.isNotBlank(remark)) {
+            Date time = Calendar.getInstance().getTime();
+            OrdersDO orders = new OrdersDO();
+            orders.setOrderNum(orderNum);
+            OrdersDO originalOrder = orderService.selectOne(orders);
+            OrdersExtendDO ordersExtend = new OrdersExtendDO();
+            ordersExtend.setOrderId(originalOrder.getId());
+            ordersExtend.setOrderNum(originalOrder.getOrderNum());
+            ordersExtend.setRemark(remark);
+            ordersExtend.setReturnTime(time);
+            ordersExtend.setCreateTime(time);
+            ordersExtend.setUpdateTime(time);
+            ordersExtendService.insertSelective(ordersExtend);
+        }
+        return shipOrder(logistics);
     }
 
     @Override

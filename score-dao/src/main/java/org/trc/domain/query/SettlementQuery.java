@@ -1,4 +1,4 @@
-package org.trc.domain.dto;
+package org.trc.domain.query;
 
 import java.io.Serializable;
 import java.util.Date;

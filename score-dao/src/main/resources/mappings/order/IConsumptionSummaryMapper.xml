@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="org.trc.mapper.order.IConsumptionSummaryMapper" >
-    <select id="queryMonthConsumptionSummary" parameterType="org.trc.domain.dto.SettlementQuery" resultType="org.trc.domain.order.ConsumptionSummaryDO">
+    <select id="queryMonthConsumptionSummary" parameterType="org.trc.domain.query.SettlementQuery" resultType="org.trc.domain.order.ConsumptionSummaryDO">
         select userId, shopId, phone, left(accountDay,7) as accountDay, SUM(exchangeInNum) as exchangeInNum, SUM(consumeNum) as consumeNum  from consumption_summary
         <where>
             <if test="shopId != null ">
@@ -18,7 +18,7 @@ mp(#{endTime})]]>
         order by userId desc, shopId desc, phone desc, left(accountDay,7) desc
     </select>
 
-    <select id="queryConsumptionSummaryForExport" parameterType="org.trc.domain.dto.SettlementQuery" resultType="org.trc.domain.order.ConsumptionSummaryDO">
+    <select id="queryConsumptionSummaryForExport" parameterType="org.trc.domain.query.SettlementQuery" resultType="org.trc.domain.order.ConsumptionSummaryDO">
         select * from consumption_summary
         <where>
             <if test="shopId != null ">
@@ -31,7 +31,7 @@ mp(#{endTime})]]>
             AND UNIX_TIMESTAMP(accountDay) < unix_timestamp(#{endTime})]]>
         </where>
     </select>
-    <select id="queryMonthConsumptionSummaryForExport" parameterType="org.trc.domain.dto.SettlementQuery" resultType="org.trc.domain.order.ConsumptionSummaryDO">
+    <select id="queryMonthConsumptionSummaryForExport" parameterType="org.trc.domain.query.SettlementQuery" resultType="org.trc.domain.order.ConsumptionSummaryDO">
         select userId, shopId, phone, left(accountDay,7) as accountDay, SUM(exchangeInNum) as exchangeInNum, SUM(consumeNum) as consumeNum  from consumption_summary
         <where>
             <if test="shopId != null ">

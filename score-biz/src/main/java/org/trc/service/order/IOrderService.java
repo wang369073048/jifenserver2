@@ -1,10 +1,9 @@
 package org.trc.service.order;
 
-import com.txframework.core.jdbc.PageRequest;
 import org.trc.IBaseService;
 import org.trc.domain.dto.ExportOrderDTO;
 import org.trc.domain.dto.OrderDTO;
-import org.trc.domain.dto.SettlementQuery;
+import org.trc.domain.query.SettlementQuery;
 import org.trc.domain.order.OrdersDO;
 import org.trc.domain.order.SettlementDO;
 import org.trc.util.Pagenation;

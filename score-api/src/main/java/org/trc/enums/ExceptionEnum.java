@@ -27,6 +27,7 @@ public enum ExceptionEnum {
 
     QUERY_LIST_EXCEPTION("4000305","查询列表异常"),
     INSERT_EXCEPTION("4000306","新增异常"),
+    UPDATE_EXCEPTION("4000307","更新异常"),
 
     DATABASE_DUPLICATE_KEY_EXCEPTION("3000100","数据库主键重复异常"),
     DATABASE_PERMISSION_DENIED_EXCEPTION("3000101","数据库数据访问权限异常"),
@@ -112,9 +113,8 @@ public enum ExceptionEnum {
     USER_NOT_HAVE_PERMISSION("900003","用户无此权限"),
 
 
-
-    PARAM_CHECK_EXCEPTION("2000100","参数校验错误"),
-    PARAM_ERROR_ILLEGAL("2000200", "参数不合法");
+    PARAM_CHECK_EXCEPTION("2000200","参数校验错误"),
+    PARAM_ERROR_ILLEGAL("2000300", "参数不合法");
     private String code;
     private String message;
 

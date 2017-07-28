@@ -1,10 +1,9 @@
 package org.trc.service.order;
 
-import com.txframework.core.jdbc.PageRequest;
 import org.trc.IBaseService;
 import org.trc.domain.dto.ConsumptionSummaryStatisticalDataDTO;
 import org.trc.domain.dto.SettlementIntervalDTO;
-import org.trc.domain.dto.SettlementQuery;
+import org.trc.domain.query.SettlementQuery;
 import org.trc.domain.order.ConsumptionSummaryDO;
 import org.trc.util.Pagenation;
 

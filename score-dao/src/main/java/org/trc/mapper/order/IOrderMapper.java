@@ -1,15 +1,12 @@
 package org.trc.mapper.order;
 
-import org.apache.ibatis.annotations.Param;
 import org.trc.domain.dto.ExportOrderDTO;
 import org.trc.domain.dto.OrderDTO;
-import org.trc.domain.dto.SettlementQuery;
+import org.trc.domain.query.SettlementQuery;
 import org.trc.domain.order.OrdersDO;
 import org.trc.util.BaseMapper;
-import org.trc.util.Pagenation;
 
 import java.util.List;
-import java.util.Map;
 
 /**
  * author: hzwzhen

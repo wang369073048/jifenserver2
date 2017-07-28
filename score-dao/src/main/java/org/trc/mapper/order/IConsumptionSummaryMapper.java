@@ -2,7 +2,7 @@ package org.trc.mapper.order;
 
 import org.trc.domain.dto.ConsumptionSummaryStatisticalDataDTO;
 import org.trc.domain.dto.SettlementIntervalDTO;
-import org.trc.domain.dto.SettlementQuery;
+import org.trc.domain.query.SettlementQuery;
 import org.trc.domain.order.ConsumptionSummaryDO;
 import org.trc.util.BaseMapper;
 

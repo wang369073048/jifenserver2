@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.trc.mapper.luckydraw.ILuckyDrawMapper">
+
+    <!-- 所有查询字段 -->
+    <sql id="allSelectionColumn">
+        id,
+        shopId,
+        platform,
+        activityName,
+        startTime,
+        endTime,
+        freeLotteryTimes,
+        freeDrawType,
+        expenditure,
+        dailyDrawLimit,
+        appBackground,
+        webBackground,
+        isDeleted,
+        activityRules,
+        createTime,
+        updateTime
+    </sql>
+
+    <select id="getLuckyDraw"  parameterType="org.trc.domain.luckydraw.LuckyDrawDO" resultType="org.trc.domain.luckydraw.LuckyDrawDO">
+        SELECT <include refid="allSelectionColumn"/> FROM lucky_draw
+        <where>
+            <if test="id != null">
+                and id = #{id}
+            </if>
+            <if test="shopId!=null">
+                and shopId = #{shopId}
+            </if>
+            <if test="platform!=null">
+                and platform like concat('%',#{platform},'%')
+            </if>
+            and isDeleted = 0
+        </where>
+    </select>
+
+</mapper>

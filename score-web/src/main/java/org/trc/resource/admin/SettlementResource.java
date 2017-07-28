@@ -17,7 +17,7 @@ import org.trc.biz.order.ISettlementBiz;
 import org.trc.constants.ScoreAdminConstants;
 import org.trc.constants.TemporaryContext;
 import org.trc.domain.dto.ExportOrderDTO;
-import org.trc.domain.dto.SettlementQuery;
+import org.trc.domain.query.SettlementQuery;
 import org.trc.domain.order.OrdersDO;
 import org.trc.domain.order.SettlementDO;
 import org.trc.enums.ExceptionEnum;
