@@ -1,9 +1,10 @@
 package org.trc.biz.impl.order;
 
+import com.trc.mall.externalservice.HttpBaseAck;
 import com.trc.mall.externalservice.LogisticAck;
 import com.trc.mall.externalservice.LogisticTrace;
 import com.trc.mall.externalservice.TrcExpress100;
-import com.trc.mall.externalservice.TrcExpressAck;
+import com.trc.mall.externalservice.dto.TrcExpressDto;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -33,6 +34,7 @@ import org.trc.service.shop.IShopService;
 import org.trc.util.Pagenation;
 
 import javax.annotation.Resource;
+import java.io.IOException;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -95,7 +97,7 @@ public class NewOrderBiz implements INewOrderBiz {
     }
 
     @Override
-    public TrcExpressAck pull(String shipperCode, String logisticCode) {
+    public HttpBaseAck<TrcExpressDto> pull(String shipperCode, String logisticCode) throws IOException {
         return trcExpress100.pull(shipperCode, logisticCode);
     }
 

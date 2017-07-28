@@ -4,8 +4,9 @@ import com.alibaba.fastjson.JSONObject;
 import com.tairanchina.md.account.user.model.UserDO;
 import com.tairanchina.md.account.user.service.UserService;
 import com.tairanchina.md.api.QueryType;
+import com.trc.mall.externalservice.HttpBaseAck;
 import com.trc.mall.externalservice.LogisticAck;
-import com.trc.mall.externalservice.TrcExpressAck;
+import com.trc.mall.externalservice.dto.TrcExpressDto;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,6 +26,8 @@ import javax.annotation.Resource;
 import javax.validation.constraints.NotNull;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
+
+import java.io.IOException;
 
 import static org.trc.util.ResultUtil.*;
 
@@ -107,19 +110,25 @@ public class OrderAdminResource {
      */
     @GET
     @Path(ScoreAdminConstants.Route.Order.PULL+"/{id}")
-    public AppResult<TrcExpressAck> pull(@NotNull @PathParam("id") Long id ){
+    public AppResult pull(@NotNull @PathParam("id") Long id ){
         LogisticsDO logistic = new LogisticsDO();
         logistic.setOrderId(id);
         LogisticsDO logisticsDO = newOrderBiz.getOrderLogistic(logistic);
         if(null==logisticsDO || StringUtils.isEmpty(logisticsDO.getShipperCode()) || StringUtils.isEmpty(logisticsDO.getLogisticsNum())){
             throw new OrderException(ExceptionEnum.LOGISTICS_QUERY_EXCEPTION,"物流信息查询异常");
         }
-        TrcExpressAck result = newOrderBiz.pull(logisticsDO.getShipperCode(), logisticsDO.getLogisticsNum());
-        if ("200".equals(result.getCode())) {
-            return createSucssAppResult("快递100查询物流信息成功!" ,result);
-        } else {
-            logger.error(result.getMessage());
-            return createFailAppResult(result.getMessage());
+        HttpBaseAck<TrcExpressDto> resultAck = null;
+        try{
+            resultAck = newOrderBiz.pull(logisticsDO.getShipperCode(), logisticsDO.getLogisticsNum());
+        }catch (IOException e) {
+            e.printStackTrace();
+            logger.error("物流查询服务不可用!");
+            return createFailAppResult("物流查询服务不可用!");
         }
+        if(resultAck.isSuccess() && null != resultAck.getData() && TrcExpressDto.SUCCESS_CODE.equals(resultAck.getData().getCode())){
+            return createSucssAppResult("查询物流信息成功!" ,resultAck.getData());
+        }
+        logger.error("物流查询服务不可用!");
+        return createFailAppResult("物流查询服务不可用!");
     }
 }

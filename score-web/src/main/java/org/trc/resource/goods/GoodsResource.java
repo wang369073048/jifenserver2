@@ -2,10 +2,11 @@ package org.trc.resource.goods;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-import com.trc.mall.externalservice.TrCouponAck;
-import com.trc.mall.util.CustomAck;
+import com.trc.mall.externalservice.dto.CouponDto;
 import com.txframework.util.ListUtils;
 import org.hibernate.validator.constraints.NotEmpty;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.trc.biz.goods.ICategoryBiz;
@@ -23,11 +24,11 @@ import org.trc.util.Pagenation;
 import javax.validation.constraints.NotNull;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
+import static org.trc.util.ResultUtil.createFailAppResult;
 import static org.trc.util.ResultUtil.createSucssAppResult;
 
 /**
@@ -37,6 +38,8 @@ import static org.trc.util.ResultUtil.createSucssAppResult;
 @Produces(MediaType.APPLICATION_JSON)
 @Path("{shopId}/" + ScoreAdminConstants.Route.Goods.ROOT)
 public class GoodsResource {
+
+    Logger logger = LoggerFactory.getLogger(GoodsResource.class);
 
     @Autowired
     private IGoodsBiz goodsBiz;
@@ -322,13 +325,21 @@ public class GoodsResource {
      */
     @GET
     @Path(ScoreAdminConstants.Route.Goods.CHECKEID)
-    public AppResult<JSONObject> checkEid(@PathParam("shopId") Long shopId, @NotNull @QueryParam("eid")String eid){
-
-        TrCouponAck trCouponAck = goodsBiz.checkEid(eid);
-        JSONObject result = new JSONObject();
-        result.put("packageFrom",trCouponAck.getPackageFrom());
-        result.put("packageTo",trCouponAck.getPackageTo());
-        return createSucssAppResult("检查批次号成功", result);
+    public AppResult checkEid(@PathParam("shopId") Long shopId, @NotNull @QueryParam("eid")String eid){
+        try {
+            CouponDto couponDto = goodsBiz.checkEid(eid);
+            if(CouponDto.SUCCESS_CODE.equals(couponDto.getCode())) {
+                JSONObject result = new JSONObject();
+                result.put("packageFrom", couponDto.getData().getPackageFrom());
+                result.put("packageTo", couponDto.getData().getPackageTo());
+                return createSucssAppResult("查询成功", result);
+            } else{
+                return createFailAppResult("金融卡券批次号不存在!");
+            }
+        }catch (Exception e){
+            logger.error("金融卡券查询服务不可用!");
+            return createFailAppResult("金融卡券查询服务不可用!");
+        }
 
     }
 }

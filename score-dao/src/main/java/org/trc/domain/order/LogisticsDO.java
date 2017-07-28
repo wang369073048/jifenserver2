@@ -1,5 +1,6 @@
 package org.trc.domain.order;
 
+import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Date;
 
@@ -9,33 +10,40 @@ import java.util.Date;
  * comments:
  * since Date： 2017/7/3
  */
+@Table(name = "logistics")
 public class LogisticsDO implements Serializable{
 
 	private static final long serialVersionUID = 1L;
 
 	/**
-    * 主键ID
-    */
+	 * 主键ID
+	 */
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
 	/**
     * 
     */
+	@Column(name = "orderId")
 	private Long orderId;
 
 	/**
     * 物流公司名称
     */
+	@Column(name = "companyName")
 	private String companyName;
 
 	/**
 	 * 物流公司编码
 	 */
+	@Column(name = "shipperCode")
 	private String shipperCode;
 
 	/**
     * 物流单号
     */
+	@Column(name = "logisticsNum")
 	private String logisticsNum;
 
 	/**
@@ -46,21 +54,25 @@ public class LogisticsDO implements Serializable{
 	/**
     * 操作人账户
     */
+	@Column(name = "operatorUserId")
 	private String operatorUserId;
 
 	/**
     * 操作人姓名
     */
+	@Column(name = "operatorName")
 	private String operatorName;
 
 	/**
     * 创建时间
     */
+	@Column(name = "createTime")
 	private Date createTime;
 
 	/**
     * 修改时间
     */
+	@Column(name = "updateTime")
 	private Date updateTime;
 
 	public LogisticsDO() {

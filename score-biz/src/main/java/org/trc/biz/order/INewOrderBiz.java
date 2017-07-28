@@ -1,13 +1,15 @@
 package org.trc.biz.order;
 
+import com.trc.mall.externalservice.HttpBaseAck;
 import com.trc.mall.externalservice.LogisticAck;
-import com.trc.mall.externalservice.TrcExpressAck;
+import com.trc.mall.externalservice.dto.TrcExpressDto;
 import org.trc.domain.dto.ExportOrderDTO;
 import org.trc.domain.dto.OrderDTO;
 import org.trc.domain.query.SettlementQuery;
 import org.trc.domain.order.*;
 import org.trc.util.Pagenation;
 
+import java.io.IOException;
 import java.util.Date;
 import java.util.List;
 
@@ -25,7 +27,7 @@ public interface INewOrderBiz {
 
     LogisticAck logisticsTracking(String shipperCode, String logisticCode );
 
-    TrcExpressAck pull(String shipperCode, String logisticCode);
+    HttpBaseAck<TrcExpressDto> pull(String shipperCode, String logisticCode)throws IOException;;
 
     /**
      * 多条件查询(分页)

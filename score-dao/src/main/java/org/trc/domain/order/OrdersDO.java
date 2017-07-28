@@ -41,7 +41,7 @@ public class OrdersDO implements Serializable{
     /**
      * 非持久化属性，店铺名称
      */
-    @Column(name = "shopName")
+    @Transient
     public String shopName;
 
     /**
@@ -69,7 +69,7 @@ public class OrdersDO implements Serializable{
     /**
      * 商品version
      */
-    @Column(name = "goodsVersion")
+    @Transient
     public Integer goodsVersion;
 
     /**

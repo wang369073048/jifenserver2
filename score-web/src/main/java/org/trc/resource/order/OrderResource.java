@@ -4,8 +4,9 @@ import com.alibaba.fastjson.JSONObject;
 import com.tairanchina.md.account.user.model.UserDO;
 import com.tairanchina.md.account.user.service.UserService;
 import com.tairanchina.md.api.QueryType;
+import com.trc.mall.externalservice.HttpBaseAck;
 import com.trc.mall.externalservice.LogisticAck;
-import com.trc.mall.externalservice.TrcExpressAck;
+import com.trc.mall.externalservice.dto.TrcExpressDto;
 import com.txframework.util.DateUtils;
 import com.txframework.util.ListUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -454,8 +455,8 @@ public class OrderResource {
     @GET
     @Path("/pull")
     //@Manager
-    public AppResult<TrcExpressAck> pull(@NotNull @QueryParam("id") Long id,
-                                         @Context ContainerRequestContext requestContext) {
+    public AppResult pull(@NotNull @QueryParam("id") Long id,
+                                         @Context ContainerRequestContext requestContext) throws IOException {
 
         String userId = (String) requestContext.getProperty("userId");
         //取该用户的权限
@@ -473,13 +474,12 @@ public class OrderResource {
         if (null == logisticsDO || StringUtils.isEmpty(logisticsDO.getShipperCode()) || StringUtils.isEmpty(logisticsDO.getLogisticsNum())) {
             throw new OrderException(ExceptionEnum.LOGISTICS_QUERY_EXCEPTION, "物流信息查询异常");
         }
-        TrcExpressAck result = newOrderBiz.pull(logisticsDO.getShipperCode(), logisticsDO.getLogisticsNum());
-        if ("200".equals(result.getCode())) {
-            return createSucssAppResult("快递100查询物流信息成功!", result);
-        } else {
-            logger.error(result.getMessage());
-            return createFailAppResult(result.getMessage());
+        HttpBaseAck<TrcExpressDto> resultAck =  newOrderBiz.pull(logisticsDO.getShipperCode(), logisticsDO.getLogisticsNum());
+        if(resultAck.isSuccess() && null != resultAck.getData() && TrcExpressDto.SUCCESS_CODE.equals(resultAck.getData().getCode())){
+            return createSucssAppResult("查询物流信息成功!", resultAck.getData());
         }
+        logger.error("物流查询服务不可用!");
+        return createFailAppResult("物流查询服务不可用!");
     }
 
     /**

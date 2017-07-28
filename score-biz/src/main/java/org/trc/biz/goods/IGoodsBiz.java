@@ -1,9 +1,11 @@
 package org.trc.biz.goods;
 
-import com.trc.mall.externalservice.TrCouponAck;
+import com.trc.mall.externalservice.dto.CouponDto;
 import org.trc.domain.goods.GoodsDO;
 import org.trc.util.Pagenation;
 
+import java.io.IOException;
+import java.net.URISyntaxException;
 import java.util.List;
 
 /**
@@ -124,7 +126,7 @@ public interface IGoodsBiz {
      * @param eid
      * @return
      */
-    TrCouponAck checkEid(String eid);
+    CouponDto checkEid(String eid) throws IOException, URISyntaxException;
 
 
 }

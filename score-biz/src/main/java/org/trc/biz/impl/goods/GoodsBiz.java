@@ -1,7 +1,8 @@
 package org.trc.biz.impl.goods;
 
-import com.trc.mall.externalservice.TrCouponAck;
+import com.trc.mall.externalservice.HttpBaseAck;
 import com.trc.mall.externalservice.TrCouponOperation;
+import com.trc.mall.externalservice.dto.CouponDto;
 import com.trc.mall.util.GuidUtil;
 import org.apache.commons.lang.time.DateUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -21,15 +22,15 @@ import org.trc.constants.ExternalserviceResultCodeConstants;
 import org.trc.domain.goods.CardCouponsDO;
 import org.trc.domain.goods.CategoryDO;
 import org.trc.domain.goods.GoodsDO;
-import org.trc.domain.pagehome.Banner;
 import org.trc.enums.ExceptionEnum;
 import org.trc.exception.CardCouponException;
+import org.trc.exception.CouponException;
 import org.trc.exception.GoodsException;
 import org.trc.service.goods.IGoodsService;
 import org.trc.util.Pagenation;
-import tk.mybatis.mapper.entity.Example;
-import tk.mybatis.mapper.util.StringUtil;
 
+import java.io.IOException;
+import java.net.URISyntaxException;
 import java.util.*;
 
 import static org.trc.enums.ExceptionEnum.COUPON_QUERY_EXCEPTION;
@@ -288,12 +289,13 @@ public class GoodsBiz implements IGoodsBiz{
     }
 
     @Override
-    public TrCouponAck checkEid(String eid) {
-        TrCouponAck trCouponAck = trCouponOperation.checkEid2(eid);
-        if(!ExternalserviceResultCodeConstants.TrCoupon.SUCCESS.equals(trCouponAck.getCode())){
-            throw new CardCouponException(ExceptionEnum.COUPON_QUERY_EXCEPTION,"虚拟卡券对应的批次号不存在!");
+    public CouponDto checkEid(String eid) throws IOException, URISyntaxException {
+        HttpBaseAck<CouponDto> resultAck = trCouponOperation.checkEid2(eid);
+        if (resultAck.isSuccess() && null != resultAck.getData() && CouponDto.SUCCESS_CODE.equals(resultAck.getCode())) {
+            return resultAck.getData();
+        } else {
+            throw new CouponException("41000", "虚拟卡券对应的批次号不存在!");
         }
-        return trCouponAck;
     }
 
     private void validateForAdd(GoodsDO goodsDO) {
@@ -326,19 +328,25 @@ public class GoodsBiz implements IGoodsBiz{
     private void validateGoods(GoodsDO goodsDO) {
         CategoryDO category = categoryBiz.getCategoryDOById(goodsDO.getCategory());
         if(Category.FINANCIAL_CARD.equals(category.getCode()) && StringUtils.isNotBlank(goodsDO.getBatchNumber())){
-            TrCouponAck trCouponAck = trCouponOperation.checkEid2(goodsDO.getBatchNumber());
-            if(!ExternalserviceResultCodeConstants.TrCoupon.SUCCESS.equals(trCouponAck.getCode())){
-                throw new CardCouponException(COUPON_QUERY_EXCEPTION,"批次号:"+ goodsDO.getBatchNumber() +"虚拟卡券不存在!");
-            }
-            if(DateUtils.isSameDay(goodsDO.getValidStartTime(),trCouponAck.getStartTime()) && DateUtils.isSameDay(goodsDO.getValidEndTime(),trCouponAck.getEndTime())){
-                logger.info("虚拟卡券领取有效期检查通过");
-            }else{
-                throw new CardCouponException(COUPON_QUERY_EXCEPTION,"虚拟卡券领取有效期检查不通过!");
-            }
-            if(!goodsDO.getAutoUpTime().before(goodsDO.getValidStartTime()) && !goodsDO.getValidEndTime().before(goodsDO.getAutoDownTime()) && goodsDO.getAutoUpTime().before(goodsDO.getAutoDownTime())){
-                logger.info("虚拟卡券启用有效期检查通过");
-            }else{
-                throw new CardCouponException(COUPON_QUERY_EXCEPTION,"虚拟卡券启用有效期检查不通过!");
+            try {
+                CouponDto couponDto =checkEid(goodsDO.getBatchNumber());
+                if (!ExternalserviceResultCodeConstants.TrCoupon.SUCCESS.equals(couponDto.getCode())) {
+                    throw new CardCouponException(COUPON_QUERY_EXCEPTION,"批次号:"+ goodsDO.getBatchNumber() +"虚拟卡券不存在!");
+                }
+                if (DateUtils.isSameDay(goodsDO.getValidStartTime(), couponDto.getData().getStartTime()) && DateUtils.isSameDay(goodsDO.getValidEndTime(), couponDto.getData().getEndTime())) {
+                    logger.info("虚拟卡券领取有效期检查通过");
+                }else{
+                    throw new CardCouponException(COUPON_QUERY_EXCEPTION,"虚拟卡券领取有效期检查不通过!");
+                }
+                if(!goodsDO.getAutoUpTime().before(goodsDO.getValidStartTime()) && !goodsDO.getValidEndTime().before(goodsDO.getAutoDownTime()) && goodsDO.getAutoUpTime().before(goodsDO.getAutoDownTime())){
+                    logger.info("虚拟卡券启用有效期检查通过");
+                }else{
+                    throw new CardCouponException(COUPON_QUERY_EXCEPTION,"虚拟卡券启用有效期检查不通过!");
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            } catch (URISyntaxException e) {
+                e.printStackTrace();
             }
         }else if(Category.EXTERNAL_CARD.equals(category.getCode()) && StringUtils.isNotBlank(goodsDO.getBatchNumber())){
             //判断虚拟批次号对应的卡券是否存在！
