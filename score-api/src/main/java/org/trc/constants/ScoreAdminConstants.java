@@ -69,6 +69,11 @@ public class ScoreAdminConstants {
             public static final String ROOT = "converter";
         }
 
+        public static final class ShopClassification{
+            public static final String ROOT ="shopClassification";
+            public static final String PAGE="/page";
+        }
+
         public static final class Goods {
             public static final String ROOT = "goods";
             public static final String ENTITY = "/entity";

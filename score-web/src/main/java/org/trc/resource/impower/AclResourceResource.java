@@ -28,32 +28,28 @@ public class AclResourceResource {
     private IAclResourceBiz jurisdictionBiz;
 
     /**
-     * 提供两种角色下对应的角色权限
-     * 1.提供全局角色对应的权限资源
-     * 2.提供渠道角色对应的权限资源
+     *查询所有权限资源
      */
     @GET
     @Path(ScoreAdminConstants.Route.Jurisdiction.JURISDICTION_WHOLE)
     @Produces(MediaType.APPLICATION_JSON)
     public AppResult<AclResource> findWholeJurisdiction(){
-
         return ResultUtil.createSucssAppResult("查询全局角色成功", jurisdictionBiz.findWholeJurisdiction());
 
     }
 
-    @GET
-    @Path(ScoreAdminConstants.Route.Jurisdiction.JURISDICTION_CHANNEL)
-    @Produces(MediaType.APPLICATION_JSON)
-    public AppResult<AclResource> findChannelJurisdiction(){
-
-        return ResultUtil.createSucssAppResult("查询渠道角色成功", jurisdictionBiz.findChannelJurisdiction());
-
-    }
+//    @GET
+//    @Path(ScoreAdminConstants.Route.Jurisdiction.JURISDICTION_CHANNEL)
+//    @Produces(MediaType.APPLICATION_JSON)
+//    public AppResult<AclResource> findChannelJurisdiction(){
+//
+//        return ResultUtil.createSucssAppResult("查询渠道角色成功", jurisdictionBiz.findChannelJurisdiction());
+//
+//    }
 
     /**
-     * 提供两种角色下对应的角色权限，用于回写被选中的权限
-     * 1.提供带有角色id的，角色与权限的关联信息查询<全局角色>
-     * 2.提供带有角色id的，角色与权限的关联信息查询<渠道角色>
+     * 提供对应的角色权限，用于回写被选中的权限
+     * 提供带有角色id的，角色与权限的关联信息查询
      */
     @GET
     @Path(ScoreAdminConstants.Route.Jurisdiction.JURISDICTION_WHOLE + "/{roleId}")
@@ -64,14 +60,14 @@ public class AclResourceResource {
 
     }
 
-    @GET
-    @Path(ScoreAdminConstants.Route.Jurisdiction.JURISDICTION_CHANNEL + "/{roleId}")
-    @Produces(MediaType.APPLICATION_JSON)
-    public AppResult<AclResource> findChannelJurisdictionAndCheckedByRoleId(@PathParam("roleId") Long roleId){
-
-        return ResultUtil.createSucssAppResult("查询全局角色成功", jurisdictionBiz.findChannelJurisdictionAndCheckedByRoleId(roleId));
-
-    }
+//    @GET
+//    @Path(ScoreAdminConstants.Route.Jurisdiction.JURISDICTION_CHANNEL + "/{roleId}")
+//    @Produces(MediaType.APPLICATION_JSON)
+//    public AppResult<AclResource> findChannelJurisdictionAndCheckedByRoleId(@PathParam("roleId") Long roleId){
+//
+//        return ResultUtil.createSucssAppResult("查询全局角色成功", jurisdictionBiz.findChannelJurisdictionAndCheckedByRoleId(roleId));
+//
+//    }
 
     @GET
     @Path(ScoreAdminConstants.Route.Jurisdiction.JURISDICTION_TREE)

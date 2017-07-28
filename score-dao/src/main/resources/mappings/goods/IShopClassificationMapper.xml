@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.trc.mapper.goods.IShopClassificationMapper">
+
+    <!-- 所有查询字段 -->
+    <sql id="allSelectionColumn">
+        id,
+        uuid,
+        shopId,
+        classificationName,
+        pictureUrl,
+        sort,
+        description,
+        createTime,
+        updateTime
+    </sql>
+
+    <select id="queryEntity" parameterType="org.trc.domain.goods.ShopClassificationDO" resultType="org.trc.domain.goods.ShopClassificationDO">
+        SELECT
+        <include refid="allSelectionColumn"/>
+        FROM shop_classification
+        <where>
+            <if test="id != null">
+                and id = #{id}
+            </if>
+            <if test="shopId != null">
+                and shopId = #{shopId}
+            </if>
+        </where>
+        order by sort asc
+    </select>
+</mapper>
