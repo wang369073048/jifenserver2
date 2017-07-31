@@ -1,9 +1,6 @@
 package org.trc.domain.impower;
 
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Transient;
+import javax.persistence.*;
 import javax.ws.rs.FormParam;
 
 
@@ -12,6 +9,7 @@ import javax.ws.rs.FormParam;
  * JDK-version:  JDK1.8
  * since Date： 2017/7/13
  */
+@Table(name = "acl_resource")
 public class AclResource extends ImpowerCommonDO {
     @FormParam("id")
     @Id
@@ -52,7 +50,7 @@ public class AclResource extends ImpowerCommonDO {
     }  //为zTree的父id做准备
 
     public Long getId() {
-        return code;
+        return id;
     }
 
     public void setId(Long id) {
