@@ -4,6 +4,7 @@ import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.trc.domain.goods.GoodsClassificationRelationshipDO;
 import org.trc.domain.goods.ShopClassificationDO;
 import org.trc.mapper.goods.IShopClassificationMapper;
 import org.trc.service.goods.IShopClassificationService;
@@ -35,5 +36,10 @@ public class ShopClassificationService extends BaseService<ShopClassificationDO,
     @Override
     public List<ShopClassificationDO> listEntity(ShopClassificationDO param) {
         return shopClassificationMapper.queryEntity(param);
+    }
+
+    @Override
+    public List<ShopClassificationDO> listEntityByParam(GoodsClassificationRelationshipDO param) {
+        return shopClassificationMapper.listEntityByParam(param);
     }
 }

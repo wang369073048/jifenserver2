@@ -5,6 +5,7 @@ import com.github.pagehelper.PageHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.trc.domain.goods.GoodsDO;
+import org.trc.domain.query.GoodsQuery;
 import org.trc.mapper.goods.IGoodsMapper;
 import org.trc.service.goods.IGoodsService;
 import org.trc.service.impl.BaseService;
@@ -59,5 +60,14 @@ public class GoodsService extends BaseService<GoodsDO,Long> implements IGoodsSer
     @Override
     public int isOwnerOf(Map<String, Object> params) {
         return goodsMapper.isOwnerOf(params);
+    }
+
+    @Override
+    public Pagenation<GoodsDO> selectListByClassification(GoodsQuery goodsQuery, Pagenation<GoodsDO> pagenation) {
+        Page page = PageHelper.startPage(pagenation.getPageNo(), pagenation.getPageSize());
+        List<GoodsDO> list = goodsMapper.selectListByClassification(goodsQuery);
+        pagenation.setTotalCount(page.getTotal());
+        pagenation.setResult(list);
+        return pagenation;
     }
 }

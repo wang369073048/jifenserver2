@@ -1,6 +1,7 @@
 package org.trc.service.goods;
 
 import org.trc.IBaseService;
+import org.trc.domain.goods.GoodsClassificationRelationshipDO;
 import org.trc.domain.goods.ShopClassificationDO;
 import org.trc.util.Pagenation;
 
@@ -17,4 +18,6 @@ public interface IShopClassificationService extends IBaseService<ShopClassificat
     Pagenation<ShopClassificationDO> queryEntityByPage(ShopClassificationDO param, Pagenation<ShopClassificationDO> pageRequest);
 
     List<ShopClassificationDO> listEntity(ShopClassificationDO param);
+
+    List<ShopClassificationDO> listEntityByParam(GoodsClassificationRelationshipDO param);
 }

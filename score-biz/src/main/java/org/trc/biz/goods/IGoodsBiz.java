@@ -2,6 +2,7 @@ package org.trc.biz.goods;
 
 import com.trc.mall.externalservice.dto.CouponDto;
 import org.trc.domain.goods.GoodsDO;
+import org.trc.domain.query.GoodsQuery;
 import org.trc.util.Pagenation;
 
 import java.io.IOException;
@@ -51,6 +52,14 @@ public interface IGoodsBiz {
      * @return Pagenation<GoodsDO>
      */
     Pagenation<GoodsDO> queryGoodsDOListForUser(GoodsDO goodsDO, Pagenation<GoodsDO> page);
+
+    /**
+     * 多条件查询(分页)
+     * @param goodsQuery GoodsQuery
+     * @param pageRequest PageRequest<GoodsDO>
+     * @return PageRequest<GoodsDO>
+     */
+    Pagenation<GoodsDO> queryGoodsDOListForClassification(GoodsQuery goodsQuery, Pagenation<GoodsDO> pageRequest);
 
     /**
      * 根据ID查询

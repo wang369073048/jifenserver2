@@ -19,7 +19,7 @@ public class CacheEvitInterceptor extends BaseInterceptor{
 	 * 定义缓存逻辑
 	 * @throws Throwable 
 	 */
-	@Around("@annotation(org.trc.annotation.cache.CacheEvit)")
+	//@Around("@annotation(org.trc.annotation.cache.CacheEvit)")
 	public Object cache(ProceedingJoinPoint pjp) throws Throwable {
 		Object result = null;
 		try {

@@ -164,4 +164,31 @@
         </where>
         order by sort asc, updateTime desc
     </select>
+
+    <!--多条件查询未删除商品信息(分页)用户视角 -->
+    <select id="selectListByClassification" parameterType="org.trc.domain.query.GoodsQuery" resultType="org.trc.domain.goods.GoodsDO">
+        SELECT distinct g.* FROM goods g left join goods_classification_relationship gcr on g.id = gcr.goodsId
+        <where>
+            <if test="goodsName != null">
+                and g.goodsName like concat('%',#{goodsName},'%')
+            </if>
+            <if test="shopId != null">
+                and g.shopId = #{shopId}
+            </if>
+            <if test="isUp != null">
+                and g.isUp = #{isUp}
+            </if>
+            <if test="classificationId != null">
+                and gcr.shopClassificationId = #{classificationId}
+            </if>
+            <if test="whetherPrizes != null">
+                and g.whetherPrizes = #{whetherPrizes}
+            </if>
+            <if test="whetherPrizes == null">
+                and g.whetherPrizes = 0
+            </if>
+            and isDeleted = 0
+        </where>
+        order by g.sort asc, g.updateTime desc
+    </select>
 </mapper>

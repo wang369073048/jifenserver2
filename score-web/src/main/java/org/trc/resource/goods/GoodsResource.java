@@ -1,5 +1,6 @@
 package org.trc.resource.goods;
 
+import com.alibaba.dubbo.common.utils.CollectionUtils;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.trc.mall.externalservice.dto.CouponDto;
@@ -15,6 +16,8 @@ import org.trc.constants.Category;
 import org.trc.constants.ScoreAdminConstants;
 import org.trc.domain.goods.CategoryDO;
 import org.trc.domain.goods.GoodsDO;
+import org.trc.domain.goods.ShopClassificationDO;
+import org.trc.domain.query.GoodsQuery;
 import org.trc.enums.ExceptionEnum;
 import org.trc.exception.GoodsException;
 import org.trc.util.AppResult;
@@ -212,13 +215,29 @@ public class GoodsResource {
     public Pagenation<GoodsDO>  getGoodsList(@PathParam("shopId") Long shopId,
                                  @QueryParam("goodsName") String goodsName,
                                  @QueryParam("isUp") Integer isUp,
+                                 @QueryParam("whetherPrizes") Integer whetherPrizes,
+                                 @QueryParam("classificationId") Long classificationId,
                                  @BeanParam Pagenation<GoodsDO> page) {
-        GoodsDO query = new GoodsDO();
-        query.setShopId(shopId);
-        query.setGoodsName(goodsName);
-        query.setIsDeleted(0);
-        query.setIsUp(isUp);
-        page =  goodsBiz.queryGoodsDOListForPage(query,page);
+        GoodsQuery param = new GoodsQuery();
+        param.setShopId(shopId);
+        param.setGoodsName(goodsName);
+        param.setIsUp(isUp);
+        param.setWhetherPrizes(whetherPrizes);
+        param.setClassificationId(classificationId);
+        page =  goodsBiz.queryGoodsDOListForClassification(param,page);
+        List<GoodsDO> goodsDOs = page.getResult();
+        if (ListUtils.isNotEmpty(goodsDOs)){
+            for (GoodsDO goodsDO : goodsDOs) {
+                if(CollectionUtils.isNotEmpty(goodsDO.getShopClassificationList())){
+                    String shopClassificationNames = "";
+                    for(ShopClassificationDO item : goodsDO.getShopClassificationList()){
+                        shopClassificationNames += item.getClassificationName()+",";
+                    }
+                    shopClassificationNames = shopClassificationNames.substring(0, shopClassificationNames.length()-1);
+                    goodsDO.setShopClassificationNames(shopClassificationNames);
+                }
+            }
+        }
         return page;
     }
 

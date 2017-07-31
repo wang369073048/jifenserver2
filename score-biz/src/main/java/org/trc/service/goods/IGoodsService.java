@@ -3,6 +3,7 @@ package org.trc.service.goods;
 import com.txframework.core.jdbc.PageRequest;
 import org.trc.IBaseService;
 import org.trc.domain.goods.GoodsDO;
+import org.trc.domain.query.GoodsQuery;
 import org.trc.util.Pagenation;
 
 import java.util.List;
@@ -56,4 +57,12 @@ public interface IGoodsService extends IBaseService<GoodsDO,Long>{
      * @return
      */
     int isOwnerOf(Map<String, Object> params);
+
+    /**
+     * 多条件查询表信息(分页)
+     * @param goodsQuery GoodsQuery
+     * @param pageRequest PageRequest<GoodsDO>
+     * @return List<GoodsDO>
+     */
+    Pagenation<GoodsDO> selectListByClassification(GoodsQuery goodsQuery, Pagenation<GoodsDO> pageRequest);
 }

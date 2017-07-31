@@ -31,7 +31,7 @@ public class GoodsRecommendDO implements Serializable{
 	/**
     * 排序
     */
-	private int sort;
+	private Integer sort;
 
 	/**
     * 操作人ID
@@ -82,11 +82,11 @@ public class GoodsRecommendDO implements Serializable{
     	this.goodsId = goodsId;
     }
 
-    public int getSort() {
+    public Integer getSort() {
     	return sort;
     }
 
-    public void setSort(int sort) {
+    public void setSort(Integer sort) {
     	this.sort = sort;
     }
 

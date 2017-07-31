@@ -29,4 +29,15 @@
         </where>
         order by sort asc
     </select>
+
+    <select id="listEntityByParam" resultType="org.trc.domain.goods.ShopClassificationDO" parameterType="org.trc.domain.goods.GoodsClassificationRelationshipDO">
+        SELECT
+        sc.*
+        FROM shop_classification sc inner join goods_classification_relationship gcr on sc.id = gcr.shopClassificationId
+        <where>
+            <if test="goodsId != null">
+                and gcr.goodsId = #{goodsId}
+            </if>
+        </where>
+    </select>
 </mapper>

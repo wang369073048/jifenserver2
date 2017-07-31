@@ -1,6 +1,7 @@
 package org.trc.mapper.goods;
 
 import org.trc.domain.goods.GoodsDO;
+import org.trc.domain.query.GoodsQuery;
 import org.trc.util.BaseMapper;
 
 import java.util.List;
@@ -43,4 +44,11 @@ public interface IGoodsMapper extends BaseMapper<GoodsDO> {
      * @return List<GoodsDO>
      */
     List<GoodsDO> selectListByParams(GoodsDO goodsDO);
+
+    /**
+     * 多条件查询表信息(分页)
+     * @param goodsQuery GoodsQuery
+     * @return List<GoodsDO>
+     */
+    List<GoodsDO> selectListByClassification(GoodsQuery goodsQuery);
 }

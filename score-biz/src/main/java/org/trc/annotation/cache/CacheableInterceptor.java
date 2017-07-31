@@ -21,7 +21,7 @@ public class CacheableInterceptor extends BaseInterceptor{
      * 定义缓存逻辑
      * @throws Throwable
      */
-    @Around("@annotation(org.trc.annotation.cache.Cacheable)")
+    //@Around("@annotation(org.trc.annotation.cache.Cacheable)")//TODO 缓存
     public Object cache(ProceedingJoinPoint pjp ) throws Throwable {
         Object result=null;
         String key = "";

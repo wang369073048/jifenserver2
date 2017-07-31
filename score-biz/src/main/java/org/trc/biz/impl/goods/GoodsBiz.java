@@ -19,14 +19,15 @@ import org.trc.biz.goods.IGoodsBiz;
 import org.trc.biz.goods.IGoodsRecommendBiz;
 import org.trc.constants.Category;
 import org.trc.constants.ExternalserviceResultCodeConstants;
-import org.trc.domain.goods.CardCouponsDO;
-import org.trc.domain.goods.CategoryDO;
-import org.trc.domain.goods.GoodsDO;
+import org.trc.domain.goods.*;
+import org.trc.domain.query.GoodsQuery;
 import org.trc.enums.ExceptionEnum;
 import org.trc.exception.CardCouponException;
 import org.trc.exception.CouponException;
 import org.trc.exception.GoodsException;
 import org.trc.service.goods.IGoodsService;
+import org.trc.service.goods.IPurchaseRestrictionsService;
+import org.trc.service.goods.IShopClassificationService;
 import org.trc.util.Pagenation;
 
 import java.io.IOException;
@@ -57,6 +58,10 @@ public class GoodsBiz implements IGoodsBiz{
 
     @Autowired
     private TrCouponOperation trCouponOperation;
+    @Autowired
+    private IShopClassificationService shopClassificationService;
+    @Autowired
+    private IPurchaseRestrictionsService purchaseRestrictionsService;
 
     @Override
     @CacheEvit(key="#goodsDO.id")
@@ -146,6 +151,38 @@ public class GoodsBiz implements IGoodsBiz{
     @Override
     public Pagenation<GoodsDO> queryGoodsDOListForUser(GoodsDO goodsDO, Pagenation<GoodsDO> page) {
         return null;
+    }
+
+    @Override
+    public Pagenation<GoodsDO> queryGoodsDOListForClassification(GoodsQuery goodsQuery, Pagenation<GoodsDO> pageRequest) {
+        try {
+            Assert.notNull(pageRequest, "分页参数不能为空");
+            Assert.notNull(goodsQuery, "传入参数不能为空");
+            Pagenation<GoodsDO> page= goodsService.selectListByClassification(goodsQuery, pageRequest);
+            if(page != null && page.getResult() != null && page.getResult().size() > 0) {
+                for(GoodsDO item : page.getResult()){
+                    List<ShopClassificationDO> shopClassifications = _listShopClassificationByGoodsId(item.getId());
+                    item.setShopClassificationList(shopClassifications);
+                    PurchaseRestrictionsDO param = new PurchaseRestrictionsDO();
+                    param.setGoodsId(item.getId());
+                    PurchaseRestrictionsDO result = purchaseRestrictionsService.selectOne(param);
+                    item.setLimitQuantity(null != result ? result.getLimitQuantity() : -1);
+                }
+            }
+            return page;
+        } catch (IllegalArgumentException e) {
+            logger.error("多条件查询GoodsDO校验参数异常!",e);
+            throw new GoodsException(ExceptionEnum.PARAM_CHECK_EXCEPTION,e.getMessage());
+        } catch (Exception e) {
+            logger.error("多条件查询GoodsDO信息异常!", e);
+            throw new GoodsException(ExceptionEnum.QUERY_LIST_EXCEPTION,"多条件查询GoodsDO信息异常!");
+        }
+    }
+
+    private List<ShopClassificationDO> _listShopClassificationByGoodsId(Long goodsId){
+        GoodsClassificationRelationshipDO param = new GoodsClassificationRelationshipDO();
+        param.setGoodsId(goodsId);
+        return shopClassificationService.listEntityByParam(param);
     }
 
     @Override

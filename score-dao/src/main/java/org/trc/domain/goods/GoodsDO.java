@@ -7,7 +7,9 @@ import org.trc.domain.CommonDO;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 
 /**
  * Created by hzwzhen on 2017/6/22.
@@ -15,24 +17,18 @@ import java.util.Date;
 @Table(name = "goods")
 public class GoodsDO implements Serializable{
 
+    /**
+     * 主键ID
+     */
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    protected Long id; //主键
+    private Long id;
+
     /**
-     * 业务方ID
+     * 商品所属店铺
      */
     @Column(name = "shopId")
-    protected Long shopId;
-    /**
-     * 创建时间
-     */
-    @Column(name = "createTime")
-    protected Date createTime;
-    /**
-     * 更新时间
-     */
-    @Column(name = "updateTime")
-    protected Date updateTime;
+    private Long shopId;
 
     /**
      * 所属类目
@@ -119,13 +115,13 @@ public class GoodsDO implements Serializable{
      * 兑换数量
      */
     @Column(name = "exchangeQuantity")
-    private Integer exchangeQuantity;
+    private Integer exchangeQuantity = 0;
 
     /**
      * 虚拟兑换量
      */
     @Column(name = "virtualExchangeQuantity")
-    private Integer virtualExchangeQuantity;
+    private Integer virtualExchangeQuantity = 0;
 
     /**
      * 是否上架,0上架,1下架
@@ -142,7 +138,13 @@ public class GoodsDO implements Serializable{
      *
      */
     @Column(name = "versionLock")
-    private Integer versionLock;
+    private Integer versionLock = 1;
+
+    /**
+     * 是否奖品
+     */
+    @Column(name = "whetherPrizes")
+    private Integer whetherPrizes;
 
     /**
      * 0 正常 ;1 已删除
@@ -175,6 +177,17 @@ public class GoodsDO implements Serializable{
     private Date autoDownTime;
 
     /**
+     * -1:表示不限购，否则为正整数
+     */
+    @Column(name = "limitQuantity")
+    private Integer limitQuantity;
+
+    /**
+     * 排序：介于0-1000的整数，默认为500
+     */
+    private Integer sort;
+
+    /**
      * 上架时间
      */
     @Column(name = "upTime")
@@ -187,26 +200,54 @@ public class GoodsDO implements Serializable{
     private Date snapshotTime;
 
     /**
-     * 是否奖品
+     * 创建时间
      */
-    @Column(name = "whetherPrizes")
-    private Integer whetherPrizes;
+    @Column(name = "createTime")
+    private Date createTime;
 
-    public void calMainImg(){
-        if(StringUtils.isEmpty(this.mainImg)){
-            if(StringUtils.hasText(this.mediumImg)){
-                JSONArray array = JSONArray.parseArray(this.mediumImg);
-                this.mainImg = ((JSONObject)array.get(0)).toJSONString();
-            }
-        }
+    /**
+     * 修改时间
+     */
+    @Column(name = "updateTime")
+    private Date updateTime;
+
+    /**
+     *	展示分类
+     */
+    @Transient
+    private List<ShopClassificationDO> shopClassificationList;
+
+    /**
+     *	展示分类
+     */
+    @Transient
+    private List<GoodsClassificationRelationshipDO> goodsClassificationRelationshipList;
+
+    @Transient
+    private String shopClassificationNames;
+
+    public String getShopClassificationNames() {
+        return shopClassificationNames;
     }
 
-    public Integer getWhetherPrizes() {
-        return whetherPrizes;
+    public void setShopClassificationNames(String shopClassificationNames) {
+        this.shopClassificationNames = shopClassificationNames;
     }
 
-    public void setWhetherPrizes(Integer whetherPrizes) {
-        this.whetherPrizes = whetherPrizes;
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public Long getShopId() {
+        return shopId;
+    }
+
+    public void setShopId(Long shopId) {
+        this.shopId = shopId;
     }
 
     public Long getCategory() {
@@ -361,6 +402,22 @@ public class GoodsDO implements Serializable{
         this.versionLock = versionLock;
     }
 
+    public Integer getWhetherPrizes() {
+        return whetherPrizes;
+    }
+
+    public void setWhetherPrizes(Integer whetherPrizes) {
+        this.whetherPrizes = whetherPrizes;
+    }
+
+    public Integer getIsDeleted() {
+        return isDeleted;
+    }
+
+    public void setIsDeleted(Integer isDeleted) {
+        this.isDeleted = isDeleted;
+    }
+
     public Date getValidStartTime() {
         return validStartTime;
     }
@@ -393,6 +450,22 @@ public class GoodsDO implements Serializable{
         this.autoDownTime = autoDownTime;
     }
 
+    public Integer getLimitQuantity() {
+        return limitQuantity;
+    }
+
+    public void setLimitQuantity(Integer limitQuantity) {
+        this.limitQuantity = limitQuantity;
+    }
+
+    public Integer getSort() {
+        return sort;
+    }
+
+    public void setSort(Integer sort) {
+        this.sort = sort;
+    }
+
     public Date getUpTime() {
         return upTime;
     }
@@ -409,30 +482,6 @@ public class GoodsDO implements Serializable{
         this.snapshotTime = snapshotTime;
     }
 
-    public Integer getIsDeleted() {
-        return isDeleted;
-    }
-
-    public void setIsDeleted(Integer isDeleted) {
-        this.isDeleted = isDeleted;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public Long getShopId() {
-        return shopId;
-    }
-
-    public void setShopId(Long shopId) {
-        this.shopId = shopId;
-    }
-
     public Date getCreateTime() {
         return createTime;
     }
@@ -447,6 +496,43 @@ public class GoodsDO implements Serializable{
 
     public void setUpdateTime(Date updateTime) {
         this.updateTime = updateTime;
+    }
+
+    public void calMainImg(){
+        if(StringUtils.isEmpty(this.mainImg)){
+            if(StringUtils.hasText(this.mediumImg)){
+                JSONArray array = JSONArray.parseArray(this.mediumImg);
+                this.mainImg = ((JSONObject)array.get(0)).toJSONString();
+            }
+        }
+    }
+
+    public boolean isOverdue(){
+        if(null == this.autoDownTime){
+            return false;
+        }
+        Date now = Calendar.getInstance().getTime();
+        if(this.autoDownTime.after(now)){
+            return false;
+        }else{
+            return true;
+        }
+    }
+
+    public List<ShopClassificationDO> getShopClassificationList() {
+        return shopClassificationList;
+    }
+
+    public void setShopClassificationList(List<ShopClassificationDO> shopClassificationList) {
+        this.shopClassificationList = shopClassificationList;
+    }
+
+    public List<GoodsClassificationRelationshipDO> getGoodsClassificationRelationshipList() {
+        return goodsClassificationRelationshipList;
+    }
+
+    public void setGoodsClassificationRelationshipList(List<GoodsClassificationRelationshipDO> goodsClassificationRelationshipList) {
+        this.goodsClassificationRelationshipList = goodsClassificationRelationshipList;
     }
 
     @Override
@@ -473,11 +559,14 @@ public class GoodsDO implements Serializable{
                 ", isUp=" + isUp +
                 ", content='" + content + '\'' +
                 ", versionLock=" + versionLock +
+                ", whetherPrizes=" + whetherPrizes +
                 ", isDeleted=" + isDeleted +
                 ", validStartTime=" + validStartTime +
                 ", validEndTime=" + validEndTime +
                 ", autoUpTime=" + autoUpTime +
                 ", autoDownTime=" + autoDownTime +
+                ", limitQuantity=" + limitQuantity +
+                ", sort=" + sort +
                 ", upTime=" + upTime +
                 ", snapshotTime=" + snapshotTime +
                 ", createTime=" + createTime +
