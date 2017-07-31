@@ -11,4 +11,6 @@ import org.trc.util.BaseMapper;
  * since Date： 2017/7/27
  */
 public interface IScoreConverterFlowMapper extends BaseMapper<ScoreConverterFlow> {
+
+    int insertScoreConverterFlow(ScoreConverterFlow scoreConverter);
 }

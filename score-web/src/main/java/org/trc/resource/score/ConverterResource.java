@@ -143,10 +143,7 @@ public class ConverterResource {
         }
 
         //查看这条规则是否存在
-        ScoreConverter scoreConverter = new ScoreConverter();
-        scoreConverter.setIsDeleted(0);
-        scoreConverter.setId(id);
-        ScoreConverter oldConverter = scoreConverterBiz.selectOne(scoreConverter);
+        ScoreConverter oldConverter = scoreConverterBiz.selectScoreConverterById(id);
 
         //权限判定
         Auth auth = authBiz.getAuthByUserId(userId);

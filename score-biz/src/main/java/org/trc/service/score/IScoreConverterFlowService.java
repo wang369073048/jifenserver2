@@ -10,4 +10,6 @@ import org.trc.domain.score.ScoreConverterFlow;
  * since Date： 2017/7/26
  */
 public interface IScoreConverterFlowService extends IBaseService<ScoreConverterFlow,Long>{
+
+    int insertScoreConverterFlow(ScoreConverterFlow scoreConverter);
 }

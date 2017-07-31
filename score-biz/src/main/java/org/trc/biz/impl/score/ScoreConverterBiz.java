@@ -72,7 +72,7 @@ public class ScoreConverterBiz implements IScoreConverterBiz{
             flow.setConverterId(converter.getId());
             flow.setOperatedBy(converter.getCreateBy());
             flow.setOperatedTime(converter.getCreateTime());
-            scoreConverterFlowService.insertSelective(flow);
+            scoreConverterFlowService.insertScoreConverterFlow(flow);
         } catch (Exception e) {
             logger.error("新增"+scoreConverter.getExchangeCurrency()+"ScoreConverterFlow失败!",e);
             throw new ScoreConverterException(ExceptionEnum.INSERT_EXCEPTION, "新增"+scoreConverter.getExchangeCurrency()+"ScoreConverterFlow失败!");
@@ -80,6 +80,7 @@ public class ScoreConverterBiz implements IScoreConverterBiz{
     }
 
     @Override
+    @Transactional(propagation= Propagation.REQUIRED,rollbackFor=Exception.class)
     public int updateScoreConverter(ScoreConverter scoreConverter) {
         try {
             Assert.notNull(scoreConverter, "积分兑换规则不能为空");

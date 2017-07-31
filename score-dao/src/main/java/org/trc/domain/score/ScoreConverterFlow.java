@@ -13,7 +13,7 @@ public class ScoreConverterFlow implements Serializable{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;                         //主键id
-    @Column(name = "")
+    @Column(name = "converterId")
     private Long converterId;               //规则id
 
     private Integer amount;                 //兑换额度

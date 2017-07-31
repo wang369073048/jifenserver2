@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.trc.mapper.score.IScoreConverterFlowMapper" >
+    <insert id="insertScoreConverterFlow" parameterType="org.trc.domain.score.ScoreConverterFlow">
+        insert into score_converter_flow(
+        converterId,
+        amount,
+        score,
+        direction,
+        personEverydayInLimit,
+        personEverydayOutLimit,
+        channelEverydayInLimit,
+        channelEverydayOutLimit,
+        operatedBy,
+        operatedTime
+        )values(
+        #{converterId},
+        #{amount},
+        #{score},
+        #{direction},
+        #{personEverydayInLimit},
+        #{personEverydayOutLimit},
+        #{channelEverydayInLimit},
+        #{channelEverydayOutLimit},
+        #{operatedBy},
+        now()
+        )
+    </insert>
+</mapper>
