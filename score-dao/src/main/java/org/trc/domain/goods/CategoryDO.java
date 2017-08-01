@@ -2,14 +2,26 @@ package org.trc.domain.goods;
 
 import org.trc.domain.CommonDO;
 
-import javax.persistence.Column;
-import javax.persistence.Table;
+import javax.persistence.*;
+import java.io.Serializable;
+import java.util.Date;
 
 /**
  * Created by hzwzhen on 2017/6/22.
  */
 @Table(name = "category")
-public class CategoryDO extends CommonDO {
+public class CategoryDO implements Serializable {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    protected Long id; //主键
+    @Column(name = "operatorUserId")
+    protected String operatorUserId; //操作人ID
+
+    @Column(name = "createTime")
+    protected Date createTime; //创建时间
+    @Column(name = "updateTime")
+    protected Date updateTime; //更新时间
 
     /**
      * 父ID
@@ -131,6 +143,47 @@ public class CategoryDO extends CommonDO {
 
     public void setIsDeleted(boolean isDeleted) {
         this.isDeleted = isDeleted;
+    }
+
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public String getOperatorUserId() {
+        return operatorUserId;
+    }
+
+    public void setOperatorUserId(String operatorUserId) {
+        this.operatorUserId = operatorUserId;
+    }
+
+    public Date getCreateTime() {
+        return createTime;
+    }
+
+    public void setCreateTime(Date createTime) {
+        this.createTime = createTime;
+    }
+
+    public Date getUpdateTime() {
+        return updateTime;
+    }
+
+    public void setUpdateTime(Date updateTime) {
+        this.updateTime = updateTime;
+    }
+
+    public boolean isDeleted() {
+        return isDeleted;
+    }
+
+    public void setDeleted(boolean deleted) {
+        isDeleted = deleted;
     }
 
     @Override

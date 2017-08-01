@@ -158,7 +158,7 @@ public class CouponsBiz implements ICouponsBiz{
                 criteria.andLessThan("createTime", DateUtils.addDays(endDate, 1));
             }
             criteria.andEqualTo("isDeleted",0);
-            example.orderBy("createTime").desc();
+            example.orderBy("createTime").asc();
             page = couponsService.pagination(example,page,queryModel);
             return page;
         } catch (IllegalArgumentException e){
