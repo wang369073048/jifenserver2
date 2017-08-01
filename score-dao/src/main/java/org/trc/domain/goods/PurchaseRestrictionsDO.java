@@ -1,29 +1,35 @@
 package org.trc.domain.goods;
 
+import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Date;
 
-
+@Table(name = "purchase_restrictions")
 public class PurchaseRestrictionsDO implements Serializable{
 
     /**
      * 主键
      */
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     /**
      * -1:表示不限购，否则为正整数
      */
+    @Column(name = "limitQuantity")
     private Integer limitQuantity;
 
     /**
      * 商品id
      */
+    @Column(name = "goodsId")
     private Long goodsId;
 
     /**
      * 限制起始时间
      */
+    @Column(name = "limitStartTime")
     private Date limitStartTime;
 
     /**
@@ -34,11 +40,13 @@ public class PurchaseRestrictionsDO implements Serializable{
     /**
      * 创建时间
      */
+    @Column(name = "createTime")
     private Date createTime;
 
     /**
      * 更新时间
      */
+    @Column(name = "updateTime")
     private Date updateTime;
 
     public Long getId() {
