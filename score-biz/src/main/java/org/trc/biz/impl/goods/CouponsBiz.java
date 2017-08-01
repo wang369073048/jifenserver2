@@ -150,12 +150,12 @@ public class CouponsBiz implements ICouponsBiz{
             if (StringUtils.isNotBlank(queryModel.getBatchNumber())){ //banner名称
                 criteria.andEqualTo("batchNumber",queryModel.getBatchNumber());
             }
-            if (StringUtil.isNotEmpty(queryModel.getStartDate())) {//开始日期
-                criteria.andGreaterThanOrEqualTo("createTime", DateUtils.parseDate(queryModel.getStartDate()));
+            if (queryModel.getStartTime() != null) {//开始日期
+                criteria.andGreaterThanOrEqualTo("createTime", new Date(queryModel.getStartTime()));
             }
-            if (StringUtil.isNotEmpty(queryModel.getEndDate())) {//截止日期
-                Date endDate = DateUtils.parseDate(queryModel.getEndDate());
-                criteria.andLessThan("createTime", DateUtils.addDays(endDate, 1));
+            if (queryModel.getEndTime() != null) {//截止日期
+                Date endTime = new Date(queryModel.getEndTime());
+                criteria.andLessThan("createTime", DateUtils.addDays(endTime, 1));
             }
             criteria.andEqualTo("isDeleted",0);
             example.orderBy("createTime").asc();

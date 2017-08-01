@@ -107,12 +107,12 @@ public class BannerContentBiz implements IBannerContentBiz{
             if (StringUtils.isNotBlank(queryModel.getTitle())){ //标题
                 criteria.andEqualTo("title",queryModel.getTitle());
             }
-            if (StringUtil.isNotEmpty(queryModel.getStartDate())) {//开始日期
-                criteria.andGreaterThanOrEqualTo("updateTime", DateUtils.parseDate(queryModel.getStartDate()));
+            if (queryModel.getStartTime() != null) {//开始日期
+                criteria.andGreaterThanOrEqualTo("updateTime",new Date(queryModel.getStartTime()));
             }
-            if (StringUtil.isNotEmpty(queryModel.getEndDate())) {//截止日期
-                Date endDate = DateUtils.parseDate(queryModel.getEndDate());
-                criteria.andLessThan("updateTime", DateUtils.addDays(endDate, 1));
+            if (queryModel.getEndTime() != null) {//截止日期
+                Date endTime = new Date(queryModel.getEndTime());
+                criteria.andLessThan("updateTime", DateUtils.addDays(endTime, 1));
             }
             criteria.andEqualTo("type",queryModel.getType());
             criteria.andEqualTo("isDeleted",false);

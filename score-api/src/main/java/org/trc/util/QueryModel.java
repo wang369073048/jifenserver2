@@ -15,12 +15,10 @@ public class QueryModel {
     @QueryParam("isValid")
     @Length(max = 2, message = "是否启用编码长度不能超过2个")
     private String isValid;
-    @QueryParam("startDate")
-    @Length(max = 10, message = "开始日期长度不能超过10个")
-    private String startDate;//开始日期，格式：yyyy-mm-dd
-    @QueryParam("endDate")
-    @Length(max = 10, message = "截止日期长度不能超过10个")
-    private String endDate;//截止日期，格式：yyyy-mm-dd
+    @QueryParam("startTime")
+    private Long startTime;
+    @QueryParam("endTime")
+    private Long endTime;
 
     /**
      * 排序方向变量
@@ -155,20 +153,19 @@ public class QueryModel {
         this.isValid = isValid;
     }
 
-    public String getStartDate() {
-        return startDate;
+    public Long getStartTime() {
+        return startTime;
     }
 
-    public void setStartDate(String startDate) {
-        this.startDate = startDate;
+    public void setStartTime(Long startTime) {
+        this.startTime = startTime;
     }
 
-    public String getEndDate() {
-        return endDate;
+    public Long getEndTime() {
+        return endTime;
     }
 
-    public void setEndDate(String endDate) {
-        this.endDate = endDate;
+    public void setEndTime(Long endTime) {
+        this.endTime = endTime;
     }
-
 }
