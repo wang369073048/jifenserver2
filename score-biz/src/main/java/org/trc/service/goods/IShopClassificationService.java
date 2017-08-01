@@ -20,4 +20,6 @@ public interface IShopClassificationService extends IBaseService<ShopClassificat
     List<ShopClassificationDO> listEntity(ShopClassificationDO param);
 
     List<ShopClassificationDO> listEntityByParam(GoodsClassificationRelationshipDO param);
+
+    int delete(ShopClassificationDO shopClassification);
 }

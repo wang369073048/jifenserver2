@@ -49,7 +49,7 @@ public class CategoryDO implements Serializable {
      * 是否允许修改
      */
     @Column(name = "allowUpdates")
-    private boolean allowUpdates;
+    private Boolean allowUpdates;
 
     /**
      * LOGO地址
@@ -60,7 +60,7 @@ public class CategoryDO implements Serializable {
     /**
      * 排序
      */
-    private int sort;
+    private Integer sort;
 
     /**
      * 备注
@@ -71,7 +71,7 @@ public class CategoryDO implements Serializable {
      * 0 正常 ;1 已删除
      */
     @Column(name = "isDeleted")
-    private boolean isDeleted;
+    private Boolean isDeleted;
 
     public Long getPid() {
         return pid;
@@ -105,11 +105,11 @@ public class CategoryDO implements Serializable {
         this.isVirtual = isVirtual;
     }
 
-    public boolean isAllowUpdates() {
+    public Boolean isAllowUpdates() {
         return allowUpdates;
     }
 
-    public void setAllowUpdates(boolean allowUpdates) {
+    public void setAllowUpdates(Boolean allowUpdates) {
         this.allowUpdates = allowUpdates;
     }
 
@@ -121,11 +121,11 @@ public class CategoryDO implements Serializable {
         this.logoUrl = logoUrl;
     }
 
-    public int getSort() {
+    public Integer getSort() {
         return sort;
     }
 
-    public void setSort(int sort) {
+    public void setSort(Integer sort) {
         this.sort = sort;
     }
 
@@ -137,11 +137,11 @@ public class CategoryDO implements Serializable {
         this.description = description;
     }
 
-    public boolean getIsDeleted() {
+    public Boolean getIsDeleted() {
         return isDeleted;
     }
 
-    public void setIsDeleted(boolean isDeleted) {
+    public void setIsDeleted(Boolean isDeleted) {
         this.isDeleted = isDeleted;
     }
 
@@ -178,11 +178,11 @@ public class CategoryDO implements Serializable {
         this.updateTime = updateTime;
     }
 
-    public boolean isDeleted() {
+    public Boolean isDeleted() {
         return isDeleted;
     }
 
-    public void setDeleted(boolean deleted) {
+    public void setDeleted(Boolean deleted) {
         isDeleted = deleted;
     }
 

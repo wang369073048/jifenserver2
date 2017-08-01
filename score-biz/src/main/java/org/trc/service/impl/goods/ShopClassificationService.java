@@ -42,4 +42,9 @@ public class ShopClassificationService extends BaseService<ShopClassificationDO,
     public List<ShopClassificationDO> listEntityByParam(GoodsClassificationRelationshipDO param) {
         return shopClassificationMapper.listEntityByParam(param);
     }
+
+    @Override
+    public int delete(ShopClassificationDO shopClassification) {
+        return shopClassificationMapper.delete(shopClassification);
+    }
 }

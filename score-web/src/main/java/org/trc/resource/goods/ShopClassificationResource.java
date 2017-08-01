@@ -1,5 +1,6 @@
 package org.trc.resource.goods;
 
+import com.alibaba.fastjson.JSONObject;
 import org.hibernate.validator.constraints.NotEmpty;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -78,7 +79,43 @@ public class ShopClassificationResource {
         param.setDescription(description);
         param.setShopId(auth.getShopId());
         param.setUuid(UUID.randomUUID().toString().toLowerCase().replaceAll("-", ""));
-        shopClassificationBiz.insert(param);
-        return createSucssAppResult("新增成功", "");
+        return createSucssAppResult("新增成功", shopClassificationBiz.insert(param));
+    }
+
+    @PUT
+    public AppResult update(@NotNull @FormParam("id") Long id, @NotEmpty @FormParam("classificationName") String classificationName,
+                           @NotEmpty @FormParam("pictureUrl")String pictureUrl, @NotNull @FormParam("sort")Integer sort,
+                           @FormParam("description")String description){
+            ShopClassificationDO param = new ShopClassificationDO();
+            param.setId(id);
+            param.setClassificationName(classificationName);
+            param.setPictureUrl(pictureUrl);
+            param.setSort(sort);
+            param.setDescription(description);
+            return createSucssAppResult("更新成功", shopClassificationBiz.update(param));
+    }
+    @GET
+    @Path("/{id}")
+    public AppResult getEntity(@NotNull @PathParam("id") Long id,@Context ContainerRequestContext requestContext){
+            //获取userId
+            String userId = (String) requestContext.getProperty("userId");
+            Auth auth = authBiz.getAuthByUserId(userId);
+            ShopClassificationDO param = new ShopClassificationDO();
+            param.setId(id);
+            param.setShopId(auth.getShopId());
+            ShopClassificationDO result = shopClassificationBiz.getEntityByParam(param);
+            return createSucssAppResult("查询成功", result);
+    }
+
+    @DELETE
+    @Path("/{id}")
+    public AppResult delete(@NotNull @PathParam("id") Long id,@Context ContainerRequestContext requestContext){
+            //获取userId
+            String userId = (String) requestContext.getProperty("userId");
+            Auth auth = authBiz.getAuthByUserId(userId);
+            ShopClassificationDO param = new ShopClassificationDO();
+            param.setId(id);
+            param.setShopId(auth.getShopId());
+            return createSucssAppResult("删除成功", shopClassificationBiz.delete(param));
     }
 }
