@@ -106,8 +106,10 @@ public class CategoryResource {
         }
         //获取登录者userId
         String userId = (String) requestContext.getProperty("userId");
-        CategoryDO categoryDO = new CategoryDO();
-        categoryDO.setId(id);
+        CategoryDO categoryDO = categoryBiz.getCategoryDOById(id);
+        if(categoryDO == null) {
+            throw new BannerException(ExceptionEnum.BANNER_QUERY_EXCEPTION, "该类目不存在! Id ==> " + id);
+        }
         categoryDO.setCategoryName(categoryName);
         categoryDO.setLogoUrl(logoUrl);
         categoryDO.setSort(sort);

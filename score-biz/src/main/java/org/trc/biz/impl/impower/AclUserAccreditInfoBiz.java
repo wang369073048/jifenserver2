@@ -211,6 +211,8 @@ public class AclUserAccreditInfoBiz extends CommonBiz implements IAclUserAccredi
     @Transactional(propagation = Propagation.REQUIRED, rollbackFor = Exception.class)
     public void saveUserAccreditInfo(AclUserAddPageDate userAddPageDate, ContainerRequestContext requestContext){
         checkUserAddPageDate(userAddPageDate);
+        String userId= (String) requestContext.getProperty("userId");
+        userAddPageDate.setCreateOperator(userId);
         if (Pattern.matches(REGEX_MOBILE, userAddPageDate.getPhone())) {
             String msg = "手机号格式错误," + userAddPageDate.getPhone();
             LOGGER.error(msg);
@@ -250,7 +252,7 @@ public class AclUserAccreditInfoBiz extends CommonBiz implements IAclUserAccredi
                 aclUserAccreditRoleRelation.setUserAccreditId(aclUserAccreditInfo.getId());
                 aclUserAccreditRoleRelation.setUserId(aclUserAccreditInfo.getUserId());
                 aclUserAccreditRoleRelation.setRoleId(roleIds[i]);
-                //aclUserAccreditRoleRelation.setIsDeleted(ZeroToNineEnum.ZERO.getCode());
+                aclUserAccreditRoleRelation.setIsDeleted(Integer.valueOf(ZeroToNineEnum.ZERO.getCode()));
                 aclUserAccreditRoleRelation.setIsValid(aclUserAccreditInfo.getIsValid());
                 aclUserAccreditRoleRelation.setCreateOperator(aclUserAccreditInfo.getCreateOperator());
                 aclUserAccreditRoleRelation.setCreateTime(aclUserAccreditInfo.getCreateTime());
@@ -275,9 +277,10 @@ public class AclUserAccreditInfoBiz extends CommonBiz implements IAclUserAccredi
     }
 
     private void checkUserAddPageDate(AclUserAddPageDate userAddPageDate) {
+        AssertUtil.notNull(userAddPageDate,"AclUserAddPageDate不能为空");
         AssertUtil.notBlank(userAddPageDate.getPhone(), "用户手机号未输入");
         AssertUtil.notBlank(userAddPageDate.getName(), "用户姓名未输入");
-        AssertUtil.notBlank(userAddPageDate.getUserType(), "用户类型未选择");
+        //AssertUtil.notBlank(userAddPageDate.getUserType(), "用户类型未选择");
         AssertUtil.notBlank(userAddPageDate.getRoleNames(), "关联角色未选择");
         AssertUtil.notNull(userAddPageDate.getIsValid(), "参数isValid不能为空");
     }

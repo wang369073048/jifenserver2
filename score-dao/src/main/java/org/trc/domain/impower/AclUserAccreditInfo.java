@@ -39,14 +39,14 @@ public class AclUserAccreditInfo extends ImpowerCommonDO{
     private String name;
 
     @FormParam("userType")
-    @NotEmpty
+    //@NotEmpty
     @Length(max = 16, message = "用户授权名称字母和数字不能超过16个,汉字不能超过8个")
     private String userType;
 
     @FormParam("remark")
     @Length(max = 1024, message = "用户授权名称字母和数字不能超过1024个,汉字不能超过512个")
     private String remark;
-
+    @FormParam("isValid")
     private Integer isValid;
 
     @FormParam("channelCode")
