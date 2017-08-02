@@ -76,6 +76,7 @@ public class AclRoleBiz extends CommonBiz implements IAclRoleBiz {
     public void updateRoleState(AclRole aclRole){
 
         AssertUtil.notNull(aclRole,"根据角色对象，修改角色的状态，角色对象为空");
+        AssertUtil.notNull(aclRole.getId(),"根据角色对象，修改角色的状态，角色对象为空");
         AclRole updateAclRole = new AclRole();
         if(aclRole.getId()==SYS_ROLE_ID){ //防止恶意修改系统角色的状态
             String tip="系统角色的状态不能被修改";

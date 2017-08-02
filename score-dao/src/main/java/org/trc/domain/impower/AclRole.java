@@ -8,6 +8,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.ws.rs.FormParam;
+import javax.ws.rs.PathParam;
 
 
 /**
@@ -17,6 +18,7 @@ import javax.ws.rs.FormParam;
  */
 public class AclRole extends ImpowerCommonDO {
     @Id
+    @PathParam("id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @FormParam("name")
@@ -27,6 +29,7 @@ public class AclRole extends ImpowerCommonDO {
     //@NotEmpty
     @Length(max = 32, message = "角色类型字母和数字不能超过32个,汉字不能超过16个")
     private String roleType;
+    @FormParam("isValid")
     private Integer isValid;
     @FormParam("remark")
     @Length(max = 1024, message = "角色信息备注字母和数字不能超过1024个,汉字不能超过512个")

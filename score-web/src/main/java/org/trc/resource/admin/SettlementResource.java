@@ -1,7 +1,5 @@
 package org.trc.resource.admin;
 
-import com.alibaba.fastjson.JSONArray;
-import com.alibaba.fastjson.JSONObject;
 import com.tairanchina.md.account.user.model.UserDO;
 import com.tairanchina.md.account.user.service.UserService;
 import com.tairanchina.md.api.QueryType;
@@ -17,9 +15,10 @@ import org.trc.biz.order.ISettlementBiz;
 import org.trc.constants.ScoreAdminConstants;
 import org.trc.constants.TemporaryContext;
 import org.trc.domain.dto.ExportOrderDTO;
-import org.trc.domain.query.SettlementQuery;
+import org.trc.domain.dto.OrderQuery;
 import org.trc.domain.order.OrdersDO;
 import org.trc.domain.order.SettlementDO;
+import org.trc.domain.query.SettlementQuery;
 import org.trc.enums.ExceptionEnum;
 import org.trc.exception.OrderException;
 import org.trc.util.*;
@@ -94,38 +93,24 @@ public class SettlementResource {
             if (null != endTime) {
                 settlementQuery.setEndTime(new Date(endTime));
             }
-            Pagenation<OrdersDO> result = newOrderBiz.queryOrdersByParams(settlementQuery, page);
-            JSONObject jsonObject = new JSONObject();
-            JSONArray jsonArray = new JSONArray();
-            if (ListUtils.isNotEmpty(result.getResult())) {
-                for (OrdersDO ordersDO : result.getResult()) {
-                    JSONObject json = new JSONObject();
-                    json.put("id", ordersDO.getId());
-                    json.put("orderNum", ordersDO.getOrderNum());
-                    json.put("shopId", ordersDO.getShopId());
-                    json.put("shopName", TemporaryContext.getShopNameById(ordersDO.getShopId()));
-                    json.put("userId", ordersDO.getUserId());
-                    json.put("username", ordersDO.getUsername());
-                    json.put("goodsId", ordersDO.getGoodsId());
-                    json.put("barcode", ordersDO.getBarcode());
-                    json.put("goodsName", ordersDO.getGoodsName());
-                    json.put("goodsCount", ordersDO.getGoodsCount());
-                    json.put("price", ordersDO.getPrice());
-                    json.put("payment", ordersDO.getPayment());
-                    json.put("minImg", ordersDO.getMinImg());
-                    json.put("orderState", ordersDO.getOrderState());
-                    json.put("createTime", ordersDO.getCreateTime());
-                    json.put("updateTime", ordersDO.getUpdateTime());
+            Pagenation<OrdersDO> orderPage = newOrderBiz.queryOrdersByParams(settlementQuery, page);
+            if (orderPage != null && ListUtils.isNotEmpty(orderPage.getResult()) && orderPage.getResult().size() > 0) {
+                List<OrdersDO> ordersDOList = orderPage.getResult();
+                for (int i= 0; i < ordersDOList.size();i++) {
+                    OrdersDO ordersDO = ordersDOList.get(i);
                     if(ordersDO.getOrderAddressDO()!=null) {
-                        json.put("address", ordersDO.getOrderAddressDO().getAddress());
-                        json.put("receiverName", ordersDO.getOrderAddressDO().getReceiverName());
-                        json.put("receiverPhone", ordersDO.getOrderAddressDO().getPhone());
+                        OrderQuery orderQuery = new OrderQuery();
+                        FatherToChildUtils.fatherToChild(ordersDO,orderQuery);
+                        orderQuery.setAddress(ordersDO.getOrderAddressDO().getAddress());
+                        orderQuery.setReceiverName(ordersDO.getOrderAddressDO().getReceiverName());
+                        orderQuery.setReceiverPhone(ordersDO.getOrderAddressDO().getPhone());
+                        orderQuery.setShopName(TemporaryContext.getShopNameById(ordersDO.getShopId()));
+                        ordersDOList.set(i,orderQuery);
                     }
-                    jsonArray.add(json);
+
                 }
             }
-            JSONUtil.putParam(jsonArray, result, jsonObject);
-            return createSucssAppResult("查询成功!", jsonObject);
+            return createSucssAppResult("查询成功!", orderPage);
     }
 
     @GET
