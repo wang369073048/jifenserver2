@@ -35,6 +35,8 @@ public class Pagenation<T> implements Serializable {
     protected List<T> result = new ArrayList<T>();
     protected long totalCount = -1;
 
+    public String appcode = "1";
+
     // -- 构造函数 --//
     public Pagenation() {
 

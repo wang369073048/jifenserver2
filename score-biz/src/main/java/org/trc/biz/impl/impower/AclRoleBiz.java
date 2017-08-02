@@ -78,11 +78,11 @@ public class AclRoleBiz extends CommonBiz implements IAclRoleBiz {
         AssertUtil.notNull(aclRole,"根据角色对象，修改角色的状态，角色对象为空");
         AssertUtil.notNull(aclRole.getId(),"根据角色对象，修改角色的状态，角色对象为空");
         AclRole updateAclRole = new AclRole();
-        if(aclRole.getId()==SYS_ROLE_ID){ //防止恶意修改系统角色的状态
-            String tip="系统角色的状态不能被修改";
-            LOGGER.error(tip);
-            throw  new RoleException(ExceptionEnum.SYSTEM_SYS_ROLE_STATE_UPDATE_EXCEPTION,tip);
-        }
+//        if(aclRole.getId()==SYS_ROLE_ID){ //防止恶意修改系统角色的状态
+//            String tip="系统角色的状态不能被修改";
+//            LOGGER.error(tip);
+//            throw  new RoleException(ExceptionEnum.SYSTEM_SYS_ROLE_STATE_UPDATE_EXCEPTION,tip);
+//        }
         updateAclRole.setId(aclRole.getId());
 
         if (aclRole.getIsValid().equals(ValidEnum.VALID.getCode())) {
@@ -102,7 +102,6 @@ public class AclRoleBiz extends CommonBiz implements IAclRoleBiz {
         map.put("status", updateAclRole.getIsValid());
         map.put("roleId", updateAclRole.getId());
         userAccreditInfoRoleRelationService.updateStatusByRoleId(map);
-
     }
 
     @Override
