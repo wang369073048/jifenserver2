@@ -26,4 +26,12 @@
         </if>
         ORDER BY sort,updateTime
     </select>
+
+    <!-- 根据ID更新删除状态 -->
+    <update id="updateIsDeletedById" parameterType="org.trc.domain.goods.CategoryDO">
+        UPDATE category SET isDeleted = 1,
+        operatorUserId = #{operatorUserId},
+        updateTime = NOW()
+        WHERE id = #{id} and allowUpdates = 1
+    </update>
 </mapper>

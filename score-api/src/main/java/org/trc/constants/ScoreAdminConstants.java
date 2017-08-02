@@ -45,6 +45,7 @@ public class ScoreAdminConstants {
         public static final String ADMIN = "admin";
     }
 
+
     public static final class Route {
 
         public static final class Admin {
@@ -111,6 +112,37 @@ public class ScoreAdminConstants {
             public static final String SETCONTENT = "/set/content";
             public static final String SETUP = "/set/up";
             public static final String SORT = "/sort";
+        }
+
+        /**
+         * 七牛
+         */
+        public static final class QinNiu {
+
+            /**
+             * 用到七牛存储的系统功能模块
+             */
+            public static final class Module {
+                //属性管理
+                public static final String PROPERTY = "property";
+                //供应商管理
+                public static final String SUPPLY = "supply";
+            }
+
+
+            //根路径
+            public static final String ROOT = "qinniu";
+            //上传
+            public static final String UPLOAD = "upload";
+            //下载
+            public static final String DOWNLOAD = "download";
+            //删除
+            public static final String DELETE = "delete";
+            //缩略图
+            public static final String THUMBNAIL = "thumbnail";
+            //批量获取url
+            public static final String URLS = "urls";
+
         }
 
         public static final class BannerContent {

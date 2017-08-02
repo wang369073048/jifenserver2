@@ -64,6 +64,7 @@ public class AclRoleResourceRelationBiz implements IAclRoleResourceRelationBiz {
             //aclRoleResourceRelation.setCreateOperator();
             aclRoleResourceRelation.setCreateTime(Calendar.getInstance().getTime());
             aclRoleResourceRelation.setUpdateTime(aclRoleResourceRelation.getCreateTime());
+            aclRoleResourceRelation.setIsDeleted(0);
             aclRoleResourceRelationList.add(aclRoleResourceRelation);
         }
         int count=0;

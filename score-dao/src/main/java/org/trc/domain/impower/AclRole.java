@@ -24,7 +24,7 @@ public class AclRole extends ImpowerCommonDO {
     @Length(max = 64, message = "角色名称字母和数字不能超过64个,汉字不能超过32个")
     private String name;
     @FormParam("roleType")
-    @NotEmpty
+    //@NotEmpty
     @Length(max = 32, message = "角色类型字母和数字不能超过32个,汉字不能超过16个")
     private String roleType;
     private Integer isValid;

@@ -36,4 +36,9 @@ public class CategoryService extends BaseService<CategoryDO,Long> implements ICa
         pagenation.setResult(list);
         return pagenation;
     }
+
+    @Override
+    public int updateIsDeletedById(CategoryDO categoryDO) {
+        return catetoryMapper.updateIsDeletedById(categoryDO);
+    }
 }

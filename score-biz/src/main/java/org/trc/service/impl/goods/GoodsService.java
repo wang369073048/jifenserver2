@@ -70,4 +70,9 @@ public class GoodsService extends BaseService<GoodsDO,Long> implements IGoodsSer
         pagenation.setResult(list);
         return pagenation;
     }
+
+    @Override
+    public int selectCountByParams(GoodsDO goodsDO) {
+        return goodsMapper.selectCountByParams(goodsDO);
+    }
 }

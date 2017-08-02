@@ -38,6 +38,11 @@
             <artifactId>score-util</artifactId>
             <version>1.3.0-SNAPSHOT</version>
         </dependency>
+
+        <dependency>
+            <groupId>com.qiniu</groupId>
+            <artifactId>qiniu-java-sdk</artifactId>
+        </dependency>
     </dependencies>
 
 </project>

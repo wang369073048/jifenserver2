@@ -30,4 +30,11 @@ public interface ICategoryService extends IBaseService<CategoryDO,Long>{
      */
     Pagenation<CategoryDO> selectListByParams(CategoryDO categoryDO, Pagenation<CategoryDO> pageRequest);
 
+    /**
+     * 根据ID更新删除状态
+     * @param categoryDO CategoryDO
+     * @return int
+     */
+    int updateIsDeletedById(CategoryDO categoryDO);
+
 }

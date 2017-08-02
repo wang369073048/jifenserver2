@@ -22,4 +22,12 @@
         <property name="EBusinessID" value="${kdniao.EBusinessID}" />
         <property name="APPKEY" value="${kdniao.APPKEY}" />
     </bean>
+
+    <bean id="qinniuForm" class="org.trc.form.QinniuForm">
+        <property name="accessKey" value="${access.key}"/>
+        <property name="secretKey" value="${secret.key}"/>
+        <property name="bucket" value="${bucket}"/>
+        <property name="domainOfBucket" value="${domain.of.bucket}"/>
+        <property name="persistentPipeline" value="${persistentPipeline}"/>
+    </bean>
 </beans>

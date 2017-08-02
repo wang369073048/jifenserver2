@@ -18,4 +18,11 @@ public interface ICatetoryMapper extends BaseMapper<CategoryDO>{
      * @return List<CategoryDO>
      */
     List<CategoryDO> selectListByParams(CategoryDO categoryDO);
+
+    /**
+     * 根据ID更新删除状态
+     * @param categoryDO CategoryDO
+     * @return int
+     */
+    int updateIsDeletedById(CategoryDO categoryDO);
 }

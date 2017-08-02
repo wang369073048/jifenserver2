@@ -65,4 +65,6 @@ public interface IGoodsService extends IBaseService<GoodsDO,Long>{
      * @return List<GoodsDO>
      */
     Pagenation<GoodsDO> selectListByClassification(GoodsQuery goodsQuery, Pagenation<GoodsDO> pageRequest);
+
+    int selectCountByParams(GoodsDO goodsDO);
 }

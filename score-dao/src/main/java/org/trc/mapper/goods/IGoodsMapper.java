@@ -51,4 +51,6 @@ public interface IGoodsMapper extends BaseMapper<GoodsDO> {
      * @return List<GoodsDO>
      */
     List<GoodsDO> selectListByClassification(GoodsQuery goodsQuery);
+
+    int selectCountByParams(GoodsDO goodsDO);
 }
