@@ -4,10 +4,10 @@
     <select id="queryMonthConsumptionSummary" parameterType="org.trc.domain.query.SettlementQuery" resultType="org.trc.domain.order.ConsumptionSummaryDO">
         select userId, shopId, phone, left(accountDay,7) as accountDay, SUM(exchangeInNum) as exchangeInNum, SUM(consumeNum) as consumeNum  from consumption_summary
         <where>
-            <if test="shopId != null ">
+            <if test="shopId != null and shopId !=''">
                 AND shopId = #{shopId}
             </if>
-            <if test="phone != null ">
+            <if test="phone != null and phone !=''">
                 AND phone = #{phone}
             </if>
             AND <![CDATA[ UNIX_TIMESTAMP(accountDay) >= unix_timestamp(#{startTime})
@@ -45,5 +45,38 @@ mp(#{endTime})]]>
         </where>
         group by userId, shopId, phone, left(accountDay,7)
         order by userId desc, shopId desc, phone desc, left(accountDay,7) desc
+    </select>
+
+    <select id="generateConsumptionSummarySDForExchangeIn" parameterType="java.util.Map" resultType="org.trc.domain.dto.ConsumptionSummaryStatisticalDataDTO">
+        select count(*) as totalExchangeCount,
+        sum(score) as exchangeNum
+        from score_change
+        <where>
+            state = 0
+            AND businessCode = 'exchangeIn'
+            <if test="phone != null ">
+                AND userName = #{phone}
+            </if>
+            AND <![CDATA[ createTime >= #{startTime}
+            AND createTime < #{endTime}]]>
+        </where>
+    </select>
+
+    <select id="generateConsumptionSummarySDForConsume" parameterType="java.util.Map" resultType="org.trc.domain.dto.ConsumptionSummaryStatisticalDataDTO">
+        select count(*) as totalConsumptionCount,
+        sum(score) as consumptionNum
+        from score_change
+        <where>
+            state = 0
+            AND businessCode = 'income'
+            <if test="shopId != null ">
+                AND shopId = #{shopId}
+            </if>
+            <if test="phone != null ">
+                AND theOtherUserName = #{phone}
+            </if>
+            AND <![CDATA[ createTime >= #{startTime}
+            AND createTime < #{endTime}]]>
+        </where>
     </select>
 </mapper>

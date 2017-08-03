@@ -15,7 +15,7 @@
     <select id="queryMembershipScoreDailyDetailForExport" parameterType="org.trc.domain.query.SettlementQuery" resultType="org.trc.domain.order.MembershipScoreDailyDetailsDO">
         select * from membership_score_daily_details
         <where>
-            <if test="userId != null ">
+            <if test="userId != null and userId != ''">
                 AND userId = #{userId}
             </if>
             AND <![CDATA[ UNIX_TIMESTAMP(accountDay) >= unix_timestamp(#{startTime})

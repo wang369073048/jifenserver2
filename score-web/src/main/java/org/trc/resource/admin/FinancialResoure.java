@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.txframework.util.DateUtils;
 import com.txframework.util.ListUtils;
+import org.apache.commons.lang.StringUtils;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -64,22 +65,6 @@ public class FinancialResoure {
         settlementQuery.setEndTime(new Date(endTime));
 
         Pagenation<ConsumptionSummaryDO> result = financialSettlementBiz.queryConsumptionSummary(settlementQuery, page);
-        List<ConsumptionSummaryDO> consumptionSummarys = result.getResult();
-        JSONObject jsonObject = new JSONObject();
-        JSONArray jsonArray = new JSONArray();
-        if (ListUtils.isNotEmpty(consumptionSummarys)) {
-            for (ConsumptionSummaryDO consumptionSummaryDO : consumptionSummarys) {
-                JSONObject json = new JSONObject();
-                json.put("userId", consumptionSummaryDO.getUserId());
-                json.put("phone", consumptionSummaryDO.getPhone());
-                json.put("accountDay", consumptionSummaryDO.getAccountDay());
-                json.put("shopName", consumptionSummaryDO.getShopName());
-                json.put("exchangeInNum", consumptionSummaryDO.getExchangeInNum());
-                json.put("consumeNum", consumptionSummaryDO.getConsumeNum());
-                json.put("createTime", consumptionSummaryDO.getCreateTime().getTime());
-                jsonArray.add(json);
-            }
-        }
         //获取统计结转时间区间
         SettlementIntervalDTO settlementIntervalDTO = financialSettlementBiz.getSettlementInterval(settlementQuery);
         if (null != settlementIntervalDTO) {
@@ -91,16 +76,15 @@ public class FinancialResoure {
                 settlementQuery.setEndTime(settlementIntervalDTO.getEndTime());
             }
         }
-        JSONUtil.putParam(jsonArray, result, jsonObject);
         //添加汇总信息
         ConsumptionSummaryStatisticalDataDTO resultSD = financialSettlementBiz.statisticsConsumptionSummary(settlementQuery);
         if (null != resultSD) {
-            jsonObject.put("totalExchangeCount", resultSD.getTotalExchangeCount());
-            jsonObject.put("exchangeNum", null != resultSD.getExchangeNum() ? resultSD.getExchangeNum() : 0);
-            jsonObject.put("totalConsumptionCount", resultSD.getTotalConsumptionCount());
-            jsonObject.put("consumptionNum", null != resultSD.getConsumptionNum() ? resultSD.getConsumptionNum() : 0);
+            result.setTotalExchangeCount(resultSD.getTotalExchangeCount());
+            result.setExchangeNum(null != resultSD.getExchangeNum() ? resultSD.getExchangeNum() : 0);
+            result.setTotalConsumptionCount(resultSD.getTotalConsumptionCount());
+            result.setConsumptionNum(null != resultSD.getConsumptionNum() ? resultSD.getConsumptionNum() : 0);
         }
-        return createSucssAppResult("查询成功!", jsonObject);
+        return createSucssAppResult("查询成功!", result);
     }
 
     @GET
@@ -156,21 +140,6 @@ public class FinancialResoure {
         settlementQuery.setEndTime(new Date(endTime));
 
         Pagenation<ConsumptionSummaryDO> result = financialSettlementBiz.queryMonthConsumptionSummary(settlementQuery, page);
-        List<ConsumptionSummaryDO> consumptionSummarys = result.getResult();
-        JSONObject jsonObject = new JSONObject();
-        JSONArray jsonArray = new JSONArray();
-        if (ListUtils.isNotEmpty(consumptionSummarys)) {
-            for (ConsumptionSummaryDO consumptionSummaryDO : consumptionSummarys) {
-                JSONObject json = new JSONObject();
-                json.put("userId", consumptionSummaryDO.getUserId());
-                json.put("phone", consumptionSummaryDO.getPhone());
-                json.put("accountDay", consumptionSummaryDO.getAccountDay());
-                json.put("shopName", consumptionSummaryDO.getShopName());
-                json.put("exchangeInNum", consumptionSummaryDO.getExchangeInNum());
-                json.put("consumeNum", consumptionSummaryDO.getConsumeNum());
-                jsonArray.add(json);
-            }
-        }
         //获取统计结转时间区间
         SettlementIntervalDTO settlementIntervalDTO = financialSettlementBiz.getSettlementInterval(settlementQuery);
         if (null != settlementIntervalDTO) {
@@ -182,16 +151,15 @@ public class FinancialResoure {
                 settlementQuery.setEndTime(settlementIntervalDTO.getEndTime());
             }
         }
-        JSONUtil.putParam(jsonArray, result, jsonObject);
         //添加汇总信息
         ConsumptionSummaryStatisticalDataDTO resultSD = financialSettlementBiz.statisticsConsumptionSummary(settlementQuery);
         if (null != resultSD) {
-            jsonObject.put("totalExchangeCount", resultSD.getTotalExchangeCount());
-            jsonObject.put("exchangeNum", null != resultSD.getExchangeNum() ? resultSD.getExchangeNum() : 0);
-            jsonObject.put("totalConsumptionCount", resultSD.getTotalConsumptionCount());
-            jsonObject.put("consumptionNum", null != resultSD.getConsumptionNum() ? resultSD.getConsumptionNum() : 0);
+            result.setTotalExchangeCount(resultSD.getTotalExchangeCount());
+            result.setExchangeNum(null != resultSD.getExchangeNum() ? resultSD.getExchangeNum() : 0);
+            result.setTotalConsumptionCount(resultSD.getTotalConsumptionCount());
+            result.setConsumptionNum(null != resultSD.getConsumptionNum() ? resultSD.getConsumptionNum() : 0);
         }
-        return createSucssAppResult("查询成功!", jsonObject);
+        return createSucssAppResult("查询成功!", result);
     }
 
     @GET
@@ -240,7 +208,9 @@ public class FinancialResoure {
                                                     @BeanParam Pagenation<MembershipScoreDailyDetailsDO> page) {
 
         SettlementQuery settlementQuery = new SettlementQuery();
-        settlementQuery.setUserId(userId);
+        if(StringUtils.isNotBlank(userId)){
+            settlementQuery.setUserId(userId);
+        }
         if(startTime == null || endTime == null) {
             throw new BusinessException(ExceptionEnum.PARAM_CHECK_EXCEPTION,"起止时间不能为空");
         }
@@ -248,21 +218,6 @@ public class FinancialResoure {
         settlementQuery.setEndTime(new Date(endTime));
 
         Pagenation<MembershipScoreDailyDetailsDO> result = financialSettlementBiz.queryMembershipScoreDailyDetails(settlementQuery, page);
-        List<MembershipScoreDailyDetailsDO> membershipDcoreDailyDetails = result.getResult();
-        JSONObject jsonObject = new JSONObject();
-        JSONArray jsonArray = new JSONArray();
-        if (ListUtils.isNotEmpty(membershipDcoreDailyDetails)) {
-            for (MembershipScoreDailyDetailsDO consumptionSummaryDO : membershipDcoreDailyDetails) {
-                JSONObject json = new JSONObject();
-                json.put("userId", consumptionSummaryDO.getUserId());
-                json.put("accountDay", consumptionSummaryDO.getAccountDay());
-                json.put("exchangeInNum", consumptionSummaryDO.getExchangeInNum());
-                json.put("consumeNum", consumptionSummaryDO.getConsumeNum());
-                json.put("balance", consumptionSummaryDO.getBalance());
-                json.put("createTime", consumptionSummaryDO.getCreateTime().getTime());
-                jsonArray.add(json);
-            }
-        }
         //获取统计结转时间区间
         SettlementIntervalDTO settlementIntervalDTO = financialSettlementBiz.getSettlementIntervalForMembershipScoreDailyDetail(settlementQuery);
         if (null != settlementIntervalDTO) {
@@ -274,16 +229,16 @@ public class FinancialResoure {
                 settlementQuery.setEndTime(settlementIntervalDTO.getEndTime());
             }
         }
-        JSONUtil.putParam(jsonArray, result, jsonObject);
+        //JSONUtil.putParam(jsonArray, result, jsonObject);
         //添加汇总信息
         ConsumptionSummaryStatisticalDataDTO resultSD = financialSettlementBiz.statisticsConsumptionSummary(settlementQuery);
         if (null != resultSD) {
-            jsonObject.put("totalExchangeCount", resultSD.getTotalExchangeCount());
-            jsonObject.put("exchangeNum", null != resultSD.getExchangeNum() ? resultSD.getExchangeNum() : 0);
-            jsonObject.put("totalConsumptionCount", resultSD.getTotalConsumptionCount());
-            jsonObject.put("consumptionNum", null != resultSD.getConsumptionNum() ? resultSD.getConsumptionNum() : 0);
+            result.setTotalExchangeCount(resultSD.getTotalExchangeCount());
+            result.setExchangeNum(null != resultSD.getExchangeNum() ? resultSD.getExchangeNum() : 0);
+            result.setTotalConsumptionCount(resultSD.getTotalConsumptionCount());
+            result.setConsumptionNum(null != resultSD.getConsumptionNum() ? resultSD.getConsumptionNum() : 0);
         }
-        return createSucssAppResult("查询成功!", jsonObject);
+        return createSucssAppResult("查询成功!", result);
     }
 
     @GET

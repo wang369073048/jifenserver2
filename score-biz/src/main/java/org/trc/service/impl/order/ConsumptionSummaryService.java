@@ -65,12 +65,12 @@ public class ConsumptionSummaryService extends BaseService<ConsumptionSummaryDO,
 
     @Override
     public ConsumptionSummaryStatisticalDataDTO generateConsumptionSummarySDForExchangeIn(Map timeInterval) {
-        return null;
+        return consumptionSummaryMapper.generateConsumptionSummarySDForExchangeIn(timeInterval);
     }
 
     @Override
     public ConsumptionSummaryStatisticalDataDTO generateConsumptionSummarySDForConsume(Map timeInterval) {
-        return null;
+        return consumptionSummaryMapper.generateConsumptionSummarySDForConsume(timeInterval);
     }
 
     @Override

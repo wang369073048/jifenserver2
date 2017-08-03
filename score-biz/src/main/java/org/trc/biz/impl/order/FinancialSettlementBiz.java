@@ -6,6 +6,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.trc.biz.order.IFinancialSettlementBiz;
+import org.trc.constants.TemporaryContext;
 import org.trc.domain.query.SettlementQuery;
 import org.trc.domain.order.ConsumptionSummaryDO;
 import org.trc.domain.dto.ConsumptionSummaryStatisticalDataDTO;
@@ -17,7 +18,9 @@ import org.trc.service.order.IConsumptionSummaryService;
 import org.trc.service.order.IMembershipDcoreDailyDetailsService;
 import org.trc.util.Pagenation;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * author: hzwzhen
@@ -39,6 +42,26 @@ public class FinancialSettlementBiz implements IFinancialSettlementBiz{
 
     @Override
     public ConsumptionSummaryStatisticalDataDTO statisticsConsumptionSummary(SettlementQuery settlementQuery) {
+        Map params = new HashMap();
+        params.put("phone",settlementQuery.getPhone());
+        params.put("shopId",settlementQuery.getShopId());
+        if(null != settlementQuery.getShopId()) {
+            params.put("exchangeCurrency", TemporaryContext.getExchangeCurrencyById(settlementQuery.getShopId()));
+        }
+        params.put("userId",settlementQuery.getUserId());
+        params.put("startTime",settlementQuery.getStartTime());
+        params.put("endTime",settlementQuery.getEndTime());
+        ConsumptionSummaryStatisticalDataDTO result1 = consumptionSummaryService.generateConsumptionSummarySDForExchangeIn(params);
+        ConsumptionSummaryStatisticalDataDTO result2 = consumptionSummaryService.generateConsumptionSummarySDForConsume(params);
+        if(null != result1 && null != result2){
+            result1.setTotalConsumptionCount(result2.getTotalConsumptionCount());
+            result1.setConsumptionNum(result2.getConsumptionNum());
+            return result1;
+        }else if(null != result1 && null == result2){
+            return result1;
+        }else if(null == result1 && null != result2){
+            return result2;
+        }
         return null;
     }
 
