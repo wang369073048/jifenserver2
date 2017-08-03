@@ -84,7 +84,7 @@ public class AclResourceBiz implements IAclResourceBiz {
         //3.赋值checked属性
         for (AclResource aclResource : wholeAclResourceList) {
             for (Long JurisdictionId : JurisdictionIdList) {
-                if (aclResource.getId().equals(JurisdictionId)) {
+                if (aclResource.getCode().equals(JurisdictionId)) {
                     aclResource.setCheck("true");
                 }
             }
