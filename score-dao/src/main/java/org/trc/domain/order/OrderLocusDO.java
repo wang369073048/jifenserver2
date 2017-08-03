@@ -1,5 +1,6 @@
 package org.trc.domain.order;
 
+import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Date;
 
@@ -8,33 +9,40 @@ import java.util.Date;
  * JDK-version:  JDK1.8
  * since Date： 2017/7/3
  */
+@Table(name = "order_locus")
 public class OrderLocusDO implements Serializable{
 
 	private static final long serialVersionUID = 1L;
 
 	/**
-    * 主键ID
-    */
+	 * 主键ID
+	 */
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
 	/**
     * 
     */
+	@Column(name = "orderId")
 	private Long orderId;
 
 	/**
     * 变更前状态
     */
+	@Column(name = "beforeStatus")
 	private Integer beforeStatus;
 
 	/**
     * 变更后状态
     */
+	@Column(name = "afterStatus")
 	private Integer afterStatus;
 
 	/**
     * 创建时间
     */
+	@Column(name = "createTime")
 	private Date createTime;
 
 	public OrderLocusDO() {
