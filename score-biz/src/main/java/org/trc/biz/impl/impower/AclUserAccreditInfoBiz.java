@@ -333,7 +333,7 @@ public class AclUserAccreditInfoBiz extends CommonBiz implements IAclUserAccredi
     public void updateUserAccredit(AclUserAddPageDate userAddPageDate, ContainerRequestContext requestContext){
         //非空校验
         AssertUtil.notBlank(userAddPageDate.getName(), "用户姓名未输入");
-        AssertUtil.notBlank(userAddPageDate.getUserType(), "用户类型未选择");
+        //AssertUtil.notBlank(userAddPageDate.getUserType(), "用户类型未选择");
         AssertUtil.notBlank(userAddPageDate.getRoleNames(), "关联角色未选择");
         AssertUtil.notNull(userAddPageDate.getId(), "更新用户时,参数Id为空");
 //        //采购组校验
@@ -399,7 +399,7 @@ public class AclUserAccreditInfoBiz extends CommonBiz implements IAclUserAccredi
                 aclUserAccreditRoleRelation.setUserAccreditId(aclUserAccreditInfo.getId());
                 aclUserAccreditRoleRelation.setUserId(aclUserAccreditInfo.getUserId());
                 aclUserAccreditRoleRelation.setRoleId(roleIds[i]);
-                //aclUserAccreditRoleRelation.setIsDeleted(ZeroToNineEnum.ZERO.getCode());
+                aclUserAccreditRoleRelation.setIsDeleted(Integer.valueOf(ZeroToNineEnum.ZERO.getCode()));
                 aclUserAccreditRoleRelation.setIsValid(aclUserAccreditInfo.getIsValid());
                 aclUserAccreditRoleRelation.setCreateOperator(userId);
                 aclUserAccreditRoleRelation.setCreateTime(aclUserAccreditInfo.getCreateTime());

@@ -74,6 +74,7 @@ public class CategoryResource {
         categoryDO.setSort(sort);
         categoryDO.setPid(pid);
         categoryDO.setOperatorUserId(userId);
+        categoryDO.setIsDeleted(false);
         //新增
         categoryBiz.addCategoryDO(categoryDO);
         JSONObject jsonObject = new JSONObject();

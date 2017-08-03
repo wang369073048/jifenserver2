@@ -8,6 +8,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Transient;
 import javax.ws.rs.FormParam;
+import javax.ws.rs.PathParam;
 
 /**
 
@@ -23,6 +24,7 @@ import javax.ws.rs.FormParam;
 public class AclUserAccreditInfo extends ImpowerCommonDO{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @PathParam("id")
     private Long id;
 
     @FormParam("userId")
