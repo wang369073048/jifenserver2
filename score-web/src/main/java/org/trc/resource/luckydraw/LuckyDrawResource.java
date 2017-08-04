@@ -123,7 +123,6 @@ public class LuckyDrawResource {
         String userId = (String) requestContext.getProperty("userId");
         Auth auth = authBiz.getAuthByUserId(userId);
         luckyDraw.setShopId(auth.getShopId());
-        logger.info("很不友好的版本测试!");
         luckyDrawBiz.insertLuckyDraw(luckyDraw);
         return createSucssAppResult("操作成功", "");
     }
