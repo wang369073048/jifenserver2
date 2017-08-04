@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.trc.mapper.goods.IPurchaseRestrictionsMapper">
+
+    <!-- 添加数据 -->
+    <insert id="insertHistory" parameterType="org.trc.domain.goods.PurchaseRestrictionsHistoryDO">
+        <selectKey resultType="Long" order="AFTER" keyProperty="id">
+            SELECT LAST_INSERT_ID() AS id
+        </selectKey>
+        INSERT INTO purchase_restrictions_history(
+        id,
+        goodsId,
+        limitQuantity,
+        limitStartTime,
+        version,
+        createTime
+        )VALUES(
+        #{id},
+        #{goodsId},
+        #{limitQuantity},
+        #{limitStartTime},
+        #{version},
+        #{createTime}
+        )
+    </insert>
+
+    <!-- 根据goodsId更新信息-->
+    <update id="updateByGoodsId" parameterType="org.trc.domain.goods..PurchaseRestrictionsDO">
+        UPDATE purchase_restrictions
+        <set>
+            <if test="limitQuantity != null">
+                limitQuantity = #{limitQuantity},
+            </if>
+        </set>
+        WHERE goodsId = #{goodsId}
+    </update>
+</mapper>

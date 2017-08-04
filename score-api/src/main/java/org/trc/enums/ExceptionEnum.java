@@ -107,6 +107,9 @@ public enum ExceptionEnum {
     ORDER_ENTITY_NOT_EXIST("880105","对应的订单不存在"),
     ORDER_ERROR_ILLEGAL_OPERATION("880106", "操作不合法"),
 
+    QUANTITY_BEYOND_THE_LIMIT("",""),
+    FAILED_INFORMATION_PROCESSING("880107","商品限购信息处理失败！"),
+
     SHOP_QUERY_EXCEPTION("890100","商铺查询异常"),
     SHOP_SAVE_EXCEPTION("890101","商铺保存异常"),
     SHOP_DELETE_EXCEPTION("890103","商铺删除异常"),

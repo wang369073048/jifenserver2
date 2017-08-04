@@ -4,6 +4,7 @@ import com.trc.mall.externalservice.HttpBaseAck;
 import com.trc.mall.externalservice.TrCouponOperation;
 import com.trc.mall.externalservice.dto.CouponDto;
 import com.trc.mall.util.GuidUtil;
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.time.DateUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -25,6 +26,7 @@ import org.trc.enums.ExceptionEnum;
 import org.trc.exception.CardCouponException;
 import org.trc.exception.CouponException;
 import org.trc.exception.GoodsException;
+import org.trc.service.goods.IGoodsClassificationRelationshipService;
 import org.trc.service.goods.IGoodsService;
 import org.trc.service.goods.IPurchaseRestrictionsService;
 import org.trc.service.goods.IShopClassificationService;
@@ -62,6 +64,8 @@ public class GoodsBiz implements IGoodsBiz{
     private IShopClassificationService shopClassificationService;
     @Autowired
     private IPurchaseRestrictionsService purchaseRestrictionsService;
+    @Autowired
+    private IGoodsClassificationRelationshipService goodsClassificationRelationshipService;
 
     @Override
     @CacheEvit(key="#goodsDO.id")
@@ -72,6 +76,17 @@ public class GoodsBiz implements IGoodsBiz{
             validateGoods(goodsDO);
             int result = goodsService.insert(goodsDO);
             logger.info("新增ID=>[" + goodsDO.getId() + "]的GoodsDO成功");
+            List<GoodsClassificationRelationshipDO> list = goodsDO.getGoodsClassificationRelationshipList();
+            if(CollectionUtils.isNotEmpty(list)) {
+                for (GoodsClassificationRelationshipDO item : list) {
+                    item.setGoodsId(goodsDO.getId());
+                }
+                goodsClassificationRelationshipService.batchInsert(list);
+            }
+            PurchaseRestrictionsDO item = new PurchaseRestrictionsDO();
+            item.setGoodsId(goodsDO.getId());
+            item.setLimitQuantity(goodsDO.getLimitQuantity());
+            purchaseRestrictionsService.deal(item);
             return result;
         } catch (IllegalArgumentException e) {
             logger.error("新增GoodsDO校验参数异常!",e);
