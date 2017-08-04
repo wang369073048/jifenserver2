@@ -52,7 +52,7 @@ public class FinancialResoure {
     @GET
     @Path(ScoreAdminConstants.Route.Financial.CONSUMPTION_SUMMARY)
     //@Admin
-    public AppResult queryConsumptionSummary(@QueryParam("shopId") Long shopId,
+    public Pagenation queryConsumptionSummary(@QueryParam("shopId") Long shopId,
                                              @QueryParam("phone") String phone,
                                              @NotNull @QueryParam("startTime") Long startTime,
                                              @NotNull @QueryParam("endTime") Long endTime,
@@ -84,7 +84,7 @@ public class FinancialResoure {
             result.setTotalConsumptionCount(resultSD.getTotalConsumptionCount());
             result.setConsumptionNum(null != resultSD.getConsumptionNum() ? resultSD.getConsumptionNum() : 0);
         }
-        return createSucssAppResult("查询成功!", result);
+        return result;
     }
 
     @GET
@@ -126,8 +126,7 @@ public class FinancialResoure {
 
     @GET
     @Path(ScoreAdminConstants.Route.Financial.MONTH_CONSUMPTION_SUMMARY)
-    //@Admin
-    public AppResult queryMonthlyConsumptionSummary(@QueryParam("shopId") Long shopId,
+    public Pagenation queryMonthlyConsumptionSummary(@QueryParam("shopId") Long shopId,
                                                     @QueryParam("phone") String phone,
                                                     @NotNull @QueryParam("startTime") Long startTime,
                                                     @NotNull @QueryParam("endTime") Long endTime,
@@ -159,7 +158,7 @@ public class FinancialResoure {
             result.setTotalConsumptionCount(resultSD.getTotalConsumptionCount());
             result.setConsumptionNum(null != resultSD.getConsumptionNum() ? resultSD.getConsumptionNum() : 0);
         }
-        return createSucssAppResult("查询成功!", result);
+        return result;
     }
 
     @GET
@@ -202,7 +201,7 @@ public class FinancialResoure {
 
     @GET
     @Path(ScoreAdminConstants.Route.Financial.MEMBERSHIP_SCORE_DAILY_DETAILS)
-    public AppResult queryMembershipScoreDailyDetail(@QueryParam("userId") String userId,
+    public Pagenation queryMembershipScoreDailyDetail(@QueryParam("userId") String userId,
                                                     @VerifyDate @QueryParam("startTime") Long startTime,
                                                     @VerifyDate @QueryParam("endTime") Long endTime,
                                                     @BeanParam Pagenation<MembershipScoreDailyDetailsDO> page) {
@@ -229,7 +228,6 @@ public class FinancialResoure {
                 settlementQuery.setEndTime(settlementIntervalDTO.getEndTime());
             }
         }
-        //JSONUtil.putParam(jsonArray, result, jsonObject);
         //添加汇总信息
         ConsumptionSummaryStatisticalDataDTO resultSD = financialSettlementBiz.statisticsConsumptionSummary(settlementQuery);
         if (null != resultSD) {
@@ -238,7 +236,7 @@ public class FinancialResoure {
             result.setTotalConsumptionCount(resultSD.getTotalConsumptionCount());
             result.setConsumptionNum(null != resultSD.getConsumptionNum() ? resultSD.getConsumptionNum() : 0);
         }
-        return createSucssAppResult("查询成功!", result);
+        return result;
     }
 
     @GET

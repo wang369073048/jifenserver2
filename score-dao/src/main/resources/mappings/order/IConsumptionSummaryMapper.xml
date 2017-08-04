@@ -4,15 +4,14 @@
     <select id="queryMonthConsumptionSummary" parameterType="org.trc.domain.query.SettlementQuery" resultType="org.trc.domain.order.ConsumptionSummaryDO">
         select userId, shopId, phone, left(accountDay,7) as accountDay, SUM(exchangeInNum) as exchangeInNum, SUM(consumeNum) as consumeNum  from consumption_summary
         <where>
-            <if test="shopId != null and shopId !=''">
+            <if test="shopId != null and shopId != ''">
                 AND shopId = #{shopId}
             </if>
-            <if test="phone != null and phone !=''">
+            <if test="phone != null and phone != ''">
                 AND phone = #{phone}
             </if>
             AND <![CDATA[ UNIX_TIMESTAMP(accountDay) >= unix_timestamp(#{startTime})
-            AND UNIX_TIMESTAMP(accountDay) < unix_timesta
-mp(#{endTime})]]>
+            AND UNIX_TIMESTAMP(accountDay) < unix_timestamp(#{endTime})]]>
         </where>
         group by userId, shopId, phone, left(accountDay,7)
         order by userId desc, shopId desc, phone desc, left(accountDay,7) desc
@@ -21,10 +20,10 @@ mp(#{endTime})]]>
     <select id="queryConsumptionSummaryForExport" parameterType="org.trc.domain.query.SettlementQuery" resultType="org.trc.domain.order.ConsumptionSummaryDO">
         select * from consumption_summary
         <where>
-            <if test="shopId != null ">
+            <if test="shopId != null and shopId != ''">
                 AND shopId = #{shopId}
             </if>
-            <if test="phone != null ">
+            <if test="phone != null and phone != ''">
                 AND phone = #{phone}
             </if>
             AND <![CDATA[ UNIX_TIMESTAMP(accountDay) >= unix_timestamp(#{startTime})
@@ -34,10 +33,10 @@ mp(#{endTime})]]>
     <select id="queryMonthConsumptionSummaryForExport" parameterType="org.trc.domain.query.SettlementQuery" resultType="org.trc.domain.order.ConsumptionSummaryDO">
         select userId, shopId, phone, left(accountDay,7) as accountDay, SUM(exchangeInNum) as exchangeInNum, SUM(consumeNum) as consumeNum  from consumption_summary
         <where>
-            <if test="shopId != null ">
+            <if test="shopId != null and shopId != ''">
                 AND shopId = #{shopId}
             </if>
-            <if test="phone != null ">
+            <if test="phone != null and phone != ''">
                 AND phone = #{phone}
             </if>
             AND <![CDATA[ UNIX_TIMESTAMP(accountDay) >= unix_timestamp(#{startTime})
@@ -54,7 +53,7 @@ mp(#{endTime})]]>
         <where>
             state = 0
             AND businessCode = 'exchangeIn'
-            <if test="phone != null ">
+            <if test="phone != null and phone != ''">
                 AND userName = #{phone}
             </if>
             AND <![CDATA[ createTime >= #{startTime}
@@ -69,10 +68,10 @@ mp(#{endTime})]]>
         <where>
             state = 0
             AND businessCode = 'income'
-            <if test="shopId != null ">
+            <if test="shopId != null and shopId !=''">
                 AND shopId = #{shopId}
             </if>
-            <if test="phone != null ">
+            <if test="phone != null and phone != ''">
                 AND theOtherUserName = #{phone}
             </if>
             AND <![CDATA[ createTime >= #{startTime}
