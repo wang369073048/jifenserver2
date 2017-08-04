@@ -5,6 +5,7 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.trc.mall.externalservice.dto.CouponDto;
 import com.txframework.util.ListUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.hibernate.validator.constraints.NotEmpty;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -15,6 +16,7 @@ import org.trc.biz.goods.IGoodsBiz;
 import org.trc.constants.Category;
 import org.trc.constants.ScoreAdminConstants;
 import org.trc.domain.goods.CategoryDO;
+import org.trc.domain.goods.GoodsClassificationRelationshipDO;
 import org.trc.domain.goods.GoodsDO;
 import org.trc.domain.goods.ShopClassificationDO;
 import org.trc.domain.query.GoodsQuery;
@@ -27,9 +29,11 @@ import org.trc.util.Pagenation;
 import javax.validation.constraints.NotNull;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.regex.Pattern;
 
 import static org.trc.util.ResultUtil.createFailAppResult;
 import static org.trc.util.ResultUtil.createSucssAppResult;
@@ -60,7 +64,9 @@ public class GoodsResource {
                              @NotNull @FormParam("priceScore") Integer priceScore, @NotNull @FormParam("stock") Integer stock, @NotNull @FormParam("stockWarn") Integer stockWarn,
                              @FormParam("targetUrl") String targetUrl, @FormParam("validStartTime") Long validStartTime, @FormParam("validEndTime") Long validEndTime,
                              @FormParam("autoUpTime") Long autoUpTime, @FormParam("autoDownTime") Long autoDownTime, @NotEmpty @FormParam("content") String content,
-                             @FormParam("virtualExchangeQuantity") Integer virtualExchangeQuantity) {
+                             @FormParam("virtualExchangeQuantity") Integer virtualExchangeQuantity, @FormParam("whetherPrizes") Integer whetherPrizes,
+                             @FormParam("sort") Integer sort, @FormParam("shopClassificationIds") String shopClassificationIds,
+                             @NotNull @FormParam("limitQuantity") Integer limitQuantity) {
         Date time = Calendar.getInstance().getTime();
         GoodsDO goodsDO = new GoodsDO();
         goodsDO.setShopId(shopId);
@@ -75,16 +81,40 @@ public class GoodsResource {
         goodsDO.setStock(stock);
         goodsDO.setStockWarn(stockWarn);
         goodsDO.setContent(content);
+        goodsDO.setWhetherPrizes(whetherPrizes);
         goodsDO.calMainImg();
         goodsDO.setIsDeleted(0);
         goodsDO.setIsUp(0);
         goodsDO.setVirtualExchangeQuantity(null == virtualExchangeQuantity ? 0 : virtualExchangeQuantity);
         goodsDO.setCreateTime(time);
         handleGoodsDO(goodsDO, category, batchNumber, targetUrl, validStartTime, validEndTime, autoUpTime, autoDownTime);
+        goodsDO.setLimitQuantity(limitQuantity);
+        goodsDO.setSort(sort);
+        goodsDO.setCreateTime(time);
+        _checkString(shopClassificationIds);
+        if(StringUtils.isNotBlank(shopClassificationIds)) {
+            String[] shopClassificationIdStrs = shopClassificationIds.split(",");
+            List<GoodsClassificationRelationshipDO> list = new ArrayList<>();
+            if (null != shopClassificationIdStrs && shopClassificationIdStrs.length > 0) {
+                for (String shopClassificationIdStr : shopClassificationIdStrs) {
+                    GoodsClassificationRelationshipDO item = new GoodsClassificationRelationshipDO();
+                    item.setShopClassificationId(Long.valueOf(shopClassificationIdStr));
+                    list.add(item);
+                }
+            }
+            goodsDO.setGoodsClassificationRelationshipList(list);
+        }
         goodsBiz.saveGoodsDO(goodsDO);
         return createSucssAppResult("保存商品成功", "");
-
     }
+    private boolean _checkString(String shopClassificationIds){
+        if(StringUtils.isNotBlank(shopClassificationIds)){
+            String reg = "^[1-9]\\d*([,]\\d+)+";
+            return Pattern.compile(reg).matcher(shopClassificationIds).matches();
+        }
+        return true;
+    }
+
     /**
      * 修改商品
      */

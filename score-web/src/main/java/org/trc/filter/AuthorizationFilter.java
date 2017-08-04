@@ -62,28 +62,28 @@ public class AuthorizationFilter implements ContainerRequestFilter {
                     BeegoToken beegoToken = beegoService.authenticationBeegoToken(beegoAuthRequest);
                     if (null != beegoToken) {
                         String userId = beegoToken.getUserId();
-                        //requestContext.setProperty(ScoreAdminConstants.Authorization.USER_ID,userId);
+                        requestContext.setProperty(ScoreAdminConstants.Authorization.USER_ID,userId);
 
-                        AclUserAccreditInfo aclUserAccreditInfo = userAccreditInfoService.selectOneById(userId);
-                        if (aclUserAccreditInfo == null) {
-                            //说明用户已经被禁用或者失效需要将用户退出要求重新登录或者联系管理员处理问题
-                            AppResult appResult = new AppResult(ResultEnum.FAILURE.getCode(), ExceptionEnum.USER_BE_FORBIDDEN.getMessage(), null);
-                            requestContext.abortWith(Response.status(Response.Status.FORBIDDEN).entity(appResult).type(MediaType.APPLICATION_JSON).encoding("UTF-8").build());
-                        } else {
-                            requestContext.setProperty(ScoreAdminConstants.Authorization.USER_ID, userId);
-                            requestContext.setProperty(ScoreAdminConstants.Authorization.ACL_USER_ACCREDIT_INFO, aclUserAccreditInfo);
-                            String method = ((ContainerRequest) requestContext).getMethod();
-                            //验证是否在需要验证的权限列表中，需要则验证，不需要url直接放行
-                            if (jurisdictionBiz.urlCheck(url)) {
-                                //验证权限
-                                if (!jurisdictionBiz.authCheck(userId, url, method)) {
-                                    AppResult appResult = new AppResult(ResultEnum.FAILURE.getCode(), "用户无此权限", null);
-                                    requestContext.abortWith(Response.status(Response.Status.UNAUTHORIZED).entity(appResult).type(MediaType.APPLICATION_JSON).encoding("UTF-8").build());
-                                }
-                            }else{
-                            log.info("url:{}不需要验证放行成功",url);
-                        }
-                        }
+//                        AclUserAccreditInfo aclUserAccreditInfo = userAccreditInfoService.selectOneById(userId);
+//                        if (aclUserAccreditInfo == null) {
+//                            //说明用户已经被禁用或者失效需要将用户退出要求重新登录或者联系管理员处理问题
+//                            AppResult appResult = new AppResult(ResultEnum.FAILURE.getCode(), ExceptionEnum.USER_BE_FORBIDDEN.getMessage(), null);
+//                            requestContext.abortWith(Response.status(Response.Status.FORBIDDEN).entity(appResult).type(MediaType.APPLICATION_JSON).encoding("UTF-8").build());
+//                        } else {
+//                            requestContext.setProperty(ScoreAdminConstants.Authorization.USER_ID, userId);
+//                            requestContext.setProperty(ScoreAdminConstants.Authorization.ACL_USER_ACCREDIT_INFO, aclUserAccreditInfo);
+//                            String method = ((ContainerRequest) requestContext).getMethod();
+//                            //验证是否在需要验证的权限列表中，需要则验证，不需要url直接放行
+//                            if (jurisdictionBiz.urlCheck(url)) {
+//                                //验证权限
+//                                if (!jurisdictionBiz.authCheck(userId, url, method)) {
+//                                    AppResult appResult = new AppResult(ResultEnum.FAILURE.getCode(), "用户无此权限", null);
+//                                    requestContext.abortWith(Response.status(Response.Status.UNAUTHORIZED).entity(appResult).type(MediaType.APPLICATION_JSON).encoding("UTF-8").build());
+//                                }
+//                            }else{
+//                            log.info("url:{}不需要验证放行成功",url);
+//                        }
+//                        }
                     }
                 } catch (AuthenticateException e) {
                     log.error(e.getMessage());

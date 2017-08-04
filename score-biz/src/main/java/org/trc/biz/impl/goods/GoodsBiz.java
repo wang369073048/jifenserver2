@@ -382,8 +382,12 @@ public class GoodsBiz implements IGoodsBiz{
                 }
             } catch (IOException e) {
                 e.printStackTrace();
+                logger.error("查询服务不可用!");
+                throw new CardCouponException(COUPON_QUERY_EXCEPTION,"查询服务不可用!");
             } catch (URISyntaxException e) {
                 e.printStackTrace();
+                logger.error("查询服务不可用!");
+                throw new CardCouponException(COUPON_QUERY_EXCEPTION,"查询服务不可用!");
             }
         }else if(Category.EXTERNAL_CARD.equals(category.getCode()) && StringUtils.isNotBlank(goodsDO.getBatchNumber())){
             //判断虚拟批次号对应的卡券是否存在！

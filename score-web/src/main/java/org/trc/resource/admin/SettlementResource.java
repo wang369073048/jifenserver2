@@ -69,7 +69,7 @@ public class SettlementResource {
 
     @GET
     @Path(ScoreAdminConstants.Route.Settlement.ORDER)
-    public AppResult querySettlementOrderList(@QueryParam("shopId") Long shopId,
+    public Pagenation querySettlementOrderList(@QueryParam("shopId") Long shopId,
                                               @QueryParam("phone") String phone,
                                               @QueryParam("orderNum") String orderNum,
                                               @QueryParam("goodsName") String goodsName,
@@ -110,7 +110,7 @@ public class SettlementResource {
 
                 }
             }
-            return createSucssAppResult("查询成功!", orderPage);
+            return orderPage;
     }
 
     @GET
