@@ -1,7 +1,11 @@
 package org.trc.service.luckydraw;
 
+import com.txframework.core.jdbc.PageRequest;
 import org.trc.IBaseService;
 import org.trc.domain.luckydraw.LuckyDrawDO;
+import org.trc.util.Pagenation;
+
+import java.util.List;
 
 /**
  * author: hzwzhen
@@ -12,4 +16,8 @@ import org.trc.domain.luckydraw.LuckyDrawDO;
 public interface ILuckyDrawService extends IBaseService<LuckyDrawDO,Long>{
 
     LuckyDrawDO getLuckyDraw(LuckyDrawDO luckyDraw);
+
+    int updateLuckyDraw(LuckyDrawDO luckyDraw);
+
+    Pagenation<LuckyDrawDO> selectByParams(LuckyDrawDO luckyDraw, Pagenation<LuckyDrawDO> pageRequest);
 }

@@ -38,4 +38,82 @@
         </where>
     </select>
 
+    <!-- 根据ID更新信息-->
+    <update id="updateLuckyDraw" parameterType="org.trc.domain.luckydraw.LuckyDrawDO">
+        UPDATE lucky_draw
+        <set>
+            <if test="platform != null">
+                platform = #{platform},
+            </if>
+            <if test="activityName != null">
+                activityName = #{activityName},
+            </if>
+            <if test="startTime != null">
+                startTime = #{startTime},
+            </if>
+            <if test="endTime != null">
+                endTime = #{endTime},
+            </if>
+            <if test="freeLotteryTimes != null">
+                freeLotteryTimes = #{freeLotteryTimes},
+            </if>
+            <if test="freeDrawType != null">
+                freeDrawType = #{freeDrawType},
+            </if>
+            <if test="expenditure != null">
+                expenditure = #{expenditure},
+            </if>
+            <if test="dailyDrawLimit !=null">
+                dailyDrawLimit = #{dailyDrawLimit},
+            </if>
+            <if test="appBackground !=null">
+                appBackground = #{appBackground},
+            </if>
+            <if test="webBackground != null ">
+                webBackground = #{webBackground},
+            </if>
+            <if test="isDeleted != null ">
+                isDeleted = #{isDeleted},
+            </if>
+            <if test="activityRules != null ">
+                activityRules = #{activityRules},
+            </if>
+            <if test="createTime != null ">
+                createTime = #{createTime},
+            </if>
+            <if test="updateTime != null ">
+                updateTime = #{updateTime},
+            </if>
+        </set>
+        WHERE id = #{id} and shopId = #{shopId}
+    </update>
+
+    <select id="selectByParams" parameterType="org.trc.domain.luckydraw.LuckyDrawDO" resultType="org.trc.domain.luckydraw.LuckyDrawDO">
+        SELECT <include refid="allSelectionColumn"/> FROM lucky_draw
+        <where>
+            <if test="shopId!=null">
+                and shopId = #{shopId}
+            </if>
+            <if test="activityName != null">
+                and activityName like concat('%',#{activityName},'%')
+            </if>
+            <if test="operateTimeMin!=null">
+                and startTime <![CDATA[>=]]> #{operateTimeMin}
+            </if>
+            <if test="operateTimeMax!=null">
+                and startTime <![CDATA[<]]> #{operateTimeMax}
+            </if>
+            <if test="1==state">
+                and now() <![CDATA[<]]> startTime
+            </if>
+            <if test="2==state">
+                and now() >= startTime and now() <![CDATA[<]]> endTime
+            </if>
+            <if test="3==state">
+                and now() > endTime
+            </if>
+            and isDeleted = 0
+        </where>
+        order by updateTime desc
+    </select>
 </mapper>

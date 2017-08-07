@@ -1,7 +1,12 @@
 package org.trc.resource.luckydraw;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.trc.mall.util.CustomAck;
+import com.txframework.core.jdbc.PageRequest;
+import com.txframework.util.ListUtils;
+import org.glassfish.jersey.jaxb.internal.XmlJaxbElementProvider;
 import org.hibernate.validator.constraints.NotEmpty;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -9,19 +14,25 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.trc.biz.auth.IAuthBiz;
 import org.trc.biz.luckydraw.ILuckyDrawBiz;
+import org.trc.biz.luckydraw.IWinningRecordBiz;
 import org.trc.biz.order.INewOrderBiz;
 import org.trc.biz.shop.IShopBiz;
 import org.trc.constants.ScoreAdminConstants;
 import org.trc.domain.auth.Auth;
+import org.trc.domain.dto.WinningRecordDTO;
 import org.trc.domain.luckydraw.ActivityPrizesDO;
 import org.trc.domain.luckydraw.LuckyDrawDO;
+import org.trc.domain.luckydraw.WinningRecordDO;
 import org.trc.domain.order.LogisticsDO;
 import org.trc.domain.order.OrdersDO;
+import org.trc.domain.pagehome.Banner;
 import org.trc.domain.shop.ManagerDO;
 import org.trc.enums.ExceptionEnum;
 import org.trc.exception.OrderException;
 import org.trc.util.AppResult;
+import org.trc.util.Pagenation;
 
+import javax.imageio.event.IIOWriteProgressListener;
 import javax.validation.constraints.NotNull;
 import javax.ws.rs.*;
 import javax.ws.rs.container.ContainerRequestContext;
@@ -51,8 +62,10 @@ public class LuckyDrawResource {
     private INewOrderBiz newOrderBiz;
     @Autowired
     private IAuthBiz authBiz;
-
+    @Autowired
     private ILuckyDrawBiz luckyDrawBiz;
+    @Autowired
+    private IWinningRecordBiz winningRecordBiz;
 
     /**
      * @param orderNum
@@ -123,7 +136,6 @@ public class LuckyDrawResource {
         String userId = (String) requestContext.getProperty("userId");
         Auth auth = authBiz.getAuthByUserId(userId);
         luckyDraw.setShopId(auth.getShopId());
-        logger.info("很不友好的版本测试!");
         luckyDrawBiz.insertLuckyDraw(luckyDraw);
         return createSucssAppResult("操作成功", "");
     }
@@ -163,6 +175,102 @@ public class LuckyDrawResource {
         luckyDraw.setActivityPrizesList(activityPrizeList);
         luckyDrawBiz.updateLuckyDraw(luckyDraw);
         return createSucssAppResult("操作成功", "");
+    }
 
+    @DELETE
+    @Path("/{id}")
+    public AppResult delete(@PathParam("id")Long id, @Context ContainerRequestContext requestContext){
+        //获取userId
+        String userId = (String) requestContext.getProperty("userId");
+        Auth auth = authBiz.getAuthByUserId(userId);
+        LuckyDrawDO luckyDraw = new LuckyDrawDO();
+        luckyDraw.setId(id);
+        luckyDraw.setShopId(auth.getShopId());
+        luckyDrawBiz.deleteEntity(luckyDraw);
+        return createSucssAppResult("删除成功", "");
+    }
+
+    /**
+     * 查询抽奖活动
+     *
+     * @return
+     */
+    @GET
+    @Path("/{id}")
+    public AppResult getEntityById(@PathParam("id") Long id,@Context ContainerRequestContext requestContext) {
+        LuckyDrawDO luckyDraw = new LuckyDrawDO();
+        //获取userId
+        String userId = (String) requestContext.getProperty("userId");
+        Auth auth = authBiz.getAuthByUserId(userId);
+        luckyDraw.setId(id);
+        luckyDraw.setShopId(auth.getShopId());
+        LuckyDrawDO result = luckyDrawBiz.getLuckyDraw(luckyDraw);
+        return createSucssAppResult("查询成功", result);
+    }
+
+    @POST
+    @Path(ScoreAdminConstants.Route.LuckyDraw.LIST)
+        public Pagenation list(@FormParam("activityName") String activityName, @FormParam("operateTimeMin") Long operateTimeMin,
+                         @FormParam("operateTimeMax") Long operateTimeMax, @FormParam("state") Integer state,
+                         @BeanParam Pagenation<LuckyDrawDO> page,@Context ContainerRequestContext requestContext){
+            LuckyDrawDO luckyDraw = new LuckyDrawDO();
+            //获取userId
+            String userId = (String) requestContext.getProperty("userId");
+            Auth auth = authBiz.getAuthByUserId(userId);
+            luckyDraw.setShopId(auth.getShopId());
+            luckyDraw.setActivityName(activityName);
+            if (null != operateTimeMin) {
+                luckyDraw.setOperateTimeMin(new Date(operateTimeMin));
+            }
+            if (null != operateTimeMax) {
+                luckyDraw.setOperateTimeMax(new Date(operateTimeMax));
+            }
+            luckyDraw.setState(state);
+            luckyDraw.setIsDeleted(0);
+            return luckyDrawBiz.queryLuckyDraw(luckyDraw, page);
+
+    }
+
+
+    /**
+     * 中奖信息
+     *
+     * @return
+     */
+    @GET
+    @Path(ScoreAdminConstants.Route.LuckyDraw.WINNING_RECORD+"/{id}")
+    public AppResult getWinningRecordById(@PathParam("id") Long id,@Context ContainerRequestContext requestContext) {
+            WinningRecordDO param = new WinningRecordDO();
+            //获取userId
+            String userId = (String) requestContext.getProperty("userId");
+            ManagerDO manager = shopBiz.getManagerByUserId(userId);
+            param.setId(id);
+            param.setShopId(manager.getShopId());
+            WinningRecordDTO result = winningRecordBiz.getWinningRecord(param);
+            return createSucssAppResult("查询成功", result);
+
+    }
+
+
+    @POST
+    @Path(ScoreAdminConstants.Route.LuckyDraw.WINNING_RECORD_LIST)
+    public Pagenation listWinningRecord(@FormParam("luckyDrawId") Long luckyDrawId, @FormParam("platform") String platform, @FormParam("operateTimeMin") Long operateTimeMin,
+                                      @FormParam("operateTimeMax") Long operateTimeMax, @FormParam("lotteryPhone") String lotteryPhone,
+                                      @FormParam("activityName") String activityName, @FormParam("state") Integer state,
+                                      @BeanParam Pagenation<WinningRecordDTO> page){
+            WinningRecordDTO param = new WinningRecordDTO();
+            param.setLuckyDrawId(luckyDrawId);
+            param.setPlatform(platform);
+            param.setLotteryPhone(lotteryPhone);
+            param.setActivityName(activityName);
+            param.setState(state);
+            if (null != operateTimeMin) {
+                param.setOperateTimeMin(new Date(operateTimeMin));
+            }
+            if (null != operateTimeMax) {
+                param.setOperateTimeMax(new Date(operateTimeMax));
+            }
+            Pagenation<WinningRecordDTO> result = winningRecordBiz.queryWinningRecord(param, page);
+           return result;
     }
 }

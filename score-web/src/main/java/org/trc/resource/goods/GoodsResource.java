@@ -126,7 +126,9 @@ public class GoodsResource {
                             @FormParam("priceMarket") Integer priceMarket, @NotNull @FormParam("priceScore") Integer priceScore, @NotNull @FormParam("stock") Integer stock,
                             @NotNull @FormParam("stockWarn") Integer stockWarn, @FormParam("targetUrl") String targetUrl, @FormParam("validStartTime") Long validStartTime,
                             @FormParam("validEndTime") Long validEndTime, @FormParam("autoUpTime") Long autoUpTime, @FormParam("autoDownTime") Long autoDownTime,
-                            @NotEmpty @FormParam("content") String content, @FormParam("virtualExchangeQuantity") Integer virtualExchangeQuantity) {
+                            @NotEmpty @FormParam("content") String content, @FormParam("virtualExchangeQuantity") Integer virtualExchangeQuantity,
+                            @FormParam("whetherPrizes") Integer whetherPrizes, @FormParam("sort") Integer sort, @FormParam("shopClassificationIds") String shopClassificationIds,
+                            @NotNull @FormParam("limitQuantity") Integer limitQuantity) {
 
         GoodsDO goods = goodsBiz.getGoodsDOById(id, null);
         if (null == goods || goods.getShopId().longValue() != shopId.longValue()) {

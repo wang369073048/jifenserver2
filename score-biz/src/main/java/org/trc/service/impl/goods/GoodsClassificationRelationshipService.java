@@ -7,6 +7,8 @@ import org.trc.mapper.goods.IGoodsClassificationRelationshipMapper;
 import org.trc.service.goods.IGoodsClassificationRelationshipService;
 import org.trc.service.impl.BaseService;
 
+import java.util.List;
+
 /**
  * author: hzwzhen
  * JDK-version:  JDK1.8
@@ -20,5 +22,10 @@ public class GoodsClassificationRelationshipService extends BaseService<GoodsCla
     @Override
     public int delete(GoodsClassificationRelationshipDO param) {
         return goodsClassificationRelationshipMapper.delete(param);
+    }
+
+    @Override
+    public int batchInsert(List<GoodsClassificationRelationshipDO> list) {
+        return goodsClassificationRelationshipMapper.batchInsert(list);
     }
 }
