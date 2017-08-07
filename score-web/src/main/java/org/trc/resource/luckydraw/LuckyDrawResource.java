@@ -14,12 +14,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.trc.biz.auth.IAuthBiz;
 import org.trc.biz.luckydraw.ILuckyDrawBiz;
+import org.trc.biz.luckydraw.IWinningRecordBiz;
 import org.trc.biz.order.INewOrderBiz;
 import org.trc.biz.shop.IShopBiz;
 import org.trc.constants.ScoreAdminConstants;
 import org.trc.domain.auth.Auth;
+import org.trc.domain.dto.WinningRecordDTO;
 import org.trc.domain.luckydraw.ActivityPrizesDO;
 import org.trc.domain.luckydraw.LuckyDrawDO;
+import org.trc.domain.luckydraw.WinningRecordDO;
 import org.trc.domain.order.LogisticsDO;
 import org.trc.domain.order.OrdersDO;
 import org.trc.domain.pagehome.Banner;
@@ -29,6 +32,7 @@ import org.trc.exception.OrderException;
 import org.trc.util.AppResult;
 import org.trc.util.Pagenation;
 
+import javax.imageio.event.IIOWriteProgressListener;
 import javax.validation.constraints.NotNull;
 import javax.ws.rs.*;
 import javax.ws.rs.container.ContainerRequestContext;
@@ -58,8 +62,10 @@ public class LuckyDrawResource {
     private INewOrderBiz newOrderBiz;
     @Autowired
     private IAuthBiz authBiz;
-
+    @Autowired
     private ILuckyDrawBiz luckyDrawBiz;
+    @Autowired
+    private IWinningRecordBiz winningRecordBiz;
 
     /**
      * @param orderNum
@@ -204,7 +210,7 @@ public class LuckyDrawResource {
 
     @POST
     @Path(ScoreAdminConstants.Route.LuckyDraw.LIST)
-    public Pagenation list(@FormParam("activityName") String activityName, @FormParam("operateTimeMin") Long operateTimeMin,
+        public Pagenation list(@FormParam("activityName") String activityName, @FormParam("operateTimeMin") Long operateTimeMin,
                          @FormParam("operateTimeMax") Long operateTimeMax, @FormParam("state") Integer state,
                          @BeanParam Pagenation<LuckyDrawDO> page,@Context ContainerRequestContext requestContext){
             LuckyDrawDO luckyDraw = new LuckyDrawDO();
@@ -223,5 +229,48 @@ public class LuckyDrawResource {
             luckyDraw.setIsDeleted(0);
             return luckyDrawBiz.queryLuckyDraw(luckyDraw, page);
 
+    }
+
+
+    /**
+     * 中奖信息
+     *
+     * @return
+     */
+    @GET
+    @Path(ScoreAdminConstants.Route.LuckyDraw.WINNING_RECORD+"/{id}")
+    public AppResult getWinningRecordById(@PathParam("id") Long id,@Context ContainerRequestContext requestContext) {
+            WinningRecordDO param = new WinningRecordDO();
+            //获取userId
+            String userId = (String) requestContext.getProperty("userId");
+            ManagerDO manager = shopBiz.getManagerByUserId(userId);
+            param.setId(id);
+            param.setShopId(manager.getShopId());
+            WinningRecordDTO result = winningRecordBiz.getWinningRecord(param);
+            return createSucssAppResult("查询成功", result);
+
+    }
+
+
+    @POST
+    @Path(ScoreAdminConstants.Route.LuckyDraw.WINNING_RECORD_LIST)
+    public Pagenation listWinningRecord(@FormParam("luckyDrawId") Long luckyDrawId, @FormParam("platform") String platform, @FormParam("operateTimeMin") Long operateTimeMin,
+                                      @FormParam("operateTimeMax") Long operateTimeMax, @FormParam("lotteryPhone") String lotteryPhone,
+                                      @FormParam("activityName") String activityName, @FormParam("state") Integer state,
+                                      @BeanParam Pagenation<WinningRecordDTO> page){
+            WinningRecordDTO param = new WinningRecordDTO();
+            param.setLuckyDrawId(luckyDrawId);
+            param.setPlatform(platform);
+            param.setLotteryPhone(lotteryPhone);
+            param.setActivityName(activityName);
+            param.setState(state);
+            if (null != operateTimeMin) {
+                param.setOperateTimeMin(new Date(operateTimeMin));
+            }
+            if (null != operateTimeMax) {
+                param.setOperateTimeMax(new Date(operateTimeMax));
+            }
+            Pagenation<WinningRecordDTO> result = winningRecordBiz.queryWinningRecord(param, page);
+           return result;
     }
 }
