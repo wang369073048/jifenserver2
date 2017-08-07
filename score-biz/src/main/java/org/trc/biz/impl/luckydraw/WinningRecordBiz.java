@@ -1,6 +1,7 @@
 package org.trc.biz.impl.luckydraw;
 
 import com.txframework.core.jdbc.PageRequest;
+import org.springframework.stereotype.Service;
 import org.trc.biz.luckydraw.IWinningRecordBiz;
 import org.trc.domain.dto.WinningRecordDTO;
 import org.trc.domain.luckydraw.ActivityDetailDO;
@@ -16,6 +17,7 @@ import java.util.Map;
  * comments:
  * since Date： 2017/8/7
  */
+@Service("winningRecordBiz")
 public class WinningRecordBiz implements IWinningRecordBiz{
     @Override
     public int insertWinningRecord(WinningRecordDO winningRecord) {

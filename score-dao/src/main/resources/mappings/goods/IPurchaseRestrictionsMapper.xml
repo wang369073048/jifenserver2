@@ -25,7 +25,7 @@
     </insert>
 
     <!-- 根据goodsId更新信息-->
-    <update id="updateByGoodsId" parameterType="org.trc.domain.goods..PurchaseRestrictionsDO">
+    <update id="updateByGoodsId" parameterType="org.trc.domain.goods.PurchaseRestrictionsDO">
         UPDATE purchase_restrictions
         <set>
             <if test="limitQuantity != null">
