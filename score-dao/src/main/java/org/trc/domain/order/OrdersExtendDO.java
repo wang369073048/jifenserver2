@@ -1,5 +1,7 @@
 package org.trc.domain.order;
 
+import javax.persistence.Column;
+import javax.persistence.Table;
 import java.io.Serializable;
 import java.util.Date;
 
@@ -9,18 +11,19 @@ import java.util.Date;
  * comments:
  * since Date： 2017/7/3
  */
+@Table(name = "orders_extend")
 public class OrdersExtendDO implements Serializable {
 
+    @Column(name = "orderId")
     private Long orderId;
-
+    @Column(name = "orderNum")
     private String orderNum;
-
     private String remark;
-
+    @Column(name = "returnTime")
     private Date returnTime;
-
+    @Column(name = "createTime")
     private Date createTime;
-
+    @Column(name = "updateTime")
     private Date updateTime;
 
     public Long getOrderId() {

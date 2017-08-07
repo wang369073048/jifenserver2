@@ -34,4 +34,5 @@ public interface IWinningRecordMapper extends BaseMapper<WinningRecordDO>{
     List<ActivityDetailDO> listActivityDetailByParams(ActivityDetailDO param);
 
     List<ActivityDetailDO> selectActivityDetailByParams(ActivityDetailDO param);
+
 }

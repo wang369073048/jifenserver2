@@ -19,7 +19,6 @@ import javax.ws.rs.core.MediaType;
  * comments:
  * since Date： 2017/7/27
  */
-
 @Produces(MediaType.APPLICATION_JSON)
 @Path(ScoreAdminConstants.Route.ActivityPrizes.ROOT)
 public class ActivityPrizesResource {

@@ -1,6 +1,7 @@
 package org.trc.mapper.goods;
 
 import org.trc.domain.goods.GoodsDO;
+import org.trc.domain.luckydraw.ActivityPrizesDO;
 import org.trc.domain.query.GoodsQuery;
 import org.trc.util.BaseMapper;
 
@@ -53,4 +54,6 @@ public interface IGoodsMapper extends BaseMapper<GoodsDO> {
     List<GoodsDO> selectListByClassification(GoodsQuery goodsQuery);
 
     int selectCountByParams(GoodsDO goodsDO);
+
+    List<ActivityPrizesDO> queryActivityPrizes(ActivityPrizesDO paramG);
 }

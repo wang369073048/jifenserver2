@@ -76,6 +76,17 @@ public class NewOrderBiz implements INewOrderBiz {
         OrderAddressDO orderAddress = new OrderAddressDO();
         orderAddress.setOrderId(orderId);
         OrderAddressDO orderAddressDO = orderAddressService.selectOne(orderAddress);
+        handleOrderAddressDO(orderAddressDO);
+        return orderAddressDO;
+    }
+
+    @Override
+    public OrderAddressDO getOrderAddressByOrderNum(String orderNum) {
+        OrderAddressDO orderAddressDO = orderAddressService.getOrderAddressDOByOrderNum(orderNum);
+        handleOrderAddressDO(orderAddressDO);
+        return orderAddressDO;
+    }
+    private void handleOrderAddressDO(OrderAddressDO orderAddressDO){
         if(null!=orderAddressDO){
             orderAddressDO.setProvince(areaBiz.getAreaByCode(orderAddressDO.getProvinceCode()).getProvince());
             orderAddressDO.setCity(areaBiz.getAreaByCode(orderAddressDO.getCityCode()).getCity());
@@ -83,12 +94,6 @@ public class NewOrderBiz implements INewOrderBiz {
                 orderAddressDO.setArea(areaBiz.getAreaByCode(orderAddressDO.getAreaCode()).getDistrict());
             }
         }
-        return orderAddressDO;
-    }
-
-    @Override
-    public OrderAddressDO getOrderAddressByOrderNum(String orderNum) {
-        return null;
     }
 
     @Override
@@ -452,6 +457,6 @@ public class NewOrderBiz implements INewOrderBiz {
 
     @Override
     public OrdersExtendDO getOrdersExtendByOrderNum(OrdersExtendDO ordersExtendDO) {
-        return null;
+        return ordersExtendService.selectOne(ordersExtendDO);
     }
 }

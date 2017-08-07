@@ -36,4 +36,13 @@ public interface IWinningRecordService extends IBaseService<WinningRecordDO,Long
     WinningRecordDTO getWinningRecord(WinningRecordDO param);
 
     int updateState(WinningRecordDO param);
+
+    List<ActivityDetailDO> listActivityDetailByParams(ActivityDetailDO param);
+
+    Pagenation<ActivityDetailDO> selectActivityDetailByParams(ActivityDetailDO param, Pagenation<ActivityDetailDO> pageRequest);
+
+    List<WinningRecordDTO> listByParams(WinningRecordDTO param);
+
+    Pagenation<WinningRecordDTO> selectByParams(WinningRecordDTO param, Pagenation<WinningRecordDTO> pageRequest);
+
 }

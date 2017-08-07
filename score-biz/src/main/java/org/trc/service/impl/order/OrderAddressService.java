@@ -1,8 +1,10 @@
 package org.trc.service.impl.order;
 
 import com.txframework.core.jdbc.PageRequest;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.trc.domain.order.OrderAddressDO;
+import org.trc.mapper.order.IOrderAddressMapper;
 import org.trc.service.impl.BaseService;
 import org.trc.service.order.IOrderAddressService;
 
@@ -16,6 +18,8 @@ import java.util.List;
  */
 @Service("orderAddressService")
 public class OrderAddressService extends BaseService<OrderAddressDO,Long> implements IOrderAddressService{
+    @Autowired
+    private IOrderAddressMapper orderAddressMapper;
     @Override
     public OrderAddressDO getOrderAddressDOByParams(OrderAddressDO orderAddress) {
         return null;
@@ -43,6 +47,6 @@ public class OrderAddressService extends BaseService<OrderAddressDO,Long> implem
 
     @Override
     public OrderAddressDO getOrderAddressDOByOrderNum(String orderNum) {
-        return null;
+        return orderAddressMapper.getOrderAddressDOByOrderNum(orderNum);
     }
 }

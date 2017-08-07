@@ -5,6 +5,7 @@ import com.github.pagehelper.PageHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.trc.domain.goods.GoodsDO;
+import org.trc.domain.luckydraw.ActivityPrizesDO;
 import org.trc.domain.query.GoodsQuery;
 import org.trc.mapper.goods.IGoodsMapper;
 import org.trc.service.goods.IGoodsService;
@@ -74,5 +75,14 @@ public class GoodsService extends BaseService<GoodsDO,Long> implements IGoodsSer
     @Override
     public int selectCountByParams(GoodsDO goodsDO) {
         return goodsMapper.selectCountByParams(goodsDO);
+    }
+
+    @Override
+    public Pagenation<ActivityPrizesDO> queryActivityPrizes(ActivityPrizesDO paramG, Pagenation<ActivityPrizesDO> pagenation) {
+        Page page = PageHelper.startPage(pagenation.getPageNo(), pagenation.getPageSize());
+        List<ActivityPrizesDO> list = goodsMapper.queryActivityPrizes(paramG);
+        pagenation.setTotalCount(page.getTotal());
+        pagenation.setResult(list);
+        return pagenation;
     }
 }

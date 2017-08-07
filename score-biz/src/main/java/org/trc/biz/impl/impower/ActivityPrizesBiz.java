@@ -1,8 +1,11 @@
 package org.trc.biz.impl.impower;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.trc.biz.goods.IGoodsBiz;
 import org.trc.biz.luckydraw.IActivityPrizesBiz;
 import org.trc.domain.luckydraw.ActivityPrizesDO;
+import org.trc.service.goods.IGoodsService;
 import org.trc.util.Pagenation;
 
 import java.util.List;
@@ -15,6 +18,9 @@ import java.util.List;
  */
 @Service(value = "activityPrizesBiz")
 public class ActivityPrizesBiz implements IActivityPrizesBiz{
+
+    @Autowired
+    private IGoodsService goodsService;
     @Override
     public int insertActivityPrizes(ActivityPrizesDO activityPrizes) {
         return 0;
@@ -32,6 +38,15 @@ public class ActivityPrizesBiz implements IActivityPrizesBiz{
 
     @Override
     public Pagenation<ActivityPrizesDO> queryActivityPrizes(ActivityPrizesDO param, Pagenation<ActivityPrizesDO> pageRequest) {
-        return null;
+        if(pageRequest.getPageNo() == 1){
+            List<ActivityPrizesDO> activityPrizes = ActivityPrizesDO.getDefaultActivityPrizes();
+            pageRequest = goodsService.queryActivityPrizes(param, pageRequest);
+            List<ActivityPrizesDO> dataList = pageRequest.getResult();
+            activityPrizes.addAll(dataList);
+            pageRequest.setResult(activityPrizes);
+            return pageRequest;
+        }else {
+            return goodsService.queryActivityPrizes(param, pageRequest);
+        }
     }
 }
