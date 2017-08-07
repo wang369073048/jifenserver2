@@ -103,7 +103,8 @@
     <update id="deleteByParam" parameterType="org.trc.domain.goods.GoodsDO">
         UPDATE goods SET
         versionLock = versionLock+1,
-        isDeleted = 1
+        isDeleted = 1,
+        updateTime = NOW()
         WHERE
         id = #{id}
         and shopId = #{shopId}

@@ -28,4 +28,9 @@ public class GoodsClassificationRelationshipService extends BaseService<GoodsCla
     public int batchInsert(List<GoodsClassificationRelationshipDO> list) {
         return goodsClassificationRelationshipMapper.batchInsert(list);
     }
+
+    @Override
+    public int batchDeleteByGoodsIds(List<Long> list) {
+        return goodsClassificationRelationshipMapper.batchDeleteByGoodsIds(list);
+    }
 }

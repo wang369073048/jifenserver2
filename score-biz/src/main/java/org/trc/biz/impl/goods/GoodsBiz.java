@@ -12,6 +12,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 import org.trc.annotation.cache.CacheEvit;
 import org.trc.biz.goods.ICategoryBiz;
@@ -23,6 +24,7 @@ import org.trc.constants.ExternalserviceResultCodeConstants;
 import org.trc.domain.goods.*;
 import org.trc.domain.query.GoodsQuery;
 import org.trc.enums.ExceptionEnum;
+import org.trc.exception.BusinessException;
 import org.trc.exception.CardCouponException;
 import org.trc.exception.CouponException;
 import org.trc.exception.GoodsException;
@@ -104,6 +106,7 @@ public class GoodsBiz implements IGoodsBiz{
 
     @Override
     @CacheEvit(key="#goodsDO.id")
+    @Transactional
     public int updateGoodsDO(GoodsDO goodsDO) {
         try {
             validateForUpdate(goodsDO);
@@ -117,7 +120,18 @@ public class GoodsBiz implements IGoodsBiz{
                 logger.error("修改GoodsDO异常!请求参数为:"+goodsDO);
                 throw new GoodsException(ExceptionEnum.GOODS_UPDATE_EXCEPTION, "修改GoodsDO异常!");
             }
+            GoodsClassificationRelationshipDO param = new GoodsClassificationRelationshipDO();
+            param.setGoodsId(goodsDO.getId());
+            goodsClassificationRelationshipService.delete(param);
+            List<GoodsClassificationRelationshipDO> list = goodsDO.getGoodsClassificationRelationshipList();
+            if(CollectionUtils.isNotEmpty(list)) {
+                goodsClassificationRelationshipService.batchInsert(list);
+            }
             logger.info("修改ID=>[" + goodsDO.getId() + "]的GoodsDO成功!");
+            PurchaseRestrictionsDO item = new PurchaseRestrictionsDO();
+            item.setGoodsId(goodsDO.getId());
+            item.setLimitQuantity(goodsDO.getLimitQuantity());
+            purchaseRestrictionsService.deal(item);
             return result;
         } catch (IllegalArgumentException e) {
             logger.error("修改GoodsDO校验参数异常!",e);
@@ -208,6 +222,32 @@ public class GoodsBiz implements IGoodsBiz{
             if(isUp != null){
                 param.setIsUp(isUp);
             }
+            param.setId(id);
+            GoodsDO goodsDO = goodsService.selectOne(param);
+            if (null == goodsDO) {
+                logger.warn("查询结果为空!");
+                throw new GoodsException(ExceptionEnum.GOODS_ID_NOT_EXIST, "查询结果为空");
+            } else {
+                return goodsDO;
+            }
+        } catch (IllegalArgumentException e) {
+            logger.error("查询GoodsDO传入Id为空!",e);
+            throw new GoodsException(ExceptionEnum.PARAM_CHECK_EXCEPTION,e.getMessage());
+        } catch (GoodsException e) {
+            throw e;
+        } catch (Exception e) {
+            logger.error("根据ID=>[" + id + "]查询GoodsDO信息异常!",e);
+            throw new GoodsException(ExceptionEnum.GOODS_QUERY_EXCEPTION, "根据ID=>[" + id + "]查询GoodsDO信息异常!");
+        }
+    }
+
+    @Override
+    public GoodsDO getGoodsDOById(Long id, Integer whetherPrizes, Integer isUp) {
+        try {
+            Assert.isTrue(id != null,"查询Id不能为空!");
+            GoodsDO param = new GoodsDO();
+            param.setIsUp(isUp);
+            param.setWhetherPrizes(whetherPrizes);
             param.setId(id);
             GoodsDO goodsDO = goodsService.selectOne(param);
             if (null == goodsDO) {
@@ -347,6 +387,17 @@ public class GoodsBiz implements IGoodsBiz{
             return resultAck.getData();
         } else {
             throw new CouponException("41000", "虚拟卡券对应的批次号不存在!");
+        }
+    }
+
+    @Override
+    public void setClassification(List<Long> goodsList, List<GoodsClassificationRelationshipDO> gcrList) {
+        try {
+            goodsClassificationRelationshipService.batchDeleteByGoodsIds(goodsList);
+            goodsClassificationRelationshipService.batchInsert(gcrList);
+        }catch (Exception e){
+            logger.error(e.getMessage());
+            throw new BusinessException(ExceptionEnum.UPDATE_EXCEPTION, e.getMessage());
         }
     }
 

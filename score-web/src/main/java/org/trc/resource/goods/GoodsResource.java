@@ -29,6 +29,7 @@ import org.trc.util.Pagenation;
 import javax.validation.constraints.NotNull;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -130,7 +131,7 @@ public class GoodsResource {
                             @FormParam("whetherPrizes") Integer whetherPrizes, @FormParam("sort") Integer sort, @FormParam("shopClassificationIds") String shopClassificationIds,
                             @NotNull @FormParam("limitQuantity") Integer limitQuantity) {
 
-        GoodsDO goods = goodsBiz.getGoodsDOById(id, null);
+        GoodsDO goods = goodsBiz.getGoodsDOById(id, whetherPrizes,null);
         if (null == goods || goods.getShopId().longValue() != shopId.longValue()) {
             throw new GoodsException(ExceptionEnum.ERROR_ILLEGAL_OPERATION, "操作不合法");
         }
@@ -167,7 +168,23 @@ public class GoodsResource {
         goodsDO.setContent(content);
         goodsDO.calMainImg();
         goodsDO.setVirtualExchangeQuantity(null == virtualExchangeQuantity ? 0 : virtualExchangeQuantity);
+        goodsDO.setLimitQuantity(limitQuantity);
+        goodsDO.setSort(sort);
         goodsDO.setUpdateTime(time);
+        _checkString(shopClassificationIds);
+        if(StringUtils.isNotBlank(shopClassificationIds)) {
+            String[] shopClassificationIdStrs = shopClassificationIds.split(",");
+            List<GoodsClassificationRelationshipDO> list = new ArrayList<>();
+            if (null != shopClassificationIdStrs && shopClassificationIdStrs.length > 0) {
+                for (String shopClassificationIdStr : shopClassificationIdStrs) {
+                    GoodsClassificationRelationshipDO item = new GoodsClassificationRelationshipDO();
+                    item.setGoodsId(id);
+                    item.setShopClassificationId(Long.valueOf(shopClassificationIdStr));
+                    list.add(item);
+                }
+            }
+            goodsDO.setGoodsClassificationRelationshipList(list);
+        }
         goodsBiz.updateGoodsDO(goodsDO);
         return createSucssAppResult("修改商品成功", "");
 
@@ -201,7 +218,18 @@ public class GoodsResource {
         jsonObject.put("exchangeQuantity", goods.getExchangeQuantity());
         jsonObject.put("virtualExchangeQuantity", goods.getVirtualExchangeQuantity());
         jsonObject.put("content", goods.getContent());
+        jsonObject.put("whetherPrizes",goods.getWhetherPrizes());
+        jsonObject.put("limitQuantity",goods.getLimitQuantity());
         jsonObject.put("isUp", goods.getIsUp());
+        jsonObject.put("sort", goods.getSort());
+        if(CollectionUtils.isNotEmpty(goods.getShopClassificationList())){
+            String shopClassificationIds = "";
+            for(ShopClassificationDO item : goods.getShopClassificationList()){
+                shopClassificationIds += item.getId()+",";
+            }
+            shopClassificationIds = shopClassificationIds.substring(0,shopClassificationIds.length()-1);
+            jsonObject.put("shopClassificationIds", shopClassificationIds);
+        }
         CategoryDO category = categoryBiz.getCategoryDOById(goods.getCategory());
         if (Category.FINANCIAL_CARD.equals(category.getCode())) {
             jsonObject.put("batchNumber", goods.getBatchNumber());
@@ -293,6 +321,32 @@ public class GoodsResource {
             }
             goodsDO.setBarcode(GuidUtil.getNextUid("bar"));
         }
+    }
+
+    @POST
+    @Path(ScoreAdminConstants.Route.Goods.SET_CLASSIFICATION)
+    public AppResult setClassification(@PathParam("shopId") Long shopId, @NotEmpty @FormParam("goodsIds") String goodsIds,
+                                      @NotEmpty @FormParam("classificationIds") String classificationIds) {
+        _checkString(goodsIds);
+        _checkString(classificationIds);
+        String[] goodsIdStrs = goodsIds.split(",");
+        String[] classificationIdStrs = classificationIds.split(",");
+        List<Long> goodsList = new ArrayList<>();
+        for(String goodsId : goodsIdStrs){
+            goodsList.add(Long.valueOf(goodsId));
+        }
+        List<GoodsClassificationRelationshipDO> gcrList =  new ArrayList<>();
+        for(String classificationId : classificationIdStrs){
+            for(Long goodsId : goodsList){
+                GoodsClassificationRelationshipDO item = new GoodsClassificationRelationshipDO();
+                item.setGoodsId(goodsId);
+                item.setShopClassificationId(Long.valueOf(classificationId));
+                gcrList.add(item);
+            }
+        }
+        goodsBiz.setClassification(goodsList, gcrList);
+        return createSucssAppResult("操作成功", "");
+
     }
 
     /**

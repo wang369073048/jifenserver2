@@ -14,4 +14,6 @@ import java.util.List;
 public interface IGoodsClassificationRelationshipMapper extends BaseMapper<GoodsClassificationRelationshipDO> {
 
     int batchInsert(List<GoodsClassificationRelationshipDO> list);
+
+    int batchDeleteByGoodsIds(List<Long> list);
 }

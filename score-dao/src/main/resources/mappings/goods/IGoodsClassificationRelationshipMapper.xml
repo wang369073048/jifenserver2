@@ -8,4 +8,12 @@
             (#{item.goodsId}, #{item.shopClassificationId})
         </foreach>
     </insert>
+
+    <delete id="batchDeleteByGoodsIds" parameterType="java.util.List">
+        delete from goods_classification_relationship
+        where goodsId in
+        <foreach collection="list" item="item" open="(" close=")" separator="," >
+            #{item}
+        </foreach>
+    </delete>
 </mapper>
