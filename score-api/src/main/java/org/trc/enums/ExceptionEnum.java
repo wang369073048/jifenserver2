@@ -109,6 +109,7 @@ public enum ExceptionEnum {
 
     QUANTITY_BEYOND_THE_LIMIT("",""),
     FAILED_INFORMATION_PROCESSING("880107","商品限购信息处理失败！"),
+    WINNING_PROBABILITY_ILLEGAL("880108","中奖几率不合法"),
 
     SHOP_QUERY_EXCEPTION("890100","商铺查询异常"),
     SHOP_SAVE_EXCEPTION("890101","商铺保存异常"),

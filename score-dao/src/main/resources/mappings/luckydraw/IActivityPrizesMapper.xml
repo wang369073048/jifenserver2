@@ -1,4 +1,41 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="org.trc.mapper.luckydraw.IActivityPrizesMapper">
+
+    <select id="checkActivityPrizes" parameterType="java.util.Map" resultType="java.lang.Integer">
+        select count(id) from activity_prizes
+        <where>
+            <if test="shopId!=null">
+                and shopId = #{shopId}
+            </if>
+            <if test="luckyDrawId != null">
+                and luckyDrawId = #{luckyDrawId}
+            </if>
+            <if test="list!=null and list.size > 0">
+                and id in
+                <foreach collection="list" item="item" index="index" open="(" separator="," close=")" >
+                    #{item}
+                </foreach>
+            </if>
+        </where>
+    </select>
+
+    <delete id="deleteActivityPrizes" parameterType="java.util.Map">
+        delete from activity_prizes
+        <where>
+            <if test="shopId!=null">
+                and shopId = #{shopId}
+            </if>
+            <if test="luckyDrawId != null">
+                and luckyDrawId = #{luckyDrawId}
+            </if>
+            <if test="list!=null and list.size > 0">
+                and id not in
+                <foreach collection="list" item="item" index="index" open="(" separator="," close=")" >
+                    #{item}
+                </foreach>
+            </if>
+        </where>
+    </delete>
+
 </mapper>

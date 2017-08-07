@@ -3,6 +3,7 @@ package org.trc.biz.luckydraw;
 import com.txframework.core.jdbc.PageRequest;
 import org.trc.domain.luckydraw.ActivityDetailDO;
 import org.trc.domain.luckydraw.LuckyDrawDO;
+import org.trc.util.Pagenation;
 
 /**
  * author: hzwzhen
@@ -16,7 +17,7 @@ public interface ILuckyDrawBiz {
 
     void insertLuckyDraw(LuckyDrawDO luckyDraw);
 
-    PageRequest<LuckyDrawDO> queryLuckyDraw(LuckyDrawDO luckyDraw, PageRequest<LuckyDrawDO> pageRequest);
+    Pagenation<LuckyDrawDO> queryLuckyDraw(LuckyDrawDO luckyDraw, Pagenation<LuckyDrawDO> pageRequest);
 
     ActivityDetailDO slyderAdventures(LuckyDrawDO param, String userId, String phone) ;
 
