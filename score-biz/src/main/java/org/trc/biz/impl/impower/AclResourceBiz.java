@@ -2,17 +2,22 @@ package org.trc.biz.impl.impower;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+
+import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.Assert;
 import org.trc.biz.impower.IAclResourceBiz;
+import org.trc.domain.goods.GoodsDO;
 import org.trc.domain.impower.AclResource;
 import org.trc.domain.impower.AclRoleResourceRelation;
 import org.trc.domain.impower.AclUserAccreditInfo;
 import org.trc.domain.impower.AclUserAccreditRoleRelation;
 import org.trc.enums.ExceptionEnum;
+import org.trc.enums.RequestTypeEnum;
 import org.trc.enums.ZeroToNineEnum;
 import org.trc.exception.CategoryException;
 import org.trc.exception.JurisdictionException;
@@ -22,6 +27,8 @@ import org.trc.service.impower.IAclRoleResourceRelationService;
 import org.trc.service.impower.IAclUserAccreditInfoService;
 import org.trc.service.impower.IAclUserAccreditRoleRelationService;
 import org.trc.util.AssertUtil;
+import org.trc.util.StringUtil;
+
 import tk.mybatis.mapper.entity.Example;
 
 import javax.annotation.Resource;
@@ -212,60 +219,120 @@ public class AclResourceBiz implements IAclResourceBiz {
 
     /**
      * 新增资源
-     *
+     * @description: update by xab 2017-08-07 
      * @param jurisdictionTreeNode
      * @throws Exception
      */
     @Override
     public void saveJurisdiction(JurisdictionTreeNode jurisdictionTreeNode, ContainerRequestContext requestContext){
-        //生成code
-        String code = jurisdictionTreeNode.getParentId().toString();
-        String  parentMethod=code ;
-        parentMethod = parentMethod+ZeroToNineEnum.ZERO.getCode() + jurisdictionTreeNode.getOperationType();
-        AclResource aclResource = new AclResource();
-//        aclResource.setId(jurisdictionService.selectMaxId()+1);
-        //2.查询到当前方法,当前父资源下最大的序号,如果存在加1,如果不存在,自行组合
-        Example example = new Example(AclResource.class);
-        Example.Criteria criteria = example.createCriteria();
-        criteria.andLike("code", parentMethod+"%");
-        example.orderBy("code").desc();
-        List<AclResource> aclResourceList = jurisdictionService.selectByExample(example);
-        if (aclResourceList != null && aclResourceList.size() > 0) {
-            //存在的情况
-            aclResource.setCode(aclResourceList.get(0).getCode() + 1);
-        } else {
-            //不存在,手动组合,从一开始
-            code = code + ZeroToNineEnum.ZERO.getCode() + jurisdictionTreeNode.getOperationType() + ZeroToNineEnum.ZERO.getCode() + ZeroToNineEnum.ONE.getCode();
-            aclResource.setCode(Long.parseLong(code));
+    	try {
+    		validateResourceForAdd(jurisdictionTreeNode);//参数验证
+    		AclResource aclResource = new AclResource();
+    		//获取到父节点的code
+            String parentCode = jurisdictionTreeNode.getParentId().toString();
+            String baseCode = null; //同级资源基础code
+            
+            String requestMethod = 1+"";//二级权限资源操作类型默认为1
+            
+            //判断新增的是二级资源还是三级资源
+            if(parentCode.length()==3){//二级资源
+            	baseCode = parentCode;
+            }else{//三级资源
+            	if(StringUtils.isBlank(jurisdictionTreeNode.getMethod())){
+            		throw new JurisdictionException(ExceptionEnum.ACCREDIT_RESOURCE_SAVE_EXCEPTION, "三级权限资源[操作类型]不能为空！");
+            	}
+            	requestMethod = jurisdictionTreeNode.getMethod();
+            	baseCode = parentCode + ZeroToNineEnum.ZERO.getCode() + RequestTypeEnum.getCode(jurisdictionTreeNode.getMethod());
+            }
+            
+            //查询到当前方法,当前父资源下最大的序号,如果存在加1,如果不存在,则初始化
+            Example example = new Example(AclResource.class);
+            Example.Criteria criteria = example.createCriteria();
+            criteria.andLike("code", baseCode+"%");
+            criteria.andEqualTo("parentId", parentCode);
+            example.orderBy("code").desc();
+            List<AclResource> aclResourceList = jurisdictionService.selectByExample(example);
+            if (aclResourceList != null && aclResourceList.size() > 0) {
+                //存在的情况
+                aclResource.setCode(aclResourceList.get(0).getCode() + 1);
+            } else {
+                //不存在,手动组合,从一开始
+                String code = baseCode + ZeroToNineEnum.ZERO.getCode() + ZeroToNineEnum.ONE.getCode();
+                aclResource.setCode(Long.parseLong(code));
+            }
+            
+            aclResource.setMethod(requestMethod);
+            aclResource.setParentId(jurisdictionTreeNode.getParentId());
+            aclResource.setName(jurisdictionTreeNode.getName());
+            aclResource.setUrl(jurisdictionTreeNode.getUrl());
+            String userId = (String) requestContext.getProperty("userId");
+            aclResource.setCreateOperator(userId);
+            aclResource.setCreateTime(Calendar.getInstance().getTime());
+            aclResource.setUpdateTime(Calendar.getInstance().getTime());
+            //aclResource.setIsValid(jurisdictionTreeNode.getIsValid());
+            aclResource.setIsDeleted(Integer.valueOf(ZeroToNineEnum.ZERO.getCode()));
+            jurisdictionService.insertSelective(aclResource);
+        } catch (IllegalArgumentException e) {
+            throw new JurisdictionException(ExceptionEnum.ACCREDIT_RESOURCE_SAVE_EXCEPTION, e.getMessage());
         }
-        aclResource.setMethod(jurisdictionTreeNode.getMethod());
-        aclResource.setParentId(jurisdictionTreeNode.getParentId());
-        aclResource.setName(jurisdictionTreeNode.getName());
-        aclResource.setUrl(jurisdictionTreeNode.getUrl());
-        aclResource.setCreateOperator("admin");
-        aclResource.setCreateTime(Calendar.getInstance().getTime());
-        aclResource.setUpdateTime(Calendar.getInstance().getTime());
-        //aclResource.setIsValid(jurisdictionTreeNode.getIsValid());
-        aclResource.setIsDeleted(Integer.valueOf(ZeroToNineEnum.ZERO.getCode()));
-        jurisdictionService.insertOne(aclResource);
+      
     }
 
     /**
      *  编辑资源
+     * @description: update by xab 2017-08-07 
      * @param jurisdictionTreeNode
      * @return
      * @throws Exception
      */
     @Override
     public void updateJurisdiction(JurisdictionTreeNode jurisdictionTreeNode){
-        AclResource aclResource = JSONObject.parseObject(JSON.toJSONString(jurisdictionTreeNode),AclResource.class);
-        aclResource.setMethod(jurisdictionTreeNode.getOperationType());
-        aclResource.setUpdateTime(Calendar.getInstance().getTime());
-        int count =   jurisdictionService.updateByPrimaryKeySelective(aclResource);
-        if (count==0){
-            String msg = "更新资源" + JSON.toJSONString(aclResource.getName()) + "操作失败";
-            logger.error(msg);
-            throw new CategoryException(ExceptionEnum.SYSTEM_ACCREDIT_UPDATE_EXCEPTION, msg);
+    	try {
+    		validateResourceForUpdate(jurisdictionTreeNode);//参数验证
+    		AclResource aclResource = new AclResource();
+    		//获取到父节点的code
+            String parentCode = jurisdictionTreeNode.getParentId().toString();
+            String baseCode = null; //同级资源基础code
+            
+            String requestMethod = 1+"";//二级权限资源操作类型默认为1
+            
+            //判断新增的是二级资源还是三级资源
+            if(parentCode.length()==3){//二级资源
+            	baseCode = parentCode;
+            }else{//三级资源
+            	if(StringUtils.isBlank(jurisdictionTreeNode.getMethod())){
+            		throw new JurisdictionException(ExceptionEnum.ACCREDIT_RESOURCE_SAVE_EXCEPTION, "三级权限资源[操作类型]不能为空！");
+            	}
+            	requestMethod = jurisdictionTreeNode.getMethod();
+            	baseCode = parentCode + ZeroToNineEnum.ZERO.getCode() + RequestTypeEnum.getCode(jurisdictionTreeNode.getMethod());
+            }
+            
+            //查询到当前方法,当前父资源下最大的序号,如果存在加1,如果不存在,则初始化
+            Example example = new Example(AclResource.class);
+            Example.Criteria criteria = example.createCriteria();
+            criteria.andLike("code", baseCode+"%");
+            criteria.andEqualTo("parentId", parentCode);
+            example.orderBy("code").desc();
+            List<AclResource> aclResourceList = jurisdictionService.selectByExample(example);
+            if (aclResourceList != null && aclResourceList.size() > 0) {
+                //存在的情况
+                aclResource.setCode(aclResourceList.get(0).getCode() + 1);
+            } else {
+                //不存在,手动组合,从一开始
+                String code = baseCode + ZeroToNineEnum.ZERO.getCode() + ZeroToNineEnum.ONE.getCode();
+                aclResource.setCode(Long.parseLong(code));
+            }
+            aclResource.setId(jurisdictionTreeNode.getId());
+            aclResource.setMethod(requestMethod);
+            aclResource.setParentId(jurisdictionTreeNode.getParentId());
+            aclResource.setName(jurisdictionTreeNode.getName());
+            aclResource.setUrl(jurisdictionTreeNode.getUrl());
+            aclResource.setUpdateTime(Calendar.getInstance().getTime());
+            //aclResource.setIsValid(jurisdictionTreeNode.getIsValid());
+            aclResource.setIsDeleted(Integer.valueOf(ZeroToNineEnum.ZERO.getCode()));
+            jurisdictionService.updateByPrimaryKeySelective(aclResource);
+        } catch (IllegalArgumentException e) {
+            throw new JurisdictionException(ExceptionEnum.ACCREDIT_RESOURCE_SAVE_EXCEPTION, e.getMessage());
         }
     }
 
@@ -319,5 +386,31 @@ public class AclResourceBiz implements IAclResourceBiz {
             JurisdictionList.add(jurisdictionMap);
         }
         return JurisdictionList;
+    }
+    
+    /**
+     * @Description 新增权限资源参数校验
+     * @param jurisdictionTreeNode
+     */
+    private void validateResourceForAdd(JurisdictionTreeNode jurisdictionTreeNode) {
+        Assert.isTrue(null!=jurisdictionTreeNode,"参数不能为空!");
+//        Assert.hasText(jurisdictionTreeNode.getMethod(),"权限资源[操作类型]不能为空！");
+        Assert.isTrue(null!=jurisdictionTreeNode.getParentId(),"权限资源[父节点code]不能为空！");
+        Assert.hasText(jurisdictionTreeNode.getName(),"权限资源[名称]不能为空！");
+        Assert.hasText(jurisdictionTreeNode.getUrl(),"权限资源[URL路径]不能为空！");
+    }
+    
+    /**
+     * @Description 编辑权限资源参数校验
+     * @param jurisdictionTreeNode
+     */
+    private void validateResourceForUpdate(JurisdictionTreeNode jurisdictionTreeNode) {
+    	
+        Assert.isTrue(null!=jurisdictionTreeNode,"参数不能为空!");
+//        Assert.hasText(jurisdictionTreeNode.getMethod(),"权限资源[操作类型]不能为空！");
+        Assert.isTrue(null!=jurisdictionTreeNode.getId(),"权限资源[id]不能为空!");
+        Assert.isTrue(null!=jurisdictionTreeNode.getParentId(),"权限资源[父节点code]不能为空！");
+        Assert.hasText(jurisdictionTreeNode.getName(),"权限资源[名称]不能为空！");
+        Assert.hasText(jurisdictionTreeNode.getUrl(),"权限资源[URL路径]不能为空！");
     }
 }

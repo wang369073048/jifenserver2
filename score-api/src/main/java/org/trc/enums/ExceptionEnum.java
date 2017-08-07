@@ -67,6 +67,12 @@ public enum ExceptionEnum {
     AUTH_SAVE_EXCEPTION("820101","权限保存异常"),
     AUTH_UPDATE_EXCEPTION("820102","权限更新异常"),
     AUTH_ID_NOT_EXIST("820103","权限Id不存在"),
+    
+    /**start 权限资源管理操作相关异常 add by xab *******/
+    ACCREDIT_RESOURCE_QUERY_EXCEPTION("820104","权限资源查询异常"),
+    ACCREDIT_RESOURCE_SAVE_EXCEPTION("820105","权限资源保存异常"),
+    ACCREDIT_RESOURCE_UPDATE_EXCEPTION("820106","权限资源更新异常"),
+    /**end *******/
 
     CONVERTER_QUERY_EXCEPTION("830100","兑换规则查询异常"),
     CONVERTER_SAVE_EXCEPTION("830101","兑换规则保存异常"),
