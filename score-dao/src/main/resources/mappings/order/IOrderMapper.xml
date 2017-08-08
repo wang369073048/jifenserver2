@@ -120,8 +120,12 @@
             <if test="orderType != null and orderType != ''">
                 and orderType = #{orderType}
             </if>
-            AND <![CDATA[createTime >= #{startTime}
-            AND createTime < #{endTime}]]>
+			<if test="startTime !=null">
+    			AND <![CDATA[DATE_FORMAT(createTime, '%Y-%m-%d')>=  DATE_FORMAT(#{startTime}, '%Y-%m-%d')   ]]>
+			</if>
+			<if test="endTime !=null">
+    			AND <![CDATA[DATE_FORMAT(createTime, '%Y-%m-%d') <= DATE_FORMAT(#{endTime}, '%Y-%m-%d')    ]]>
+			</if>
             and source = 1
         </where>
         ORDER BY
@@ -137,8 +141,12 @@
             <if test="userId != null">
                 and userId = #{userId}
             </if>
-            AND <![CDATA[createTime >= #{startTime}
-            AND createTime < #{endTime}]]>
+            <if test="startTime !=null">
+    			AND <![CDATA[DATE_FORMAT(createTime, '%Y-%m-%d')>=  DATE_FORMAT(#{startTime}, '%Y-%m-%d')   ]]>
+			</if>
+			<if test="endTime !=null">
+    			AND <![CDATA[DATE_FORMAT(createTime, '%Y-%m-%d') <= DATE_FORMAT(#{endTime}, '%Y-%m-%d')    ]]>
+			</if>
             and source = 1
         </where>
         ORDER BY
