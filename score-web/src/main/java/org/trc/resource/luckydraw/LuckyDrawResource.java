@@ -213,10 +213,10 @@ public class LuckyDrawResource {
         return createSucssAppResult("查询成功", result);
     }
 
-    @POST
+    @GET
     @Path(ScoreAdminConstants.Route.LuckyDraw.LIST)
-        public Pagenation list(@FormParam("activityName") String activityName, @FormParam("operateTimeMin") Long operateTimeMin,
-                         @FormParam("operateTimeMax") Long operateTimeMax, @FormParam("state") Integer state,
+        public Pagenation list(@QueryParam("activityName") String activityName, @QueryParam("operateTimeMin") Long operateTimeMin,
+                         @QueryParam("operateTimeMax") Long operateTimeMax, @QueryParam("state") Integer state,
                          @BeanParam Pagenation<LuckyDrawDO> page,@Context ContainerRequestContext requestContext){
             LuckyDrawDO luckyDraw = new LuckyDrawDO();
             //获取userId

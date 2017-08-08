@@ -331,30 +331,12 @@ public class OrderResource {
         jsonObject.put("deliveryTime", result.getDeliveryTime());
         jsonObject.put("confirmTime", result.getConfirmTime());
         jsonObject.put("updateTime", result.getUpdateTime());
-        if (result.getOrderAddressDO() != null) {
-            jsonObject.put("provinceCode", result.getOrderAddressDO().getProvinceCode());
-            jsonObject.put("cityCode", result.getOrderAddressDO().getCityCode());
-            jsonObject.put("areaCode", result.getOrderAddressDO().getAreaCode());
-            jsonObject.put("address", result.getOrderAddressDO().getAddress());
-            jsonObject.put("province", result.getOrderAddressDO().getProvince());
-            jsonObject.put("city", result.getOrderAddressDO().getCity());
-            jsonObject.put("area", result.getOrderAddressDO().getArea());
-            jsonObject.put("receiverName", result.getOrderAddressDO().getReceiverName());
-            jsonObject.put("receiverPhone", result.getOrderAddressDO().getPhone());
-            jsonObject.put("postcode", result.getOrderAddressDO().getPostcode());
-        }
-        if (result.getLogisticsDO() != null) {
-            jsonObject.put("companyName", result.getLogisticsDO().getCompanyName());
-            jsonObject.put("shipperCode", result.getLogisticsDO().getShipperCode());
-            jsonObject.put("logisticsNum", result.getLogisticsDO().getLogisticsNum());
-            jsonObject.put("freight", result.getLogisticsDO().getFreight());
-        }
+        handleJson(order,jsonObject);
         return createSucssAppResult("订单发货成功", jsonObject);
     }
 
     @GET
     @Path("/settlement")
-    //@Logined
     public Pagenation<SettlementDO> querySettlementList(@QueryParam("billNum") String billNum,
                                                         @BeanParam Pagenation<SettlementDO> page,
                                                         @Context ContainerRequestContext requestContext) {
@@ -369,7 +351,6 @@ public class OrderResource {
 
     @GET
     @Path("/settlementOrder")
-    //@Logined
     public Pagenation<OrdersDO> querySettlementOrderList(@QueryParam("orderNum") String orderNum,
                                                          @QueryParam("goodsName") String goodsName,
                                                          @QueryParam("startTime") Long startTime,
@@ -413,7 +394,6 @@ public class OrderResource {
      */
     @GET
     @Path("/logisticsTracking")
-    //@Manager
     public AppResult logisticsTracking(@NotNull @QueryParam("id") Long id,
                                        @Context ContainerRequestContext requestContext) {
         String userId = (String) requestContext.getProperty("userId");
@@ -521,6 +501,12 @@ public class OrderResource {
         jsonObject.put("deliveryTime", order.getDeliveryTime());
         jsonObject.put("confirmTime", order.getConfirmTime());
         jsonObject.put("updateTime", order.getUpdateTime());
+        handleJson(order,jsonObject);
+        return createSucssAppResult("查询待退款订单成功!", jsonObject);
+    }
+
+
+    private void handleJson(OrdersDO order,JSONObject jsonObject){
         if (order.getOrderAddressDO() != null) {
             jsonObject.put("provinceCode", order.getOrderAddressDO().getProvinceCode());
             jsonObject.put("cityCode", order.getOrderAddressDO().getCityCode());
@@ -539,9 +525,7 @@ public class OrderResource {
             jsonObject.put("logisticsNum", order.getLogisticsDO().getLogisticsNum());
             jsonObject.put("freight", order.getLogisticsDO().getFreight());
         }
-        return createSucssAppResult("查询待退款订单成功!", jsonObject);
     }
-
     /**
      * 退款
      * @param orderNum
@@ -551,7 +535,6 @@ public class OrderResource {
      */
     @POST
     @Path("/returnGoods")
-    //@CustomerService TODO 缺少注解
     public AppResult returnGoods(@NotNull @FormParam("orderNum") String orderNum,
                                 @NotNull @FormParam("phone") String phone,
                                 @NotNull @FormParam("remark") String remark) {
