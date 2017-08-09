@@ -1,6 +1,7 @@
 package org.trc.biz.goods;
 
 import com.trc.mall.externalservice.dto.CouponDto;
+import org.trc.domain.goods.GoodsClassificationRelationshipDO;
 import org.trc.domain.goods.GoodsDO;
 import org.trc.domain.query.GoodsQuery;
 import org.trc.util.Pagenation;
@@ -70,6 +71,15 @@ public interface IGoodsBiz {
     GoodsDO getGoodsDOById(Long id, Integer isUp);
 
     /**
+     * 根据ID查询
+     * @param id Long
+     * @param whetherPrizes
+     * @param isUp isUp
+     * @return GoodsDO
+     */
+    GoodsDO getGoodsDOById(Long id, Integer whetherPrizes, Integer isUp);
+
+    /**
      * 根据ID查询有效商品
      * @param id Long
      * @return GoodsDO
@@ -136,6 +146,8 @@ public interface IGoodsBiz {
      * @return
      */
     CouponDto checkEid(String eid) throws IOException, URISyntaxException;
+
+    void setClassification(List<Long> goodsList, List<GoodsClassificationRelationshipDO> gcrList);
 
 
 }

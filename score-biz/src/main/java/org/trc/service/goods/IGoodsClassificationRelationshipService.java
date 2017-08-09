@@ -16,4 +16,6 @@ public interface IGoodsClassificationRelationshipService extends IBaseService<Go
     int delete(GoodsClassificationRelationshipDO param);
 
     int batchInsert(List<GoodsClassificationRelationshipDO> list);
+
+    int batchDeleteByGoodsIds(List<Long> list);
 }

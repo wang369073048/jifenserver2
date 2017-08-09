@@ -2,6 +2,32 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="org.trc.mapper.luckydraw.IWinningRecordMapper">
 
+    <!-- 所有查询字段 -->
+    <sql id="winningRecordColumn">
+        id,
+        shopId,
+        userId,
+        luckyDrawId,
+        activityPrizeId,
+        activityName,
+        platform,
+        drawDate,
+        drawTime,
+        lotteryPhone,
+        whetherFree,
+        expenditure,
+        requestNo,
+        prizeName,
+        prizeType,
+        goodsType,
+        numberOfPrizes,
+        goodsId,
+        goodsNo,
+        orderNum,
+        winningPhone,
+        state
+    </sql>
+
     <sql id="allSelectionColumn">
         id,
         shopId,
@@ -61,4 +87,91 @@
         </set>
         WHERE id = #{id} and version = #{version}
     </update>
+
+    <select id="listActivityDetailByParams" parameterType="org.trc.domain.luckydraw.ActivityDetailDO" resultType="org.trc.domain.luckydraw.ActivityDetailDO">
+        select pr.userId userId, pr.drawTime drawTime, pr.shopId shopId, pr.activityName activityName, pr.lotteryPhone lotteryPhone, wr.prizeName prizeName, wr.numberOfPrizes numberOfPrizes,
+        wr.goodsType goodsType, pr.expenditure expenditure, pr.whetherWinning whetherWinning
+        from participation_record pr left join winning_record wr
+        on pr.requestNo = wr.requestNo
+        <where>
+            <if test="shopId != null">
+                and pr.shopId = #{shopId}
+            </if>
+            <if test="lotteryPhone != null">
+                and pr.lotteryPhone like concat('%',#{lotteryPhone},'%')
+            </if>
+            <if test="whetherWinning != null">
+                and pr.whetherWinning = #{whetherWinning}
+            </if>
+            <if test="operateTimeMin!=null">
+                and pr.drawTime <![CDATA[>=]]> #{operateTimeMin}
+            </if>
+            <if test="operateTimeMax!=null">
+                and pr.drawTime <![CDATA[<]]> #{operateTimeMax}
+            </if>
+        </where>
+        order by pr.drawTime desc
+    </select>
+
+    <select id="listByParams" parameterType="org.trc.domain.dto.WinningRecordDTO" resultType="org.trc.domain.dto.WinningRecordDTO">
+        select <include refid="winningRecordColumn"/> from winning_record
+        <where>
+            <if test="luckyDrawId != null">
+                and luckyDrawId = #{luckyDrawId}
+            </if>
+            <if test="platform != null">
+                and platform like concat('%',#{platform},'%')
+            </if>
+            <if test="activityName != null">
+                and activityName like concat('%',#{activityName},'%')
+            </if>
+            <if test="lotteryPhone != null">
+                and lotteryPhone like concat('%',#{lotteryPhone},'%')
+            </if>
+            <if test="state != null">
+                and state = #{state}
+            </if>
+            <if test="operateTimeMin!=null">
+                and drawTime <![CDATA[>=]]> #{operateTimeMin}
+            </if>
+            <if test="operateTimeMax!=null">
+                and drawTime <![CDATA[<]]> #{operateTimeMax}
+            </if>
+        </where>
+        order by drawTime desc
+    </select>
+
+    <select id="selectByParams" parameterType="org.trc.domain.dto.WinningRecordDTO" resultType="org.trc.domain.dto.WinningRecordDTO">
+        select <include refid="winningRecordColumn"/> from winning_record
+        <where>
+            <if test="luckyDrawId != null">
+                and luckyDrawId = #{luckyDrawId}
+            </if>
+            <if test="platform != null">
+                and platform like concat('%',#{platform},'%')
+            </if>
+            <if test="luckyDrawId != null">
+                and luckyDrawId = #{luckyDrawId}
+            </if>
+            <if test="userId != null">
+                and userId = #{userId}
+            </if>
+            <if test="activityName != null">
+                and activityName like concat('%',#{activityName},'%')
+            </if>
+            <if test="lotteryPhone != null">
+                and lotteryPhone like concat('%',#{lotteryPhone},'%')
+            </if>
+            <if test="state != null">
+                and state = #{state}
+            </if>
+            <if test="operateTimeMin!=null">
+                and drawTime <![CDATA[>=]]> #{operateTimeMin}
+            </if>
+            <if test="operateTimeMax!=null">
+                and drawTime <![CDATA[<]]> #{operateTimeMax}
+            </if>
+        </where>
+        order by drawTime desc
+    </select>
 </mapper>

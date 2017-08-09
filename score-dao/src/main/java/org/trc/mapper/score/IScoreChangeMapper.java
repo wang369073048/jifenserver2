@@ -23,4 +23,6 @@ public interface IScoreChangeMapper extends BaseMapper<ScoreChange>{
 
     List<FlowDTO> queryScoreChangeForExport(ScoreChangeRecordQueryDTO queryDto);
 
+    int correctScoreChange(ScoreChange scoreChange);
+
 }

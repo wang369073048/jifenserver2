@@ -10,4 +10,6 @@ import org.trc.util.BaseMapper;
  * since Date： 2017/7/18
  */
 public interface IOrderAddressMapper extends BaseMapper<OrderAddressDO>{
+
+    OrderAddressDO getOrderAddressDOByOrderNum(String orderNum);
 }

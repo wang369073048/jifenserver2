@@ -3,6 +3,7 @@ package org.trc.service.goods;
 import com.txframework.core.jdbc.PageRequest;
 import org.trc.IBaseService;
 import org.trc.domain.goods.GoodsDO;
+import org.trc.domain.luckydraw.ActivityPrizesDO;
 import org.trc.domain.query.GoodsQuery;
 import org.trc.util.Pagenation;
 
@@ -67,4 +68,6 @@ public interface IGoodsService extends IBaseService<GoodsDO,Long>{
     Pagenation<GoodsDO> selectListByClassification(GoodsQuery goodsQuery, Pagenation<GoodsDO> pageRequest);
 
     int selectCountByParams(GoodsDO goodsDO);
+
+    Pagenation<ActivityPrizesDO> queryActivityPrizes(ActivityPrizesDO paramG, Pagenation<ActivityPrizesDO> pageRequest);
 }

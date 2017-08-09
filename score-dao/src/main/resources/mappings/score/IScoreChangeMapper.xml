@@ -112,4 +112,10 @@
         </where>
         order by createTime desc
     </select>
+
+    <update id="correctScoreChange" parameterType="org.trc.domain.score.ScoreChange">
+        update score_change
+        set state = 1
+        where orderCode = #{orderCode} and businessCode = #{businessCode}
+    </update>
 </mapper>

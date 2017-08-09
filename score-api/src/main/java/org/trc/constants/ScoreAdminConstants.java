@@ -88,6 +88,7 @@ public class ScoreAdminConstants {
             public static final String VIRTUAL_UP = VIRTUAL + UP;
             public static final String VIRTUAL_DOWN = VIRTUAL + DOWN;
             public static final String CHECKEID = "/checkeid";
+            public static final String SET_CLASSIFICATION = "/setClassification";
         }
 
         //推荐

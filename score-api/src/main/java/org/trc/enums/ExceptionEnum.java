@@ -126,6 +126,8 @@ public enum ExceptionEnum {
     USER_NOT_LOGIN("900002","用户未登录"),
     USER_NOT_HAVE_PERMISSION("900003","用户无此权限"),
 
+    CORRECT_OPERATION_FAILED("999992","冲正操作失败"),
+
 
     PARAM_CHECK_EXCEPTION("2000200","参数校验错误"),
     PARAM_ERROR_ILLEGAL("2000300", "参数不合法");

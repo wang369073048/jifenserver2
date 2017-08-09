@@ -105,7 +105,7 @@ public class QiniuResource {
     }
 
     /**
-     * 批量获取多个文件的url
+     * 批量删除
      * @return
      * @throws Exception
      */

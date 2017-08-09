@@ -103,7 +103,8 @@
     <update id="deleteByParam" parameterType="org.trc.domain.goods.GoodsDO">
         UPDATE goods SET
         versionLock = versionLock+1,
-        isDeleted = 1
+        isDeleted = 1,
+        updateTime = NOW()
         WHERE
         id = #{id}
         and shopId = #{shopId}
@@ -213,6 +214,19 @@
             </if>
             and whetherPrizes = 0
             and isDeleted = 0
+        </where>
+    </select>
+
+    <select id="queryActivityPrizes" parameterType="org.trc.domain.luckydraw.ActivityPrizesDO" resultType="org.trc.domain.luckydraw.ActivityPrizesDO">
+        select id goodsId, goodsNo goodsNo, goodsName name, mainImg prizeUrl, 'GOODS' prizeType from goods
+        <where>
+            <if test="name != null">
+                and goodsName like concat('%',#{name},'%')
+            </if>
+            <if test="category != null">
+                and category = #{category}
+            </if>
+            and whetherPrizes = 1 and isDeleted = 0 and (( autoUpTime is null and autoDownTime is null ) or ( now() > autoUpTime and now() <![CDATA[ < ]]> autoDownTime))
         </where>
     </select>
 </mapper>
