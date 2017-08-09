@@ -17,11 +17,13 @@ import org.trc.enums.PicTypeEnum;
 import org.trc.enums.ZeroToNineEnum;
 import org.trc.exception.FileException;
 import org.trc.form.FileUrl;
+import org.trc.form.QinniuForm;
 import org.trc.service.impl.qiniu.QinniuService;
 import org.trc.service.qiniu.IQinniuService;
 import org.trc.util.CommonUtil;
 
 import java.io.InputStream;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -38,6 +40,8 @@ public class QinniuBiz implements IQinniuBiz {
     private IQinniuService qinniuService;
     @Autowired
     private BaseThumbnailSize baseThumbnailSize;
+    @Autowired
+    private QinniuForm qinniuForm;
 
     @Override
     public String upload(InputStream inputStream, String fileName, String module) throws Exception {
@@ -58,7 +62,13 @@ public class QinniuBiz implements IQinniuBiz {
             log.error(msg,e);
             throw new FileException(ExceptionEnum.FILE_UPLOAD_EXCEPTION, msg);
         }
-        return defaultPutRet.key;
+        String url = null;
+        if (defaultPutRet != null && defaultPutRet.key != null){
+            String domainOfBucket = qinniuForm.getDomainOfBucket();
+            String encodedFileName = URLEncoder.encode(defaultPutRet.key, "utf-8");
+            url = String.format("%s/%s", domainOfBucket, encodedFileName);
+        }
+        return url;
     }
 
     @Override
@@ -136,7 +146,7 @@ public class QinniuBiz implements IQinniuBiz {
         boolean flag = false;
         for(Object obj : jsonArray){
             JSONObject json = (JSONObject)obj;
-            if(StringUtils.equals(json.getString("code"), tmps[1].toUpperCase())){
+            if(StringUtils.equalsIgnoreCase(json.getString("code"), tmps[1].toUpperCase())){
                 flag = true;
                 break;
             }

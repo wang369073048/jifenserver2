@@ -1,5 +1,6 @@
 package org.trc.biz.impl.pagehome;
 
+import com.alibaba.fastjson.JSON;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -7,11 +8,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 import org.trc.biz.pagehome.IBannerContentBiz;
+import org.trc.biz.qiniu.IQinniuBiz;
 import org.trc.domain.pagehome.Banner;
 import org.trc.domain.pagehome.BannerContent;
 import org.trc.enums.ExceptionEnum;
 import org.trc.exception.BannerContentException;
 import org.trc.exception.BannerException;
+import org.trc.form.FileUrl;
 import org.trc.form.pagehome.BannerContentForm;
 import org.trc.service.pagehome.IBannerContentService;
 import org.trc.service.pagehome.IBannerService;
@@ -22,6 +25,7 @@ import tk.mybatis.mapper.util.StringUtil;
 
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 
 
 /**
@@ -31,6 +35,8 @@ import java.util.Date;
 public class BannerContentBiz implements IBannerContentBiz{
 
     private Logger logger = LoggerFactory.getLogger(BannerContentBiz.class);
+    @Autowired
+    private IQinniuBiz qinniuBiz;
     @Autowired
     private IBannerContentService bannerContentService;
     @Autowired
@@ -118,6 +124,15 @@ public class BannerContentBiz implements IBannerContentBiz{
             criteria.andEqualTo("isDeleted",false);
             example.orderBy("createTime").desc();
             page = bannerContentService.pagination(example,page,queryModel);
+            List<BannerContent> list = page.getResult();
+
+            String [] strs = {"bannerContent/327221493935169.png"};
+            List<FileUrl> list1 = qinniuBiz.batchGetFileUrl(strs, "0");
+            System.out.println(JSON.toJSONString(list1));
+//            for (BannerContent bannerContent: list) {
+//                if("bannerContent/327221493935169.png".equalsIgnoreCase(bannerContent.getImgUrl())){
+//                }
+//            }
             return page;
         }catch(IllegalArgumentException e){
             logger.error("查询banner列表校验参数异常!", e);
