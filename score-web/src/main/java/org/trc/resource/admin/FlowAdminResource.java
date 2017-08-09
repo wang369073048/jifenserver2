@@ -126,7 +126,7 @@ public class FlowAdminResource {
         CellDefinition exchangeCurrency = new CellDefinition("exchangeCurrency", "兑出币种", CellDefinition.TEXT, 4000);
         CellDefinition foreignCurrency = new CellDefinition("foreignCurrency", "兑出数量", CellDefinition.NUM_0, 4000);
         CellDefinition score = new CellDefinition("score", "兑入积分数量", CellDefinition.NUM_0, 4000);
-        CellDefinition phone = new CellDefinition("phone", "会员手机号", CellDefinition.NUM_0, 4000);
+        CellDefinition phone = new CellDefinition("phone", "会员手机号", CellDefinition.TEXT, 4000);
         List<CellDefinition> cellDefinitionList = new ArrayList<>();
         cellDefinitionList.add(orderDate);
         cellDefinitionList.add(serialNum);

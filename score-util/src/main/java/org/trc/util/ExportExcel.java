@@ -1,5 +1,6 @@
 package org.trc.util;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.hssf.usermodel.*;
 import org.apache.poi.ss.util.CellRangeAddress;
 
@@ -7,6 +8,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.FileOutputStream;
 import java.io.OutputStream;
 import java.lang.reflect.Method;
+import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
@@ -339,8 +341,26 @@ public class ExportExcel {
                         if(null!=object) {
                             textcell.setCellValue(new SimpleDateFormat(CellDefinition.DATE_TIME).format(object));
                         }
+                    }else if(CellDefinition.NUM_0.equals(cellDefinition.getFormat())){
+                        if(null!=object) {
+                        	NumberFormat format = NumberFormat.getInstance();  
+                            format.setMinimumFractionDigits(0);//setMinimumFractionDigits(int) 设置数值的小数部分允许的最小位数。   
+                            format.setMaximumFractionDigits(0);//setMaximumFractionDigits(int) 设置数值的小数部分允许的最大位数。  
+                            format.setMaximumIntegerDigits(20);//setMaximumIntegerDigits(int)  设置数值的整数部分允许的最大位数。   
+                            format.setMinimumIntegerDigits(0);//setMinimumIntegerDigits(int)  设置数值的整数部分允许的最小位数.   
+                            textcell.setCellValue(format.format(object));
+                        }
+                    }else if(CellDefinition.NUM_0_00.equals(cellDefinition.getFormat())){
+                        if(null!=object) {
+                        	NumberFormat format = NumberFormat.getInstance();  
+                            format.setMinimumFractionDigits(2);//setMinimumFractionDigits(int) 设置数值的小数部分允许的最小位数。   
+                            format.setMaximumFractionDigits(2);//setMaximumFractionDigits(int) 设置数值的小数部分允许的最大位数。  
+                            format.setMaximumIntegerDigits(20);//setMaximumIntegerDigits(int)  设置数值的整数部分允许的最大位数。   
+                            format.setMinimumIntegerDigits(0);//setMinimumIntegerDigits(int)  设置数值的整数部分允许的最小位数.   
+                            textcell.setCellValue(format.format(object));
+                        }
                     } else{
-                        if(null!=value) {
+                        if(StringUtils.isNotBlank(value)) {
                             textcell.setCellValue(Double.parseDouble(value));
                         }
                     }
