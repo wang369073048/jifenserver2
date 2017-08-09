@@ -114,7 +114,7 @@ public class GoodsDO implements Serializable{
     /**
      * 兑换数量
      */
-    @Column(name = "exchangeQuantity")
+    @Column(name = "exchangeQuantity",nullable = false)
     private Integer exchangeQuantity;
 
     /**
@@ -137,7 +137,7 @@ public class GoodsDO implements Serializable{
     /**
      *
      */
-    @Column(name = "versionLock")
+    @Column(name = "versionLock",nullable = false)
     private Integer versionLock;
 
     /**

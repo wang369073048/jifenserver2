@@ -139,7 +139,7 @@ public class SettlementResource {
         CellDefinition orderDate = new CellDefinition("orderDate", "日期", CellDefinition.DATE, 4000);
         CellDefinition orderNum = new CellDefinition("orderNum", "订单编号", CellDefinition.TEXT, 9000);
         CellDefinition shopName = new CellDefinition("shopName", "店铺名称", CellDefinition.TEXT, 4000);
-        CellDefinition username = new CellDefinition("username", "会员手机号", CellDefinition.NUM_0, 4000);
+        CellDefinition username = new CellDefinition("username", "会员手机号", CellDefinition.TEXT, 4000);
         CellDefinition barCode = new CellDefinition("barCode", "商品条码", CellDefinition.TEXT, 4000);
         CellDefinition goodsName = new CellDefinition("goodsName", "商品名称", CellDefinition.TEXT, 16000);
         CellDefinition goodsCount = new CellDefinition("goodsCount", "兑换数量", CellDefinition.NUM_0, 4000);

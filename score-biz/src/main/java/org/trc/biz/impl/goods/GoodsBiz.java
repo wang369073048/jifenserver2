@@ -76,7 +76,7 @@ public class GoodsBiz implements IGoodsBiz{
             goodsDO.setGoodsSn(GuidUtil.getNextUid("pro"));
             validateForAdd(goodsDO);
             validateGoods(goodsDO);
-            int result = goodsService.insert(goodsDO);
+            int result = goodsService.insertSelective(goodsDO);
             logger.info("新增ID=>[" + goodsDO.getId() + "]的GoodsDO成功");
             List<GoodsClassificationRelationshipDO> list = goodsDO.getGoodsClassificationRelationshipList();
             if(CollectionUtils.isNotEmpty(list)) {
@@ -411,7 +411,7 @@ public class GoodsBiz implements IGoodsBiz{
         Assert.isTrue(null!=goodsDO.getStockWarn()&&goodsDO.getStockWarn()>0&&goodsDO.getStockWarn()<100000000,"goodsDO对应的库存预警不能为空并且最大不超过99999999！");
         Assert.hasText(goodsDO.getGoodsSn(),"goodsDO对应的商品编号不能为空！");
         Assert.hasText(goodsDO.getMediumImg(),"goodsDO对应的商品组图不能为空！");
-        Assert.hasText(goodsDO.getContent(),"goodsDO对应的商品描述不能为空！");
+//        Assert.hasText(goodsDO.getContent(),"goodsDO对应的商品描述不能为空！");
     }
 
     private void validateForUpdate(GoodsDO goodsDO) {
@@ -424,7 +424,7 @@ public class GoodsBiz implements IGoodsBiz{
         Assert.isTrue(null!=goodsDO.getStock()&&goodsDO.getStock()>0&&goodsDO.getStock()<100000000,"goodsDO对应的库存不能为空并且最大不超过99999999！");
         Assert.isTrue(null!=goodsDO.getStockWarn()&&goodsDO.getStockWarn()>0&&goodsDO.getStockWarn()<100000000,"goodsDO对应的库存预警不能为空并且最大不超过99999999！");
         Assert.hasText(goodsDO.getMediumImg(),"goodsDO对应的商品组图不能为空！");
-        Assert.hasText(goodsDO.getContent(),"goodsDO对应的商品描述不能为空！");
+//        Assert.hasText(goodsDO.getContent(),"goodsDO对应的商品描述不能为空！");
 
     }
 

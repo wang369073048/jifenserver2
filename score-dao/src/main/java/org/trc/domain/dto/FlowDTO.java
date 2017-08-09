@@ -14,6 +14,8 @@ public class FlowDTO implements Serializable {
     private Date serialDate;
 
     private String serialNum;
+    
+    private String shopName;
 
     private String exchangeCurrency;
 
@@ -46,6 +48,10 @@ public class FlowDTO implements Serializable {
             ScoreCst.ExchangeCurrency ec = Enum.valueOf(ScoreCst.ExchangeCurrency.class, this.exchangeCurrency);
             return ec.getValue();
         }
+    }
+    
+    public String getRealExchangeCurrency() {
+         return this.exchangeCurrency;
     }
 
     public void setExchangeCurrency(String exchangeCurrency) {
@@ -84,7 +90,11 @@ public class FlowDTO implements Serializable {
         }
     }
 
-    @Override
+    public void setShopName(String shopName) {
+		this.shopName = shopName;
+	}
+
+	@Override
     public String toString() {
         return "FlowDTO{" +
                 "serialDate=" + serialDate +
