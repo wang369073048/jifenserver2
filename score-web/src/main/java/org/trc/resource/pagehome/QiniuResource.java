@@ -59,8 +59,8 @@ public class QiniuResource {
             uploadResponse.setKey(key);
             uploadResponse.setFileName(fileName);
             //获取图片缩略图url
-            //String url = qinniuBiz.getThumbnail(key, WIDTH, HEIGHT);
-            //uploadResponse.setUrl(url);
+            String url = qinniuBiz.getThumbnail(key, WIDTH, HEIGHT);
+            uploadResponse.setUrl(url);
         }catch (Exception e){
             String msg = String.format("%s%s%s%s", "上传文件", fileName, "异常,异常信息：",e.getMessage());
             log.error(msg, e);

@@ -61,7 +61,7 @@ public class GoodsResource {
     @Path(ScoreAdminConstants.Route.Goods.ENTITY)
     public AppResult publish(@NotNull @PathParam("shopId") Long shopId, @NotNull @FormParam("category") Long category, @FormParam("brandName") String brandName,
                              @NotEmpty @FormParam("goodsName") String goodsName, @FormParam("barcode") String barcode, @FormParam("goodsNo") String goodsNo,
-                             @FormParam("batchNumber") String batchNumber, @NotEmpty @FormParam("mediumImg") String mediumImg, @FormParam("priceMarket") Integer priceMarket,
+                             @FormParam("batchNumber") String batchNumber, @NotEmpty @FormParam("mainImg") String mainImg,@NotEmpty @FormParam("mediumImg") String mediumImg, @FormParam("priceMarket") Integer priceMarket,
                              @NotNull @FormParam("priceScore") Integer priceScore, @NotNull @FormParam("stock") Integer stock, @NotNull @FormParam("stockWarn") Integer stockWarn,
                              @FormParam("targetUrl") String targetUrl, @FormParam("validStartTime") Long validStartTime, @FormParam("validEndTime") Long validEndTime,
                              @FormParam("autoUpTime") Long autoUpTime, @FormParam("autoDownTime") Long autoDownTime, @NotEmpty @FormParam("content") String content,
@@ -76,6 +76,7 @@ public class GoodsResource {
         goodsDO.setGoodsNo(goodsNo);
         goodsDO.setBrandName(brandName);
         goodsDO.setGoodsName(goodsName);
+        goodsDO.setMainImg(mainImg);
         goodsDO.setMediumImg(mediumImg);
         goodsDO.setPriceMarket(priceMarket);
         goodsDO.setPriceScore(priceScore);
@@ -416,6 +417,7 @@ public class GoodsResource {
                 json.put("operatorUserId", categoryDO.getOperatorUserId());
                 json.put("createTime", categoryDO.getCreateTime().getTime());
                 json.put("updateTime", categoryDO.getUpdateTime().getTime());
+                json.put("code", categoryDO.getCode());
                 jsonArray.add(json);
             }
         }
