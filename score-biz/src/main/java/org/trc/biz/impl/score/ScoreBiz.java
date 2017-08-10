@@ -1,6 +1,8 @@
 package org.trc.biz.impl.score;
 
 import com.txframework.core.jdbc.PageRequest;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
@@ -13,9 +15,13 @@ import org.trc.domain.dto.ScoreAck;
 import org.trc.domain.dto.ScoreReq;
 import org.trc.domain.score.Score;
 import org.trc.domain.score.ScoreChange;
+import org.trc.domain.score.ScoreChangeDetail;
+import org.trc.domain.score.ScoreChild;
 import org.trc.enums.ExceptionEnum;
 import org.trc.exception.ScoreException;
+import org.trc.service.score.IScoreChangeDetailService;
 import org.trc.service.score.IScoreChangeRecordService;
+import org.trc.service.score.IScoreChildService;
 import org.trc.service.score.IScoreService;
 
 import java.util.Date;
@@ -32,10 +38,15 @@ import java.util.Map;
 @Service("scoreBiz")
 public class ScoreBiz implements IScoreBiz{
 
+    Logger logger = LoggerFactory.getLogger(ScoreBiz.class);
     @Autowired
     private IScoreService scoreService;
     @Autowired
     private IScoreChangeRecordService scoreChangeRecordService;
+    @Autowired
+    private IScoreChildService scoreChildService;
+    @Autowired
+    private IScoreChangeDetailService scoreChangeDetailService;
     @Override
     public Score getScoreByUserId(String userId) {
         return null;
@@ -123,70 +134,89 @@ public class ScoreBiz implements IScoreBiz{
     @Override
     @Transactional(propagation = Propagation.REQUIRED, rollbackFor = Exception.class)
     public ScoreAck deductScore(ScoreReq scoreReq) {
-//        try {
-//            _validateScoreReqForDeduct(scoreReq);
-//            Assert.isTrue(ScoreCst.BusinessCode.consume.name().equals(scoreReq.getBusinessCode()) || ScoreCst.BusinessCode.lotteryConsume.name().equals(scoreReq.getBusinessCode()) || ScoreCst.BusinessCode.incomeCorrect.name().equals(scoreReq.getBusinessCode()) || ScoreCst.BusinessCode.exchangeOut.name().equals(scoreReq.getBusinessCode()), "businessCode不合法!");
-//            //参数校验
-//            //查询积分账户是否已开启
-//            Score score = this.getScoreByUserId(scoreReq.getExpenditureAccount());
-//            if (null == score || score.getScore() < scoreReq.getScore()) {
-//                throw new ScoreException(ExceptionEnum.BALANCE_NOT_ENOUGH, "积分余额不足");
-//            }
-//            //不允许卖家兑出或者消费
-//            if (Score.ScoreUserType.SELLER.toString().equals(score.getUserType()) && !ScoreCst.BusinessCode.incomeCorrect.name().equals(scoreReq.getBusinessCode())) {
-//                throw new ScoreException(ExceptionEnum.SCORE_UPDATE_EXCEPTION, "不允许卖家兑出或者消费");
-//            }
-//            Date time = new Date();
-//            //获取所有的积分子账户
-//            List<ScoreChild> scoreChildList = scoreChildDao.queryScoreChildByUserId(scoreReq.getExpenditureAccount());
-//            Long sumChildScore = 0l;
-//            for (ScoreChild scoreChild : scoreChildList) {
-//                sumChildScore += scoreChild.getScore();
-//            }
-//            if (!sumChildScore.equals(score.getScore())) {
-//                throw new ScoreException(ScoreException.BALANCE_DOES_NOT_MATCH, "积分余额不匹配");
-//            }
-//            Long scoreTmp = scoreReq.getScore();
-//            int result = 0;
-//            for (ScoreChild scoreChild : scoreChildList) {
-//                if (scoreChild.getScore() >= scoreTmp) {
-//                    scoreChild.setScore(scoreChild.getScore() - scoreTmp);
-//                    scoreChild.setUpdateTime(time);
-//                    this.updateScoreChild(scoreChild);
-//                    ScoreChangeDetail scoreChangeDetail = new ScoreChangeDetail(scoreReq.getExpenditureAccount(), scoreReq.getOrderCode(), score.getId(), scoreChild.getId(),
-//                            scoreTmp, score.getScore() - scoreReq.getScore(), scoreChild.getFreezingScore(), ScoreCst.FlowType.expend.name(), scoreChild.getExpirationTime(), time);
-//                    scoreChangeDetailDao.insertScoreChangeDetail(scoreChangeDetail);
-//                    break;
-//                } else {
-//                    Long consumeScore = scoreChild.getScore();
-//                    scoreTmp -= scoreChild.getScore();
-//                    scoreChild.setScore(0l);
-//                    scoreChild.setUpdateTime(time);
-//                    this.updateScoreChild(scoreChild);
-//                    ScoreChangeDetail scoreChangeDetail = new ScoreChangeDetail(scoreReq.getExpenditureAccount(), scoreReq.getOrderCode(), score.getId(), scoreChild.getId(),
-//                            consumeScore, score.getScore() + scoreTmp - scoreReq.getScore(), scoreChild.getFreezingScore(), ScoreCst.FlowType.expend.name(), scoreChild.getExpirationTime(), time);
-//                    scoreChangeDetailDao.insertScoreChangeDetail(scoreChangeDetail);
-//                }
-//            }
-//            score.setScore(score.getScore() - scoreReq.getScore());
-//            score.setUpdateTime(time);
-//            this.updateScore(score);
-//            ScoreChange scoreChange = new ScoreChange(scoreReq.getExpenditureAccount(), scoreReq.getExpenditureAccountName(), scoreReq.getIncomeAccount(), scoreReq.getIncomeAccountName(), score.getId(), scoreReq.getScore(), score.getScore(), score.getFreezingScore(), scoreReq.getOrderCode(), scoreReq.getShopId(), scoreReq.getChannelCode(), scoreReq.getBusinessCode(), ScoreCst.FlowType.expend.name(), scoreReq.getRemark(), scoreReq.getExchangeCurrency(), null, time);
-//            scoreChangeDao.insertScoreChange(scoreChange);
-//            return ScoreAck.renderSuccess(ScoreCode.SCORE000001, scoreReq.getOrderCode());
-//        } catch (IllegalArgumentException e) {
-//            logger.error("deductScore参数校验错误!", e);
-//            throw new ScoreException(ScoreException.ABNORMAL_PARAMETER, "deductScore参数校验错误!");
-//        } catch (ScoreException e) {
-//            throw e;
-//        } catch (Exception e) {
-//            logger.error("deductScore发生错误!", e);
-//            throw new ScoreException(ScoreException.OPERATION_FAILED, "deductScore发生错误!" + scoreReq);
-//        }
+        try {
+            _validateScoreReqForDeduct(scoreReq);
+            Assert.isTrue(ScoreCst.BusinessCode.consume.name().equals(scoreReq.getBusinessCode()) || ScoreCst.BusinessCode.lotteryConsume.name().equals(scoreReq.getBusinessCode()) || ScoreCst.BusinessCode.incomeCorrect.name().equals(scoreReq.getBusinessCode()) || ScoreCst.BusinessCode.exchangeOut.name().equals(scoreReq.getBusinessCode()), "businessCode不合法!");
+            //参数校验
+            //查询积分账户是否已开启
+            Score score = this.getScoreByUserId(scoreReq.getExpenditureAccount());
+            if (null == score || score.getScore() < scoreReq.getScore()) {
+                throw new ScoreException(ExceptionEnum.BALANCE_NOT_ENOUGH, "积分余额不足");
+            }
+            //不允许卖家兑出或者消费
+            if (Score.ScoreUserType.SELLER.toString().equals(score.getUserType()) && !ScoreCst.BusinessCode.incomeCorrect.name().equals(scoreReq.getBusinessCode())) {
+                throw new ScoreException(ExceptionEnum.SCORE_UPDATE_EXCEPTION, "不允许卖家兑出或者消费");
+            }
+            Date time = new Date();
+            //获取所有的积分子账户
+            List<ScoreChild> scoreChildList = scoreChildService.queryScoreChildByUserId(scoreReq.getExpenditureAccount());
+            Long sumChildScore = 0l;
+            for (ScoreChild scoreChild : scoreChildList) {
+                sumChildScore += scoreChild.getScore();
+            }
+            if (!sumChildScore.equals(score.getScore())) {
+                throw new ScoreException(ExceptionEnum.BALANCE_DOES_NOT_MATCH, "积分余额不匹配");
+            }
+            Long scoreTmp = scoreReq.getScore();
+            int result = 0;
+            for (ScoreChild scoreChild : scoreChildList) {
+                if (scoreChild.getScore() >= scoreTmp) {
+                    scoreChild.setScore(scoreChild.getScore() - scoreTmp);
+                    scoreChild.setUpdateTime(time);
+                    this.updateScoreChild(scoreChild);
+                    ScoreChangeDetail scoreChangeDetail = new ScoreChangeDetail(scoreReq.getExpenditureAccount(), scoreReq.getOrderCode(), score.getId(), scoreChild.getId(),
+                            scoreTmp, score.getScore() - scoreReq.getScore(), scoreChild.getFreezingScore(), ScoreCst.FlowType.expend.name(), scoreChild.getExpirationTime(), time);
+                    scoreChangeDetailService.insertSelective(scoreChangeDetail);
+                    break;
+                } else {
+                    Long consumeScore = scoreChild.getScore();
+                    scoreTmp -= scoreChild.getScore();
+                    scoreChild.setScore(0l);
+                    scoreChild.setUpdateTime(time);
+                    this.updateScoreChild(scoreChild);
+                    ScoreChangeDetail scoreChangeDetail = new ScoreChangeDetail(scoreReq.getExpenditureAccount(), scoreReq.getOrderCode(), score.getId(), scoreChild.getId(),
+                            consumeScore, score.getScore() + scoreTmp - scoreReq.getScore(), scoreChild.getFreezingScore(), ScoreCst.FlowType.expend.name(), scoreChild.getExpirationTime(), time);
+                    scoreChangeDetailService.insertSelective(scoreChangeDetail);
+                }
+            }
+            score.setScore(score.getScore() - scoreReq.getScore());
+            score.setUpdateTime(time);
+            this.updateScore(score);
+            ScoreChange scoreChange = new ScoreChange(scoreReq.getExpenditureAccount(), scoreReq.getExpenditureAccountName(), scoreReq.getIncomeAccount(), scoreReq.getIncomeAccountName(), score.getId(), scoreReq.getScore(), score.getScore(), score.getFreezingScore(), scoreReq.getOrderCode(), scoreReq.getShopId(), scoreReq.getChannelCode(), scoreReq.getBusinessCode(), ScoreCst.FlowType.expend.name(), scoreReq.getRemark(), scoreReq.getExchangeCurrency(), null, time);
+            scoreChangeRecordService.insertScoreChange(scoreChange);
+            return ScoreAck.renderSuccess(ScoreCode.SCORE000001, scoreReq.getOrderCode());
+        } catch (IllegalArgumentException e) {
+            logger.error("deductScore参数校验错误!", e);
+            throw new ScoreException(ExceptionEnum.PARAM_CHECK_EXCEPTION, "deductScore参数校验错误!");
+        } catch (ScoreException e) {
+            throw e;
+        } catch (Exception e) {
+            logger.error("deductScore发生错误!", e);
+            throw new ScoreException(ExceptionEnum.OPERATION_FAILED, "deductScore发生错误!" + scoreReq);
+        }
 
         return null;
 
     }
+
+    private int updateScoreChild(ScoreChild scoreChild) {
+        int result = scoreChildService.updateScoreChild(scoreChild);
+        if (1 != result) {
+            logger.error("更新积分子账户失败!waaaaaaa");
+            throw new ScoreException(ExceptionEnum.SCORE_CHILD_UPDATE_EXCEPTION, "更新积分子账户失败!");
+        }
+        return result;
+    }
+
+    private int updateScore(Score score) {
+        int result = scoreService.updateScore(score);
+        if (1 != result) {
+            logger.error("更新积分账户失败!waaaaaaa");
+            throw new ScoreException(ScoreException.SCORE_UPDATE_EXCEPTION, "更新积分账户失败!");
+        }
+        return result;
+    }
+
 
     @Override
     public ScoreAck consumeScore(ScoreReq scoreReq) {

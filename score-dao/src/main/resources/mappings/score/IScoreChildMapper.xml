@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.trc.mapper.score.IScoreChildMapper" >
+    <update id="updateScoreChild" parameterType="org.trc.domain.score.ScoreChild">
+        update score_child
+        <set>
+            <if test="score != null">
+                score = #{score},
+            </if>
+            <if test="freezingScore != null">
+                freezingScore = #{freezingScore},
+            </if>
+            <if test="updateTime != null">
+                updateTime = #{updateTime},
+            </if>
+            <if test="isDeleted != null">
+                isDeleted = #{isDeleted},
+            </if>
+            version = version+1,
+        </set>
+        <where>
+            userId = #{userId} and expirationTime = #{expirationTime} and version = #{version}
+        </where>
+    </update>
+</mapper>

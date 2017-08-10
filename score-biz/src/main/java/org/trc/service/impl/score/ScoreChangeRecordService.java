@@ -38,7 +38,7 @@ public class ScoreChangeRecordService extends BaseService<ScoreChange,Long> impl
 
     @Override
     public int correctScoreChange(ScoreChange scoreChange) {
-        return 0;
+        return scoreChangeMapper.correctScoreChange(scoreChange);
     }
 
     @Override
