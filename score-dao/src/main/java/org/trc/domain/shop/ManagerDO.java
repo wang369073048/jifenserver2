@@ -1,5 +1,6 @@
 package org.trc.domain.shop;
 
+import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Date;
 
@@ -8,21 +9,26 @@ import java.util.Date;
  * JDK-version:  JDK1.8
  * since Date： 2017/7/3
  */
+@Table(name = "manager")
 public class ManagerDO implements Serializable{
 
     /**
-     * 主键标示
+     * 主键ID
      */
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     /**
      * 店铺id
      */
+    @Column(name = "shopId")
     private Long shopId;
 
     /**
      * 用户id
      */
+    @Column(name = "userId")
     private String userId;
 
     /**
@@ -33,16 +39,19 @@ public class ManagerDO implements Serializable{
     /**
      * 角色
      */
+    @Column(name = "roleType")
     private String roleType;
 
     /**
      * 创建时间
      */
+    @Column(name = "createTime")
     private Date createTime;
 
     /**
      * 更新时间
      */
+    @Column(name = "updateTime")
     private Date updateTime;
 
     public Long getId() {

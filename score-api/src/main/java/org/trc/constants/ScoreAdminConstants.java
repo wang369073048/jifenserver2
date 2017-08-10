@@ -203,7 +203,7 @@ public class ScoreAdminConstants {
 
         public static final class ActivityPrizes {
             public static final String ROOT = "activityPrizes";
-            public static final String ADD = "/add";
+            public static final String LIST = "/list";
         }
         public static final class Liumi{
             public static final String ROOT = "/liumi";

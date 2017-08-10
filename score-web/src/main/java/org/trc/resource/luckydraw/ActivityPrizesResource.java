@@ -27,10 +27,10 @@ public class ActivityPrizesResource {
 
     @Autowired
     private IActivityPrizesBiz activityPrizesBiz;
-    @POST
-    @Path(ScoreAdminConstants.Route.ActivityPrizes.ADD)
-    public Pagenation<ActivityPrizesDO> add(@FormParam("name") String name,
-                        @FormParam("category") Long category,
+    @GET
+    @Path(ScoreAdminConstants.Route.ActivityPrizes.LIST)
+    public Pagenation<ActivityPrizesDO> add(@QueryParam("name") String name,
+                        @QueryParam("category") Long category,
                         @BeanParam Pagenation<ActivityPrizesDO> page){
             ActivityPrizesDO param = new ActivityPrizesDO();
             param.setName(name);
