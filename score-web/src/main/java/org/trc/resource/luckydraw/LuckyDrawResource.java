@@ -257,12 +257,12 @@ public class LuckyDrawResource {
     }
 
 
-    @POST
+    @GET
     @Path(ScoreAdminConstants.Route.LuckyDraw.WINNING_RECORD_LIST)
-    public Pagenation listWinningRecord(@FormParam("luckyDrawId") Long luckyDrawId, @FormParam("platform") String platform, @FormParam("operateTimeMin") Long operateTimeMin,
-                                      @FormParam("operateTimeMax") Long operateTimeMax, @FormParam("lotteryPhone") String lotteryPhone,
-                                      @FormParam("activityName") String activityName, @FormParam("state") Integer state,
-                                      @BeanParam Pagenation<WinningRecordDTO> page){
+    public Pagenation listWinningRecord(@QueryParam("luckyDrawId") Long luckyDrawId, @QueryParam("platform") String platform, @QueryParam("operateTimeMin") Long operateTimeMin,
+    									@QueryParam("operateTimeMax") Long operateTimeMax, @QueryParam("lotteryPhone") String lotteryPhone,
+    									@QueryParam("activityName") String activityName, @QueryParam("state") Integer state,
+    									@BeanParam Pagenation<WinningRecordDTO> page){
             WinningRecordDTO param = new WinningRecordDTO();
             param.setLuckyDrawId(luckyDrawId);
             param.setPlatform(platform);
