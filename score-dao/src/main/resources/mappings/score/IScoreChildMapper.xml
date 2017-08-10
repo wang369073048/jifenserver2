@@ -36,6 +36,10 @@
         </where>
     </update>
     
+     <select id="queryScoreChildByUserId" parameterType="java.lang.String" resultMap="ScoreChildMap">
+        select * from score_child where userId = #{userId} and isDeleted = 0 and score > 0 and <![CDATA[ expirationTime > now()]]> order by expirationTime asc
+    </select>
+    
     <select id="getLastScoreChildByUserId" parameterType="java.lang.String" resultMap="ScoreChildMap">
         select * from score_child where userId = #{userId} and <![CDATA[ expirationTime > now()]]> and isDeleted = 0 order by expirationTime DESC limit 1
     </select>
