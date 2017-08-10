@@ -130,7 +130,6 @@ public class ScoreBiz implements IScoreBiz{
         }
     }
 
-
     @Override
     @Transactional(propagation = Propagation.REQUIRED, rollbackFor = Exception.class)
     public ScoreAck deductScore(ScoreReq scoreReq) {
@@ -194,15 +193,12 @@ public class ScoreBiz implements IScoreBiz{
             logger.error("deductScore发生错误!", e);
             throw new ScoreException(ExceptionEnum.OPERATION_FAILED, "deductScore发生错误!" + scoreReq);
         }
-
-        return null;
-
     }
 
     private int updateScoreChild(ScoreChild scoreChild) {
         int result = scoreChildService.updateScoreChild(scoreChild);
         if (1 != result) {
-            logger.error("更新积分子账户失败!waaaaaaa");
+            logger.error("更新积分子账户失败!");
             throw new ScoreException(ExceptionEnum.SCORE_CHILD_UPDATE_EXCEPTION, "更新积分子账户失败!");
         }
         return result;
@@ -211,8 +207,8 @@ public class ScoreBiz implements IScoreBiz{
     private int updateScore(Score score) {
         int result = scoreService.updateScore(score);
         if (1 != result) {
-            logger.error("更新积分账户失败!waaaaaaa");
-            throw new ScoreException(ScoreException.SCORE_UPDATE_EXCEPTION, "更新积分账户失败!");
+            logger.error("更新积分账户失败!");
+            throw new ScoreException(ExceptionEnum.SCORE_UPDATE_EXCEPTION, "更新积分账户失败!");
         }
         return result;
     }

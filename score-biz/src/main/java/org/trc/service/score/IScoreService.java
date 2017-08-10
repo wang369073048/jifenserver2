@@ -10,4 +10,6 @@ import org.trc.domain.score.Score;
  * since Date： 2017/8/8
  */
 public interface IScoreService extends IBaseService<Score,Long>{
+	
+	int updateScore(Score score);
 }

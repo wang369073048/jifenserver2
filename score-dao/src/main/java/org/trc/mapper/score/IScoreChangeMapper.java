@@ -14,6 +14,8 @@ import java.util.List;
  * since Date： 2017/7/23
  */
 public interface IScoreChangeMapper extends BaseMapper<ScoreChange>{
+	
+	int insertScoreChange(ScoreChange scoreChange);
 
     List<ScoreChange> queryScoreChangeForUser(ScoreChangeRecordQueryDTO queryDto);
 

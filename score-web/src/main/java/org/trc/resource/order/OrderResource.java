@@ -538,12 +538,18 @@ public class OrderResource {
     public AppResult returnGoods(@NotNull @FormParam("orderNum") String orderNum,
                                 @NotNull @FormParam("phone") String phone,
                                 @NotNull @FormParam("remark") String remark) {
-        UserDO userDO = userService.getUserDO(QueryType.Phone, phone);
-        if (null == userDO) {
-            throw new OrderException(ExceptionEnum.ORDER_UPDATE_EXCEPTION,String.format("手机号[%s]未注册",phone));
-        }
-        //TODO 退款
-        newOrderBiz.returnGoods(orderNum, userDO.getUserId(), remark);
+    	try{
+    		UserDO userDO = userService.getUserDO(QueryType.Phone, phone);
+            if (null == userDO) {
+                throw new OrderException(ExceptionEnum.ORDER_UPDATE_EXCEPTION,String.format("手机号[%s]未注册",phone));
+            }
+            //TODO 退款
+            newOrderBiz.returnGoods(orderNum, userDO.getUserId(), remark);
+    	}catch(OrderException e){
+    		logger.error(e.getMessage(), e);
+            return createFailAppResult(e.getMessage());
+    	}
+        
         return createSucssAppResult("退款成功!", "");
     }
 }

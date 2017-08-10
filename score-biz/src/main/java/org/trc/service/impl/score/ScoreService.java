@@ -1,7 +1,9 @@
 package org.trc.service.impl.score;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.trc.domain.score.Score;
+import org.trc.mapper.score.IScoreMapper;
 import org.trc.service.impl.BaseService;
 import org.trc.service.score.IScoreService;
 
@@ -13,4 +15,12 @@ import org.trc.service.score.IScoreService;
  */
 @Service("scoreService")
 public class ScoreService extends BaseService<Score,Long> implements IScoreService{
+
+	@Autowired
+	IScoreMapper scoreMapper;
+	
+	@Override
+	public int updateScore(Score score) {
+		return scoreMapper.updateScore(score);
+	}
 }

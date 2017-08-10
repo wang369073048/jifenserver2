@@ -49,7 +49,7 @@ public class ScoreChildService extends BaseService<ScoreChild,Long> implements I
 
     @Override
     public List<ScoreChild> queryScoreChildByUserId(String userId) {
-        return null;
+        return scoreChildMapper.queryScoreChildByUserId(userId);
     }
 
     @Override

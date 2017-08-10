@@ -53,7 +53,7 @@ public class ScoreChangeRecordService extends BaseService<ScoreChange,Long> impl
 
     @Override
     public int insertScoreChange(ScoreChange scoreChange) {
-        return 0;
+        return scoreChangeMapper.insertScoreChange(scoreChange);
     }
 
     @Override
