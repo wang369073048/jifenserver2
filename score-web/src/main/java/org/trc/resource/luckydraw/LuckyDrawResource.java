@@ -347,11 +347,11 @@ public class LuckyDrawResource {
     }
 
 
-    @POST
+    @GET
     @Path(ScoreAdminConstants.Route.LuckyDraw.ACTIVITY_DETAIL_LIST)
-    public Pagenation<ActivityDetailDO> listAcitivityDetail(@FormParam("shopId") Long shopId, @FormParam("lotteryPhone") String lotteryPhone,
-                                                            @FormParam("operateTimeMin") Long operateTimeMin, @FormParam("operateTimeMax") Long operateTimeMax,
-                                                            @FormParam("whetherWinning") Integer whetherWinning,
+    public Pagenation<ActivityDetailDO> listAcitivityDetail(@QueryParam("shopId") Long shopId, @QueryParam("lotteryPhone") String lotteryPhone,
+                                                            @QueryParam("operateTimeMin") Long operateTimeMin, @QueryParam("operateTimeMax") Long operateTimeMax,
+                                                            @QueryParam("whetherWinning") Integer whetherWinning,
                                                             @BeanParam Pagenation<ActivityDetailDO> page) {
         ActivityDetailDO param = new ActivityDetailDO();
         param.setLotteryPhone(lotteryPhone);
