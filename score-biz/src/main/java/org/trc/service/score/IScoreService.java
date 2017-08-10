@@ -12,4 +12,8 @@ import org.trc.domain.score.Score;
 public interface IScoreService extends IBaseService<Score,Long>{
 	
 	int updateScore(Score score);
+	
+	Score getScoreByUserId(String userId);
+	
+	int insertScore(Score score);
 }

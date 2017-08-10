@@ -41,12 +41,7 @@ public enum ExceptionEnum {
     DATABASE_DATA_VERSION_EXCEPTION("3000104","数据库的流水记录正在使用"),
     DATABASE_SAVE_SERIAL_EXCEPTION("3000105","保存流水号异常"),
 
-    BALANCE_NOT_ENOUGH("300501","积分余额不足"),
-    BALANCE_DOES_NOT_MATCH("300502","积分余额不匹配"),
-
-    SCORE_UPDATE_EXCEPTION("300102","更新积分账户失败"),
-
-    SCORE_CHILD_UPDATE_EXCEPTION("300202","更新积分子账户失败"),
+   
 
 
     USER_CENTER_QUERY_EXCEPTION("600101","用户中心查询异常"),
@@ -134,10 +129,18 @@ public enum ExceptionEnum {
     USER_NOT_LOGIN("900002","用户未登录"),
     USER_NOT_HAVE_PERMISSION("900003","用户无此权限"),
 
+    /**start 积分退款部分异常 add by xab ****/
+    BALANCE_NOT_ENOUGH("300501","积分余额不足"),
+    BALANCE_DOES_NOT_MATCH("300502","积分余额不匹配"),
+
+    SCORE_UPDATE_EXCEPTION("300102","更新积分账户失败"),
+    SCORE_CHILD_INSERT_EXCEPTION("300201","新增积分子账户失败"),
+    SCORE_CHILD_UPDATE_EXCEPTION("300202","更新积分子账户失败"),
     CORRECT_OPERATION_FAILED("999992","冲正操作失败"),
     OPERATION_FAILED ("999990","操作失败"),
-
-
+    /**end 积分退款部分异常****/
+    
+    
     PARAM_CHECK_EXCEPTION("2000200","参数校验错误"),
     PARAM_ERROR_ILLEGAL("2000300", "参数不合法");
     private String code;

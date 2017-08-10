@@ -11,5 +11,6 @@ import org.trc.util.BaseMapper;
  * @date 2017年8月10日 下午4:22:16
  */
 public interface IScoreChangeDetailMapper extends BaseMapper<ScoreChangeDetail>{
-
+	
+	int insertScoreChangeDetail(ScoreChangeDetail scoreChangeDetail);
 }

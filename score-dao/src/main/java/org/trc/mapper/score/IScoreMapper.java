@@ -11,4 +11,8 @@ import org.trc.util.BaseMapper;
  */
 public interface IScoreMapper extends BaseMapper<Score> {
 	int updateScore(Score score);
+	
+	Score getScoreByUserId(String userId);
+	
+	int insertScore(Score score);
 }

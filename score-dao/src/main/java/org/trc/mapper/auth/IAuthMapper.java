@@ -13,4 +13,5 @@ import java.util.List;
 public interface IAuthMapper extends BaseMapper<Auth>{
 
     List<Auth> queryAuthListByCondition(AuthQueryDTO query);
+    
 }

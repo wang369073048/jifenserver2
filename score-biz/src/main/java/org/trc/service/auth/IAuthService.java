@@ -12,6 +12,8 @@ import java.util.List;
  * Created by hzwzhen on 2017/6/14.
  */
 public interface IAuthService extends IBaseService<Auth,Long>{
+	
+	Auth getAuthByUserId(String userId);
 
     Pagenation<Auth> queryAuthListByCondition(AuthQueryDTO query, Pagenation<Auth> pageRequest);
 }

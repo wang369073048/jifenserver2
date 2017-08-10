@@ -1,6 +1,9 @@
 package org.trc.service.impl.score;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.trc.domain.score.ScoreChangeDetail;
+import org.trc.mapper.score.IScoreChangeDetailMapper;
+import org.trc.mapper.score.IScoreChangeMapper;
 import org.trc.service.impl.BaseService;
 import org.trc.service.score.IScoreChangeDetailService;
 
@@ -11,4 +14,11 @@ import org.trc.service.score.IScoreChangeDetailService;
  * since Date： 2017/8/10
  */
 public class ScoreChangeDetailService extends BaseService<ScoreChangeDetail,Long> implements IScoreChangeDetailService{
+	@Autowired
+    private IScoreChangeDetailMapper scoreChangeDetailMapper;
+	
+	@Override
+	public int insertScoreChangeDetail(ScoreChangeDetail scoreChangeDetail) {
+		return scoreChangeDetailMapper.insertScoreChangeDetail(scoreChangeDetail);
+	}
 }
