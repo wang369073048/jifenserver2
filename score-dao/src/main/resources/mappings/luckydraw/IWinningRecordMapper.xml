@@ -174,4 +174,30 @@
         </where>
         order by drawTime desc
     </select>
+
+
+    <select id="selectActivityDetailByParams" parameterType="org.trc.domain.luckydraw.ActivityDetailDO" resultType="org.trc.domain.luckydraw.ActivityDetailDO">
+        select pr.userId userId, pr.drawTime drawTime, pr.shopId shopId, pr.activityName activityName, pr.lotteryPhone lotteryPhone, wr.prizeName prizeName, wr.numberOfPrizes numberOfPrizes,
+        wr.goodsType goodsType, pr.expenditure expenditure, pr.whetherWinning whetherWinning
+        from participation_record pr left join winning_record wr
+        on pr.requestNo = wr.requestNo
+        <where>
+            <if test="shopId != null">
+                and pr.shopId = #{shopId}
+            </if>
+            <if test="lotteryPhone != null">
+                and pr.lotteryPhone like concat('%',#{lotteryPhone},'%')
+            </if>
+            <if test="whetherWinning != null">
+                and pr.whetherWinning = #{whetherWinning}
+            </if>
+            <if test="operateTimeMin!=null">
+                and pr.drawTime <![CDATA[>=]]> #{operateTimeMin}
+            </if>
+            <if test="operateTimeMax!=null">
+                and pr.drawTime <![CDATA[<]]> #{operateTimeMax}
+            </if>
+        </where>
+        order by pr.drawTime desc
+    </select>
 </mapper>
