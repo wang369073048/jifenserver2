@@ -148,6 +148,7 @@ public class WinningRecordBiz implements IWinningRecordBiz{
         result.setNumberOfPrizes(winningRecord.getNumberOfPrizes());
         result.setGoodsType(winningRecord.getGoodsType());
         result.setGoodsNo(winningRecord.getGoodsNo());
+        result.setState(winningRecord.getState());
         result.setLotteryPhone(winningRecord.getLotteryPhone());
         if(null!=ordersExtend) {
             result.setRemark(ordersExtend.getRemark());
