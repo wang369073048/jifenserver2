@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.trc.mapper.order.IOrderAddressMapper" >
+    <!-- 根据ID查询实体数据 -->
+    <select id="getOrderAddressDOByOrderNum" parameterType="java.lang.String" resultType="org.trc.domain.order.OrderAddressDO">
+        SELECT oa.* FROM order_address oa inner join orders o on oa.orderId = o.id
+        where o.orderNum = #{orderNum}
+        LIMIT 1
+    </select>
+</mapper>

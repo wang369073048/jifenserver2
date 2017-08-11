@@ -2,15 +2,20 @@ package org.trc.domain.luckydraw;
 
 import org.trc.constants.LuckyDraw;
 
+import javax.persistence.Column;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.Table;
+import javax.persistence.Transient;
+
 import java.io.Serializable;
 import java.util.*;
 
 /**
  * Created by george on 2017/5/3.
  */
+@Table(name = "activity_prizes")
 public class ActivityPrizesDO implements Serializable, Comparable<ActivityPrizesDO> {
 
     private final static List<ActivityPrizesDO> defaultActivityPrizes = new ArrayList<>();
@@ -59,36 +64,43 @@ public class ActivityPrizesDO implements Serializable, Comparable<ActivityPrizes
     /**
      * 店铺id
      */
+    @Column(name = "shopId")
     private Long shopId;
 
     /**
      * 抽奖活动id
      */
+    @Column(name = "luckyDrawId")
     private Long luckyDrawId;
 
     /**
      * 奖品id
      */
+    @Column(name = "goodsId")
     private Long goodsId;
 
     /**
      * 奖品编码
      */
+    @Transient
     private String goodsNo;
 
     /**
      * 奖品类型 SCORE|TCOIN|GOODS
      */
+    @Column(name = "prizeType")
     private String prizeType;
 
     /**
      * 商品类型  1虚拟，2实物
      */
+    @Column(name = "goodsType")
     private String goodsType;
 
     /**
      * 奖品图片
      */
+    @Column(name = "prizeUrl")
     private String prizeUrl;
 
     /**
@@ -99,37 +111,45 @@ public class ActivityPrizesDO implements Serializable, Comparable<ActivityPrizes
     /**
      * 单次中奖奖品数量
      */
+    @Column(name = "numberOfPrizes")
     private Integer numberOfPrizes;
 
     /**
      * 用户中奖次数限制
      */
+    @Column(name = "winningLimit")
     private Integer winningLimit;
 
     /**
      * 中奖次数限制
      */
+    @Column(name = "winningTimes")
     private Integer winningTimes;
     /**
      * 中奖次数限制类型:PER_DAY每天,THE_WHOLE_ACTIVITY全程
      */
+    @Column(name = "winningType")
     private String winningType;
 
     /**
      * 中奖几率:单位/万分之一
      */
+    @Column(name = "winningProbability")
     private Integer winningProbability;
 
     /**
      * 创建时间
      */
+    @Column(name = "createTime")
     private Date createTime;
 
     /**
      * 更新时间
      */
+    @Column(name = "updateTime")
     private Date updateTime;
-
+    
+    @Transient
     private Long category;
 
     public Long getId() {

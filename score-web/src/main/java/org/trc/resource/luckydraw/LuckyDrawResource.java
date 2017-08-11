@@ -311,7 +311,6 @@ public class LuckyDrawResource {
         CellDefinition city = new CellDefinition("city", "市", CellDefinition.TEXT, 4000);
         CellDefinition area = new CellDefinition("area", "区", CellDefinition.TEXT, 4000);
         CellDefinition address = new CellDefinition("address", "详细地址", CellDefinition.TEXT, 16000);
-        CellDefinition receiverName = new CellDefinition("receiverName", "收件人", CellDefinition.TEXT, 4000);
         CellDefinition stateCell = new CellDefinition("stateDesc", "奖品状态", CellDefinition.TEXT, 4000);
 
         List<CellDefinition> cellDefinitionList = new ArrayList<>();
@@ -328,7 +327,6 @@ public class LuckyDrawResource {
         cellDefinitionList.add(city);
         cellDefinitionList.add(area);
         cellDefinitionList.add(address);
-        cellDefinitionList.add(receiverName);
         cellDefinitionList.add(stateCell);
 
         String sheetName = "获奖列表";
