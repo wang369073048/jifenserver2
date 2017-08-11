@@ -12,4 +12,22 @@
             and shopId = #{shopId}
         </if>
     </update>
+
+    <!-- 根据ID更新信息-->
+    <update id="updateStockById" parameterType="org.trc.domain.goods.CardCouponsDO">
+        UPDATE card_coupons
+        <set>
+            version = version + 1,
+            <if test="stock != null">
+                stock = #{stock},
+            </if>
+            <if test="updateTime != null ">
+                updateTime = #{updateTime},
+            </if>
+        </set>
+        WHERE id = #{id} and version = #{version}
+        <if test="shopId != null ">
+            and shopId = #{shopId}
+        </if>
+    </update>
 </mapper>

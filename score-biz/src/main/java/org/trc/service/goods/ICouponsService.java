@@ -13,4 +13,6 @@ import org.trc.domain.goods.CategoryDO;
 public interface ICouponsService extends IBaseService<CardCouponsDO,Long>{
 
     int deleteByBatchNumber(CardCouponsDO cardCouponsDO);
+
+    int updateStockById(CardCouponsDO cardCoupons);
 }

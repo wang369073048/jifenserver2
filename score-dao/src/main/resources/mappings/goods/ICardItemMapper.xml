@@ -2,6 +2,20 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="org.trc.mapper.goods.ICardItemMapper" >
+
+    <!-- 所有查询字段 -->
+    <sql id="allSelectionColumn">
+        id,
+        shopId,
+        batchNumber,
+        code,
+        state,
+        userId,
+        orderCode,
+        createTime,
+        releaseTime
+    </sql>
+
     <!-- 根据ID删除数据-->
     <delete id="deleteByBatchNumber" parameterType="org.trc.domain.goods.CardItemDO">
         delete from card_item
@@ -39,4 +53,25 @@
         delete from card_item
         WHERE id = #{id} and shopId = #{shopId} and state = 0
     </delete>
+
+    <!-- 添加数据 -->
+    <insert id="batchInsert" parameterType="java.util.List">
+        INSERT INTO card_item(batchNumber, shopId, code, state, createTime)
+        VALUES
+        <foreach collection="list" item="item" index="index" separator="," >
+            (#{item.batchNumber}, #{item.shopId}, #{item.code}, #{item.state}, #{item.createTime})
+        </foreach>
+    </insert>
+
+    <!-- 根据ID查询实体数据 -->
+    <select id="checkCardItem" parameterType="org.trc.domain.goods.CardItemDO" resultType="org.trc.domain.goods.CardItemDO">
+        SELECT <include refid="allSelectionColumn"/> FROM card_item
+        <where>
+            code in(
+            <foreach collection="list" item="item" index="index" separator="," >
+                #{item.code}
+            </foreach>
+            )
+        </where>
+    </select>
 </mapper>

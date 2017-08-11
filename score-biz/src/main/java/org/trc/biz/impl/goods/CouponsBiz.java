@@ -6,6 +6,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -113,7 +114,9 @@ public class CouponsBiz implements ICouponsBiz{
             if(null != cardCoupons && StringUtils.isBlank(cardCoupons.getBatchNumber())) {
                 cardCoupons.setBatchNumber(RandomStringUtils.randomAlphanumeric(16));
             }
-            int result = couponsService.insert(cardCoupons);
+            cardCoupons.setStock(0);//库存默认0
+            cardCoupons.setVersion(1L);//版本号默认1
+            int result = couponsService.insertSelective(cardCoupons);
             if (result < 0 ){
                 logger.error("新增卡券异常!请求参数为 :" + cardCoupons);
                 throw new CardCouponException(ExceptionEnum.COUPON_SAVE_EXCEPTION, "新增卡券异常!");
@@ -130,8 +133,32 @@ public class CouponsBiz implements ICouponsBiz{
     }
 
     @Override
+    @Transactional(propagation= Propagation.REQUIRED,rollbackFor=Exception.class)
     public int importCardItem(String batchNumber, Long shopId, List<CardItemDO> cardItemList) {
-        return 0;
+        CardCouponsDO cardCoupons = new CardCouponsDO();
+        cardCoupons.setBatchNumber(batchNumber);
+        cardCoupons.setIsDeleted(0);
+        CardCouponsDO cardCoupon = couponsService.selectOne(cardCoupons);
+        if(null == cardCoupon){
+            throw new CardCouponException(ExceptionEnum.COUPON_QUERY_EXCEPTION, "批次号:" + batchNumber + "对应的卡券不存在!");
+        }
+        int addQuantity = 0;
+        try {
+            //批量插入卡券
+            addQuantity = cardItemService.batchInsert(cardItemList);
+        }catch (DataAccessException e){
+            logger.error("批量插入发生异常!");
+            List<CardItemDO> duplicateCardItem = cardItemService.checkCardItem(cardItemList);
+            StringBuilder duplicateCode = new StringBuilder("");
+            for(CardItemDO cardItem : duplicateCardItem){
+                duplicateCode.append(cardItem.getCode()).append("   ");
+            }
+            throw new CardCouponException(ExceptionEnum.COUPON_SAVE_EXCEPTION, "批量导入卡券失败!异常卡券编码为:"+duplicateCode.toString());
+        }
+        //更新卡券明细
+        cardCoupon.setStock(cardCoupon.getStock()+addQuantity);
+        couponsService.updateStockById(cardCoupon);
+        return addQuantity;
     }
 
     @Override

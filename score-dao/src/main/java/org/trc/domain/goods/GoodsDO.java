@@ -124,7 +124,7 @@ public class GoodsDO implements Serializable{
     private Integer virtualExchangeQuantity;
 
     /**
-     * 是否上架,0上架,1下架
+     * 是否上架,0下架,1上架
      */
     @Column(name = "isUp")
     private Integer isUp;

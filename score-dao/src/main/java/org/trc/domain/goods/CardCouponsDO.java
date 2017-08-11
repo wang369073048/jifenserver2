@@ -35,12 +35,14 @@ public class CardCouponsDO implements Serializable{
     /**
      * 库存
      */
-    private Integer stock = 0;
+    @Column(name = "stock")
+    private Integer stock;
 
     /**
      * 创建时间
      */
-    private Long version = 1l;
+    @Column(name = "version")
+    private Long version;
 
     /**
      * 状态(0:未删除的，1:被删除)
