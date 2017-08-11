@@ -420,7 +420,7 @@ public class NewOrderBiz implements INewOrderBiz {
         OrdersDO orders = new OrdersDO();
         orders.setOrderNum(orderNum);
         orders.setUserId(userId);
-        OrdersDO originalOrder = orderService.selectByParams(orders);
+        OrdersDO originalOrder = orderService.selectOne(orders);
         if (null == originalOrder) {
             throw new OrderException(ExceptionEnum.ORDER_QUERY_EXCEPTION, "订单:" + orderNum + "不存在!");
         } else if (OrderStatus.RETURN_GOODS == originalOrder.getOrderState().intValue()) {
@@ -435,7 +435,7 @@ public class NewOrderBiz implements INewOrderBiz {
             OrdersDO order = new OrdersDO();
             order.setId(originalOrder.getId());
             order.setOrderState(OrderStatus.RETURN_GOODS);
-            orderService.updateById(order);
+            orderService.updateByPrimaryKeySelective(order);
             //3、更新退货时间，备注信息
             OrdersExtendDO ordersExtend = new OrdersExtendDO();
             ordersExtend.setOrderId(originalOrder.getId());
@@ -444,7 +444,7 @@ public class NewOrderBiz implements INewOrderBiz {
             ordersExtend.setReturnTime(time);
             ordersExtend.setCreateTime(time);
             ordersExtend.setUpdateTime(time);
-            ordersExtendService.insert(ordersExtend);
+            ordersExtendService.insertSelective(ordersExtend);
             //4、TODO 库存更新 待明确
         }
     }

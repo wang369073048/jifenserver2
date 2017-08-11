@@ -10,4 +10,5 @@ import org.trc.util.BaseMapper;
  * since Date： 2017/8/8
  */
 public interface IScoreMapper extends BaseMapper<Score> {
+	int updateScore(Score score);
 }

@@ -25,6 +25,7 @@ public final class ScoreCst {
         exchangeOut, //兑出
         exchangeOutCorrect,//兑出冲正
         consume,     //消费（兑换商品或券）
+        lotteryConsume,     //抽奖消费
         consumeCorrect,//消费冲正
         income,      //收入（商家商品或券的兑换收入）
         incomeCorrect,//收入冲正

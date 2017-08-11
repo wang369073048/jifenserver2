@@ -1,6 +1,54 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="org.trc.mapper.score.IScoreChangeMapper" >
+
+      <insert id="insertScoreChange" parameterType="org.trc.domain.score.ScoreChange">
+        insert into score_change(
+            userId,
+            userName,
+            theOtherUserId,
+            theOtherUserName,
+            scoreId,
+            foreignCurrency,
+            score,
+            scoreBalance,
+            freezingScoreBalance,
+            orderCode,
+            shopId,
+            channelCode,
+            businessCode,
+            flowType,
+            remark,
+            exchangeCurrency,
+            <if test="operationTime != null ">
+                operationTime,
+            </if>
+            expirationTime,
+            createTime
+        )values(
+            #{userId},
+            #{userName},
+            #{theOtherUserId},
+            #{theOtherUserName},
+            #{scoreId},
+            #{foreignCurrency},
+            #{score},
+            #{scoreBalance},
+            #{freezingScoreBalance},
+            #{orderCode},
+            #{shopId},
+            #{channelCode},
+            #{businessCode},
+            #{flowType},
+            #{remark},
+            #{exchangeCurrency},
+            <if test="operationTime != null ">
+                #{operationTime},
+            </if>
+            #{expirationTime},
+            now()
+        )
+    </insert>
     <select id="queryScoreChangeForShopAdmin" parameterType="org.trc.domain.dto.ScoreChangeRecordQueryDTO"
             resultType="org.trc.domain.score.ScoreChange">
         select * from score_change

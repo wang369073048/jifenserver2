@@ -1,5 +1,6 @@
 package org.trc.domain.score;
 
+import javax.persistence.Table;
 import java.io.Serializable;
 import java.util.Date;
 
@@ -9,7 +10,7 @@ import java.util.Date;
  * comments:
  * since Date： 2017/8/8
  */
-
+@Table(name = "score")
 public class Score implements Serializable {
 
     private static final long serialVersionUID = -4534921822828807204L;

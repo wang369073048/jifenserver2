@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.trc.mapper.score.IScoreMapper" >
+  <update id="updateScore" parameterType="org.trc.domain.score.Score">
+        update score
+        <set>
+            <if test="previousScore != null">
+                previousScore = #{previousScore},
+            </if>
+            <if test="score != null">
+                score = #{score},
+            </if>
+            <if test="previousFreezingScore != null">
+                previousFreezingScore = #{previousFreezingScore},
+            </if>
+            <if test="freezingScore != null">
+                freezingScore = #{freezingScore},
+            </if>
+            <if test="accumulativeScore != null">
+                accumulativeScore = #{accumulativeScore},
+            </if>
+            <if test="updateTime != null">
+                updateTime = #{updateTime},
+            </if>
+            version = version+1,
+        </set>
+        <where>
+            userId = #{userId} and version = #{version}
+        </where>
+    </update>
+</mapper>

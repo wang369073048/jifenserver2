@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.trc.mapper.score.IScoreChildMapper" >
+   <resultMap type="org.trc.domain.score.ScoreChild" id="ScoreChildMap">
+        <id column="id" property="id"/>
+        <result column="userId" property="userId"/>
+        <result column="scoreId" property="scoreId"/>
+        <result column="score" property="score"/>
+        <result column="freezingScore" property="freezingScore"/>
+        <result column="version" property="version"/>
+        <result column="expirationTime" property="expirationTime"/>
+        <result column="isDeleted" property="isDeleted"/>
+        <result column="createTime" property="createTime"/>
+        <result column="updateTime" property="updateTime"/>
+    </resultMap>
+    
+    <update id="updateScoreChild" parameterType="org.trc.domain.score.ScoreChild">
+        update score_child
+        <set>
+            <if test="score != null">
+                score = #{score},
+            </if>
+            <if test="freezingScore != null">
+                freezingScore = #{freezingScore},
+            </if>
+            <if test="updateTime != null">
+                updateTime = #{updateTime},
+            </if>
+            <if test="isDeleted != null">
+                isDeleted = #{isDeleted},
+            </if>
+            version = version+1,
+        </set>
+        <where>
+            userId = #{userId} and expirationTime = #{expirationTime} and version = #{version}
+        </where>
+    </update>
+    
+     <select id="queryScoreChildByUserId" parameterType="java.lang.String" resultMap="ScoreChildMap">
+        select * from score_child where userId = #{userId} and isDeleted = 0 and score > 0 and <![CDATA[ expirationTime > now()]]> order by expirationTime asc
+    </select>
+    
+    <select id="getLastScoreChildByUserId" parameterType="java.lang.String" resultMap="ScoreChildMap">
+        select * from score_child where userId = #{userId} and <![CDATA[ expirationTime > now()]]> and isDeleted = 0 order by expirationTime DESC limit 1
+    </select>
+</mapper>
