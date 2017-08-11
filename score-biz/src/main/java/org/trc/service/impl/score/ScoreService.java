@@ -23,4 +23,14 @@ public class ScoreService extends BaseService<Score,Long> implements IScoreServi
 	public int updateScore(Score score) {
 		return scoreMapper.updateScore(score);
 	}
+
+	@Override
+	public Score getScoreByUserId(String userId) {
+		return scoreMapper.getScoreByUserId(userId);
+	}
+
+	@Override
+	public int insertScore(Score score) {
+		return scoreMapper.insertScore(score);
+	}
 }

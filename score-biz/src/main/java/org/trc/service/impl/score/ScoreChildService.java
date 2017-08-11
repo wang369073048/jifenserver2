@@ -24,7 +24,7 @@ public class ScoreChildService extends BaseService<ScoreChild,Long> implements I
     private IScoreChildMapper scoreChildMapper;
     @Override
     public int insertScoreChild(ScoreChild scoreChild) {
-        return 0;
+        return scoreChildMapper.insertScoreChild(scoreChild);
     }
 
     @Override
@@ -44,7 +44,7 @@ public class ScoreChildService extends BaseService<ScoreChild,Long> implements I
 
     @Override
     public ScoreChild getScoreChildByUserIdAndExpirationTime(Map params) {
-        return null;
+        return scoreChildMapper.getScoreChildByUserIdAndExpirationTime(params);
     }
 
     @Override

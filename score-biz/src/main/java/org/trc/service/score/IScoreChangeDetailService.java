@@ -10,4 +10,6 @@ import org.trc.domain.score.ScoreChangeDetail;
  * since Date： 2017/8/10
  */
 public interface IScoreChangeDetailService extends IBaseService<ScoreChangeDetail,Long>{
+	
+	int insertScoreChangeDetail(ScoreChangeDetail scoreChangeDetail);
 }
