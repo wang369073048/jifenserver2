@@ -3,6 +3,8 @@ package org.trc.service.goods;
 import org.trc.IBaseService;
 import org.trc.domain.goods.CardItemDO;
 
+import java.util.List;
+
 /**
  * author: hzwzhen
  * JDK-version:  JDK1.8
@@ -16,4 +18,8 @@ public interface ICardItemService extends IBaseService<CardItemDO,Long>{
     CardItemDO selectByParams(CardItemDO cardItem);
 
     int deleteById(CardItemDO cardItem);
+
+    int batchInsert(List<CardItemDO> list);
+
+    List<CardItemDO> checkCardItem(List<CardItemDO> list);
 }

@@ -25,4 +25,9 @@ public class CouponsService extends BaseService<CardCouponsDO,Long> implements I
     public int deleteByBatchNumber(CardCouponsDO cardCouponsDO){
         return couponsMapper.deleteByBatchNumber(cardCouponsDO);
     }
+
+    @Override
+    public int updateStockById(CardCouponsDO cardCoupons) {
+        return couponsMapper.updateStockById(cardCoupons);
+    }
 }

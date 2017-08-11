@@ -11,4 +11,6 @@ import org.trc.util.BaseMapper;
  */
 public interface ICouponsMapper extends BaseMapper<CardCouponsDO> {
     int deleteByBatchNumber(CardCouponsDO cardCouponsDO);
+
+    int updateStockById(CardCouponsDO cardCoupons);
 }

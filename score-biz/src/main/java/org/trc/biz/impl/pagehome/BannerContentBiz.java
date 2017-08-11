@@ -124,15 +124,6 @@ public class BannerContentBiz implements IBannerContentBiz{
             criteria.andEqualTo("isDeleted",false);
             example.orderBy("createTime").desc();
             page = bannerContentService.pagination(example,page,queryModel);
-            List<BannerContent> list = page.getResult();
-
-            String [] strs = {"bannerContent/327221493935169.png"};
-            List<FileUrl> list1 = qinniuBiz.batchGetFileUrl(strs, "0");
-            System.out.println(JSON.toJSONString(list1));
-//            for (BannerContent bannerContent: list) {
-//                if("bannerContent/327221493935169.png".equalsIgnoreCase(bannerContent.getImgUrl())){
-//                }
-//            }
             return page;
         }catch(IllegalArgumentException e){
             logger.error("查询banner列表校验参数异常!", e);

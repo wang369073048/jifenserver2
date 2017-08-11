@@ -3,6 +3,8 @@ package org.trc.mapper.goods;
 import org.trc.domain.goods.CardItemDO;
 import org.trc.util.BaseMapper;
 
+import java.util.List;
+
 /**
  * author: hzwzhen
  * JDK-version:  JDK1.8
@@ -16,5 +18,9 @@ public interface ICardItemMapper extends BaseMapper<CardItemDO> {
     CardItemDO selectByParams(CardItemDO cardItem);
 
     int deleteById(CardItemDO cardItem);
+
+    int batchInsert(List<CardItemDO> list);
+
+    List<CardItemDO> checkCardItem(List<CardItemDO> list);
 }
 

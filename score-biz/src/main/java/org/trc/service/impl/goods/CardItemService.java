@@ -7,6 +7,8 @@ import org.trc.mapper.goods.ICardItemMapper;
 import org.trc.service.goods.ICardItemService;
 import org.trc.service.impl.BaseService;
 
+import java.util.List;
+
 /**
  * author: hzwzhen
  * JDK-version:  JDK1.8
@@ -31,5 +33,15 @@ public class CardItemService extends BaseService<CardItemDO,Long> implements ICa
     @Override
     public int deleteById(CardItemDO cardItem) {
         return cardItemMapper.deleteById(cardItem);
+    }
+
+    @Override
+    public int batchInsert(List<CardItemDO> list) {
+        return cardItemMapper.batchInsert(list);
+    }
+
+    @Override
+    public List<CardItemDO> checkCardItem(List<CardItemDO> list) {
+        return cardItemMapper.checkCardItem(list);
     }
 }
