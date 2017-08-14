@@ -23,7 +23,7 @@ public class LogisticsService extends BaseService<LogisticsDO,Long> implements I
     private ILogisticsMapper logisticsMapper;
     @Override
     public LogisticsDO selectByParams(LogisticsDO logisticsDO) {
-        return null;
+        return logisticsMapper.selectByParams(logisticsDO);
     }
 
     @Override

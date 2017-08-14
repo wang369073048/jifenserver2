@@ -6,6 +6,7 @@ import com.trc.mall.externalservice.LogisticTrace;
 import com.trc.mall.externalservice.TrcExpress100;
 import com.trc.mall.externalservice.dto.TrcExpressDto;
 import org.apache.commons.lang.StringUtils;
+import org.apache.poi.util.SystemOutLogger;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -407,6 +408,9 @@ public class NewOrderBiz implements INewOrderBiz {
                     LogisticsDO logistics = new LogisticsDO();
                     logistics.setOrderId(exportOrderDTO.getOrderId());
                     LogisticsDO logisticsDO = logisticsService.selectByParams(logistics);
+                    if(exportOrderDTO.getOrderId()==48){
+                    	System.out.println("---------");
+                    }
                     if(null != logisticsDO){
                         exportOrderDTO.setLogisticsNum(logisticsDO.getLogisticsNum());
                         exportOrderDTO.setCompanyName(logisticsService.getLogisticsCodeDOByCode(logisticsDO.getShipperCode()).getCompanyName());

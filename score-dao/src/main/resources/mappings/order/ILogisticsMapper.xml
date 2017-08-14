@@ -2,7 +2,33 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="org.trc.mapper.order.ILogisticsMapper" >
-
+    <!-- 所有查询字段 -->
+   	<sql id="allSelectionColumn">
+		id,
+        orderId,
+        companyName,
+        shipperCode,
+        logisticsNum,
+        freight,
+        operatorUserId,
+        operatorName,
+        createTime,
+        updateTime
+	</sql>
+	
+	<!-- 根据ID查询实体数据 -->
+    <select id="selectByParams" parameterType="org.trc.domain.order.LogisticsDO" resultType="org.trc.domain.order.LogisticsDO">
+        SELECT <include refid="allSelectionColumn"/>
+        FROM logistics
+        WHERE 1=1
+        <if test="id != null ">
+            and id = #{id}
+        </if>
+        <if test="orderId != null ">
+            and orderId = #{orderId}
+        </if>
+        LIMIT 1
+    </select>
     <select id="getLogisticsCodeDOByCode" parameterType="java.lang.String" resultType="org.trc.domain.order.LogisticsCodeDO">
         SELECT * FROM logistic_code where companyCode = #{code}
     </select>

@@ -12,6 +12,13 @@ import org.trc.util.BaseMapper;
  */
 public interface ILogisticsMapper extends BaseMapper<LogisticsDO>{
 
+	/**
+	 * 根据ID查询表数据
+	 * @param logisticsDO LogisticsDO
+	 * @return LogisticsDO
+	 */
+	LogisticsDO selectByParams(LogisticsDO logisticsDO);
+	
     LogisticsCodeDO getLogisticsCodeDOByCode(String code);
 
     /**
