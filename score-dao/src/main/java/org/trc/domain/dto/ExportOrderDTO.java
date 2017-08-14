@@ -42,7 +42,19 @@ public class ExportOrderDTO implements Serializable {
     private String area;
 
     private String address;
+    
+    private Integer orderState;
 
+    /**
+     * 物流公司名称
+     */
+    private String companyName;
+
+    /**
+     * 物流单号
+     */
+    private String logisticsNum;
+    
     private Integer price;
 
     private Integer payment;
@@ -166,8 +178,32 @@ public class ExportOrderDTO implements Serializable {
     public void setAddress(String address) {
         this.address = address;
     }
+    
+    public Integer getOrderState() {
+		return orderState;
+	}
 
-    public Integer getPrice() {
+	public void setOrderState(Integer orderState) {
+		this.orderState = orderState;
+	}
+
+	public String getCompanyName() {
+		return companyName;
+	}
+
+	public void setCompanyName(String companyName) {
+		this.companyName = companyName;
+	}
+
+	public String getLogisticsNum() {
+		return logisticsNum;
+	}
+
+	public void setLogisticsNum(String logisticsNum) {
+		this.logisticsNum = logisticsNum;
+	}
+
+	public Integer getPrice() {
         return price;
     }
 
@@ -209,6 +245,8 @@ public class ExportOrderDTO implements Serializable {
                 ", city='" + city + '\'' +
                 ", area='" + area + '\'' +
                 ", address='" + address + '\'' +
+                ", companyName='" + companyName + '\'' +
+                ", logisticsNum='" + logisticsNum + '\'' +
                 ", price=" + price +
                 ", payment=" + payment +
                 '}';

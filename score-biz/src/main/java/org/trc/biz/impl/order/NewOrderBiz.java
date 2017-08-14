@@ -403,6 +403,15 @@ public class NewOrderBiz implements INewOrderBiz {
                     }
                     exportOrderDTO.setAddress(orderAddressDO.getAddress());
                 }
+                if(exportOrderDTO.getOrderState()==2 || exportOrderDTO.getOrderState()==3){
+                    LogisticsDO logistics = new LogisticsDO();
+                    logistics.setOrderId(exportOrderDTO.getOrderId());
+                    LogisticsDO logisticsDO = logisticsService.selectByParams(logistics);
+                    if(null != logisticsDO){
+                        exportOrderDTO.setLogisticsNum(logisticsDO.getLogisticsNum());
+                        exportOrderDTO.setCompanyName(logisticsService.getLogisticsCodeDOByCode(logisticsDO.getShipperCode()).getCompanyName());
+                    }
+                }
             }
         }
         return result;

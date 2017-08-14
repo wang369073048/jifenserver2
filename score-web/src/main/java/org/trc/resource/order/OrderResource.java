@@ -268,6 +268,8 @@ public class OrderResource {
             CellDefinition city = new CellDefinition("city", "市", CellDefinition.TEXT, 4000);
             CellDefinition area = new CellDefinition("area", "区", CellDefinition.TEXT, 4000);
             CellDefinition address = new CellDefinition("address", "详细地址", CellDefinition.TEXT, 16000);
+            CellDefinition companyName = new CellDefinition("companyName", "物流公司", CellDefinition.TEXT, 4000);
+            CellDefinition logisticsNum = new CellDefinition("logisticsNum", "运单号", CellDefinition.TEXT, 4000);
             CellDefinition price = new CellDefinition("price", "商品单价", CellDefinition.NUM_0, 4000);
             CellDefinition payment = new CellDefinition("payment", "消费积分数量", CellDefinition.NUM_0, 4000);
             List<CellDefinition> cellDefinitionList = new ArrayList<>();
@@ -282,6 +284,8 @@ public class OrderResource {
             cellDefinitionList.add(city);
             cellDefinitionList.add(area);
             cellDefinitionList.add(address);
+            cellDefinitionList.add(companyName);
+            cellDefinitionList.add(logisticsNum);
             cellDefinitionList.add(price);
             cellDefinitionList.add(payment);
             String sheetName = "订单列表";
