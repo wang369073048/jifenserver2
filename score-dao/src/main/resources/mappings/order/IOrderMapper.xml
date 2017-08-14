@@ -101,7 +101,7 @@
         order by shopId asc, createTime desc
     </select>
 
-    <select id="queryOrderAndAddressForExport" parameterType="com.trc.mall.query.SettlementQuery" resultType="org.trc.domain.dto.ExportOrderDTO">
+    <select id="queryOrderAndAddressForExport" parameterType="org.trc.domain.query.SettlementQuery" resultType="org.trc.domain.dto.ExportOrderDTO">
         select id as orderId, createTime as orderDate, orderNum, barcode, goodsNo, goodsName, goodsCount, orderState, price, payment from orders
         <where>
             <if test="orderNum != null">
