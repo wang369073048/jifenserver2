@@ -335,6 +335,24 @@ public class OrderResource {
         jsonObject.put("deliveryTime", result.getDeliveryTime());
         jsonObject.put("confirmTime", result.getConfirmTime());
         jsonObject.put("updateTime", result.getUpdateTime());
+        if(result.getOrderAddressDO()!=null) {
+            jsonObject.put("provinceCode", result.getOrderAddressDO().getProvinceCode());
+            jsonObject.put("cityCode", result.getOrderAddressDO().getCityCode());
+            jsonObject.put("areaCode", result.getOrderAddressDO().getAreaCode());
+            jsonObject.put("address", result.getOrderAddressDO().getAddress());
+            jsonObject.put("province", result.getOrderAddressDO().getProvince());
+            jsonObject.put("city", result.getOrderAddressDO().getCity());
+            jsonObject.put("area", result.getOrderAddressDO().getArea());
+            jsonObject.put("receiverName", result.getOrderAddressDO().getReceiverName());
+            jsonObject.put("receiverPhone", result.getOrderAddressDO().getPhone());
+            jsonObject.put("postcode", result.getOrderAddressDO().getPostcode());
+        }
+        if(result.getLogisticsDO()!=null){
+            jsonObject.put("companyName", result.getLogisticsDO().getCompanyName());
+            jsonObject.put("shipperCode", result.getLogisticsDO().getShipperCode());
+            jsonObject.put("logisticsNum", result.getLogisticsDO().getLogisticsNum());
+            jsonObject.put("freight", result.getLogisticsDO().getFreight());
+        }
         handleJson(order,jsonObject);
         return createSucssAppResult("订单发货成功", jsonObject);
     }
