@@ -154,8 +154,29 @@ public class WinningRecordBiz implements IWinningRecordBiz{
             result.setRemark(ordersExtend.getRemark());
         }
         if(null != order) {
-            result.setOrderAddress(order.getOrderAddressDO());
-            result.setLogisticsDO(order.getLogisticsDO());
+//            result.setOrderAddress(order.getOrderAddressDO());
+//            result.setLogisticsDO(order.getLogisticsDO());
+
+            if(order.getOrderAddressDO() != null) {
+                result.setProvinceCode(order.getOrderAddressDO().getProvinceCode());
+                result.setCityCode(order.getOrderAddressDO().getCityCode());
+                result.setAreaCode(order.getOrderAddressDO().getAreaCode());
+                result.setAddress(order.getOrderAddressDO().getAddress());
+                result.setProvince(order.getOrderAddressDO().getProvince());
+                result.setCity(order.getOrderAddressDO().getCity());
+                result.setArea(order.getOrderAddressDO().getArea());
+                result.setReceiverName(order.getOrderAddressDO().getReceiverName());
+                result.setReceiverPhone(order.getOrderAddressDO().getPhone());
+                result.setPostcode(order.getOrderAddressDO().getPostcode());
+            }
+            if(order.getLogisticsDO() != null){
+                result.setCompanyName(order.getLogisticsDO().getCompanyName());
+                result.setShipperCode(order.getLogisticsDO().getShipperCode());
+                result.setLogisticsNum(order.getLogisticsDO().getLogisticsNum());
+                result.setFreight(order.getLogisticsDO().getFreight());
+            }
+
+
         }
 
         return result;

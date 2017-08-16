@@ -217,6 +217,10 @@ public class CouponsBiz implements ICouponsBiz{
         cardItem.setBatchNumber(batchNumber);
         cardItem.setCode(code);
         cardItem.setShopId(shopId);
+        cardItem = cardItemService.selectByParams(cardItem);
+        if(cardItem == null) {
+            throw new CardCouponException(ExceptionEnum.COUPON_QUERY_EXCEPTION,code + "对应的卡券不存在");
+        }
         return cardItemService.selectByParams(cardItem);
     }
 
