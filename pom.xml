@@ -46,6 +46,7 @@
         <jersey-container-grizzly2-http.version>2.23.2</jersey-container-grizzly2-http.version>
         <!--jersey-container-servlet-->
         <jersey-container-servlet.version>2.25.1</jersey-container-servlet.version>
+        <jersey-bean-validation.version>2.22.2</jersey-bean-validation.version>
         <jersey-container-servlet-core.version>2.25.1</jersey-container-servlet-core.version>
         <jersey-media-json-jackson.version>2.25</jersey-media-json-jackson.version>
         <jersey-entity-filtering.version>2.23.2</jersey-entity-filtering.version>
