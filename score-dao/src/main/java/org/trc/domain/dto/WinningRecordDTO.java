@@ -111,15 +111,22 @@ public class WinningRecordDTO extends DateQuery implements Serializable{
 
     private String phone;
 
-    private String province;
-
-    private String city;
-
-    private String area;
-
-    private String address;
-
     private String remark;
+
+    private String provinceCode;
+    private String cityCode;
+    private String areaCode;
+    private String address;
+    private String province;
+    private String city;
+    private String area;
+    private String receiverName;
+    private String receiverPhone;
+    private String postcode;
+    private String companyName;
+    private String shipperCode;
+    private String logisticsNum;
+    private Integer freight;
 
     /**
      * 收货地址,实物奖品可能用到
@@ -400,6 +407,86 @@ public class WinningRecordDTO extends DateQuery implements Serializable{
 
     public void setLogisticsDO(LogisticsDO logisticsDO) {
         this.logisticsDO = logisticsDO;
+    }
+
+    public String getProvinceCode() {
+        return provinceCode;
+    }
+
+    public void setProvinceCode(String provinceCode) {
+        this.provinceCode = provinceCode;
+    }
+
+    public String getCityCode() {
+        return cityCode;
+    }
+
+    public void setCityCode(String cityCode) {
+        this.cityCode = cityCode;
+    }
+
+    public String getAreaCode() {
+        return areaCode;
+    }
+
+    public void setAreaCode(String areaCode) {
+        this.areaCode = areaCode;
+    }
+
+    public String getReceiverName() {
+        return receiverName;
+    }
+
+    public void setReceiverName(String receiverName) {
+        this.receiverName = receiverName;
+    }
+
+    public String getReceiverPhone() {
+        return receiverPhone;
+    }
+
+    public void setReceiverPhone(String receiverPhone) {
+        this.receiverPhone = receiverPhone;
+    }
+
+    public String getPostcode() {
+        return postcode;
+    }
+
+    public void setPostcode(String postcode) {
+        this.postcode = postcode;
+    }
+
+    public String getCompanyName() {
+        return companyName;
+    }
+
+    public void setCompanyName(String companyName) {
+        this.companyName = companyName;
+    }
+
+    public String getShipperCode() {
+        return shipperCode;
+    }
+
+    public void setShipperCode(String shipperCode) {
+        this.shipperCode = shipperCode;
+    }
+
+    public String getLogisticsNum() {
+        return logisticsNum;
+    }
+
+    public void setLogisticsNum(String logisticsNum) {
+        this.logisticsNum = logisticsNum;
+    }
+
+    public Integer getFreight() {
+        return freight;
+    }
+
+    public void setFreight(Integer freight) {
+        this.freight = freight;
     }
 
     @Override
