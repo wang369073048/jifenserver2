@@ -93,7 +93,9 @@ public class GoodsBiz implements IGoodsBiz{
         } catch (IllegalArgumentException e) {
             logger.error("新增GoodsDO校验参数异常!",e);
             throw new GoodsException(ExceptionEnum.PARAM_CHECK_EXCEPTION,e.getMessage());
-        } catch (GoodsException e) {
+        } catch (CardCouponException e) {
+            throw e;
+        }catch (GoodsException e) {
             throw e;
         } catch (DuplicateKeyException e){
             logger.error("新增GoodsDO校验索引异常!",e);
