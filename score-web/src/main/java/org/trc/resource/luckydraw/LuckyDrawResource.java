@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.txframework.util.DateUtils;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.hibernate.validator.constraints.NotBlank;
 import org.hibernate.validator.constraints.NotEmpty;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -108,7 +109,7 @@ public class LuckyDrawResource {
     }
 
     @POST
-    public AppResult add(@NotEmpty @FormParam("platform") String platform, @NotEmpty @FormParam("activityName") String activityName,
+    public AppResult add(@NotBlank(message = "platform不能为空") @FormParam("platform") String platform, @NotEmpty @FormParam("activityName") String activityName,
                          @NotNull @FormParam("startTime") Long startTime, @NotNull @FormParam("endTime") Long endTime,
                          @FormParam("freeLotteryTimes") Integer freeLotteryTimes, @FormParam("freeDrawType") String freeDrawType,
                          @FormParam("expenditure") Integer expenditure, @FormParam("dailyDrawLimit") Integer dailyDrawLimit,
