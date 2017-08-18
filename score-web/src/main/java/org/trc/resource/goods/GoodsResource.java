@@ -142,7 +142,8 @@ public class GoodsResource {
         goodsDO.setShopId(shopId);
         goodsDO.setCategory(category);
         goodsDO.setGoodsNo(goodsNo);
-        if (1l == category) {
+        CategoryDO category1 = categoryBiz.getCategoryDOById(category);
+        if (1 == category1.getIsVirtual().intValue()) {
             goodsDO.setBatchNumber(batchNumber);
             goodsDO.setTargetUrl(targetUrl);
             if (null != validStartTime) {

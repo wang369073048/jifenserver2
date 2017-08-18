@@ -84,8 +84,9 @@ public enum ExceptionEnum {
 
     COUPON_QUERY_EXCEPTION("840100","卡券查询异常"),
     COUPON_SAVE_EXCEPTION("840101","卡券保存异常"),
-    COUPON_DELETE_EXCEPTION("840101","卡券删除异常"),
-    COUPON_UPDATE_EXCEPTION("840102","卡券更新异常"),
+    COUPON_CODE_IMPORT_EXCEPTION("840102","券码导入EXCEL异常"),
+    COUPON_DELETE_EXCEPTION("840103","卡券删除异常"),
+    COUPON_UPDATE_EXCEPTION("840104","卡券更新异常"),
 
     CATEGORY_QUERY_EXCEPTION("850100","bannerContent查询异常"),
     CATEGORY_SAVE_EXCEPTION("850101","bannerContent保存异常"),
