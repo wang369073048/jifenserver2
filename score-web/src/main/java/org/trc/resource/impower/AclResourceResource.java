@@ -72,7 +72,7 @@ public class AclResourceResource {
     @GET
     @Path(ScoreAdminConstants.Route.Jurisdiction.JURISDICTION_TREE)
     @Produces(MediaType.APPLICATION_JSON)
-    public AppResult<JSONArray> jurisdictionTree(@NotBlank@QueryParam("parentId") Long parentId, @QueryParam("isRecursive") boolean isRecursive){
+    public AppResult<JSONArray> jurisdictionTree(@QueryParam("parentId") Long parentId, @QueryParam("isRecursive") boolean isRecursive){
         return ResultUtil.createSucssAppResult("查询权限资源成功", jurisdictionBiz.getNodes(parentId, isRecursive));
     }
 
