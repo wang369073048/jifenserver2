@@ -130,7 +130,7 @@ public class AclRoleBiz extends CommonBiz implements IAclRoleBiz {
         }
         example.orderBy("updateTime").desc();
         Pagenation<AclRole> pagination = roleService.pagination(example,page,form);
-        handleUserName(userAccreditInfoService,pagination.getResult());
+        handleUserName(userAccreditInfoService,pagination.getInfos());
         return pagination;
     }
 

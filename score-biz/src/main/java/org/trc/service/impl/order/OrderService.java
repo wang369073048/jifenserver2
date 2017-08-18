@@ -35,19 +35,19 @@ public class OrderService extends BaseService<OrdersDO,Long> implements IOrderSe
 
     @Override
     public Pagenation<OrdersDO> selectListByParams(OrderDTO ordersDO, Pagenation<OrdersDO> pagenation) {
-        Page page = PageHelper.startPage(pagenation.getPageNo(), pagenation.getPageSize());
+        Page page = PageHelper.startPage(pagenation.getPageIndex(), pagenation.getPageSize());
         List<OrdersDO> list = orderMapper.selectListByParams(ordersDO);
-        pagenation.setTotalCount(page.getTotal());
-        pagenation.setResult(list);
+        pagenation.setTotalData(page.getTotal());
+        pagenation.setInfos(list);
         return pagenation;
     }
 
     @Override
     public Pagenation<OrdersDO> selectOrdersByParams(SettlementQuery settlementQuery, Pagenation<OrdersDO> pagenation) {
-        Page page = PageHelper.startPage(pagenation.getPageNo(), pagenation.getPageSize());
+        Page page = PageHelper.startPage(pagenation.getPageIndex(), pagenation.getPageSize());
         List<OrdersDO> list = orderMapper.selectOrdersByParams(settlementQuery);
-        pagenation.setTotalCount(page.getTotal());
-        pagenation.setResult(list);
+        pagenation.setTotalData(page.getTotal());
+        pagenation.setInfos(list);
         return pagenation;
     }
 

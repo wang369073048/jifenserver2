@@ -30,10 +30,10 @@ public class CategoryService extends BaseService<CategoryDO,Long> implements ICa
 
     @Override
     public Pagenation<CategoryDO> selectListByParams(CategoryDO categoryDO, Pagenation<CategoryDO> pagenation) {
-        Page page = PageHelper.startPage(pagenation.getPageNo(), pagenation.getPageSize());
+        Page page = PageHelper.startPage(pagenation.getPageIndex(), pagenation.getPageSize());
         List<CategoryDO> list = catetoryMapper.selectListByParams(categoryDO);
-        pagenation.setTotalCount(page.getTotal());
-        pagenation.setResult(list);
+        pagenation.setTotalData(page.getTotal());
+        pagenation.setInfos(list);
         return pagenation;
     }
 

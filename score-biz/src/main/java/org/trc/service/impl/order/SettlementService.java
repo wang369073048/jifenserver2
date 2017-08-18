@@ -26,10 +26,10 @@ public class SettlementService extends BaseService<SettlementDO,Long> implements
 
     @Override
     public Pagenation<SettlementDO> selectListByParams(SettlementDO settlementDO, Pagenation<SettlementDO> pagenation) {
-        Page page = PageHelper.startPage(pagenation.getPageNo(), pagenation.getPageSize());
+        Page page = PageHelper.startPage(pagenation.getPageIndex(), pagenation.getPageSize());
         List<SettlementDO> list = settlementMapper.selectListByParams(settlementDO);
-        pagenation.setTotalCount(page.getTotal());
-        pagenation.setResult(list);
+        pagenation.setTotalData(page.getTotal());
+        pagenation.setInfos(list);
         return pagenation;
     }
 }

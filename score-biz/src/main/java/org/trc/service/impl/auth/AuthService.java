@@ -32,10 +32,10 @@ public class AuthService extends BaseService<Auth,Long> implements IAuthService{
     private IAuthMapper authMapper;
     @Override
     public Pagenation<Auth> queryAuthListByCondition(AuthQueryDTO query, Pagenation<Auth> pagenation) {
-        Page page = PageHelper.startPage(pagenation.getPageNo(), pagenation.getPageSize());
+        Page page = PageHelper.startPage(pagenation.getPageIndex(), pagenation.getPageSize());
         List<Auth> list = authMapper.queryAuthListByCondition(query);
-        pagenation.setTotalCount(page.getTotal());
-        pagenation.setResult(list);
+        pagenation.setTotalData(page.getTotal());
+        pagenation.setInfos(list);
         return pagenation;
     }
     

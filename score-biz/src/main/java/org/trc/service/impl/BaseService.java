@@ -31,10 +31,10 @@ public class BaseService<T,PK> implements IBaseService<T,PK> {
             }
         }
         int totalCount = mapper.selectCountByExample(example);
-        PageHelper.startPage(pagenation.getPageNo(), pagenation.getPageSize());
+        PageHelper.startPage(pagenation.getPageIndex(), pagenation.getPageSize());
         List<T> list = mapper.selectByExample(example);
-        pagenation.setTotalCount(totalCount);
-        pagenation.setResult(list);
+        pagenation.setTotalData(totalCount);
+        pagenation.setInfos(list);
         return pagenation;
     }
 

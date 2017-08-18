@@ -6,7 +6,6 @@ import com.trc.mall.externalservice.LogisticTrace;
 import com.trc.mall.externalservice.TrcExpress100;
 import com.trc.mall.externalservice.dto.TrcExpressDto;
 import org.apache.commons.lang.StringUtils;
-import org.apache.poi.util.SystemOutLogger;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -123,8 +122,8 @@ public class NewOrderBiz implements INewOrderBiz {
             Assert.notNull(page, "分页参数不能为空");
             Assert.notNull(ordersDO, "传入参数不能为空");
             page = orderService.selectListByParams(ordersDO, page);
-            if (page != null && page.getResult() != null) {
-                for (OrdersDO item : page.getResult()) {
+            if (page != null && page.getInfos() != null) {
+                for (OrdersDO item : page.getInfos()) {
                     ShopDO shop = shopService.selectById(item.getShopId());
                     item.setShopName(shop.getShopName());
                     OrderAddressDO orderAddressDO = this.getOrderAddressByOrderId(item.getId());

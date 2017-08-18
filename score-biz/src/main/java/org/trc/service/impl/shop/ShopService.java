@@ -31,10 +31,10 @@ public class ShopService extends BaseService<ShopDO,Long> implements IShopServic
 
     @Override
     public Pagenation<ShopDO> selectListByPage(ShopDO query, Pagenation<ShopDO> pagenation) {
-        Page page = PageHelper.startPage(pagenation.getPageNo(), pagenation.getPageSize());
+        Page page = PageHelper.startPage(pagenation.getPageIndex(), pagenation.getPageSize());
         List<ShopDO> list = shopMapper.select(query);
-        pagenation.setTotalCount(page.getTotal());
-        pagenation.setResult(list);
+        pagenation.setTotalData(page.getTotal());
+        pagenation.setInfos(list);
         return pagenation;
     }
 

@@ -38,12 +38,12 @@ public class ActivityPrizesBiz implements IActivityPrizesBiz{
 
     @Override
     public Pagenation<ActivityPrizesDO> queryActivityPrizes(ActivityPrizesDO param, Pagenation<ActivityPrizesDO> pageRequest) {
-        if(pageRequest.getPageNo() == 1){
+        if(pageRequest.getPageSize() == 1){
             List<ActivityPrizesDO> activityPrizes = ActivityPrizesDO.getDefaultActivityPrizes();
             pageRequest = goodsService.queryActivityPrizes(param, pageRequest);
-            List<ActivityPrizesDO> dataList = pageRequest.getResult();
+            List<ActivityPrizesDO> dataList = pageRequest.getInfos();
             activityPrizes.addAll(dataList);
-            pageRequest.setResult(activityPrizes);
+            pageRequest.setInfos(activityPrizes);
             return pageRequest;
         }else {
             return goodsService.queryActivityPrizes(param, pageRequest);

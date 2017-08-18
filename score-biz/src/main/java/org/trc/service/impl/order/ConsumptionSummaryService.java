@@ -80,10 +80,10 @@ public class ConsumptionSummaryService extends BaseService<ConsumptionSummaryDO,
 
     @Override
     public Pagenation<ConsumptionSummaryDO> queryMonthConsumptionSummary(SettlementQuery settlementQuery, Pagenation<ConsumptionSummaryDO> pagenation) {
-        Page page = PageHelper.startPage(pagenation.getPageNo(), pagenation.getPageSize());
+        Page page = PageHelper.startPage(pagenation.getPageIndex(), pagenation.getPageSize());
         List<ConsumptionSummaryDO> list = consumptionSummaryMapper.queryMonthConsumptionSummary(settlementQuery);
-        pagenation.setTotalCount(page.getTotal());
-        pagenation.setResult(list);
+        pagenation.setTotalData(page.getTotal());
+        pagenation.setInfos(list);
         return pagenation;
     }
 

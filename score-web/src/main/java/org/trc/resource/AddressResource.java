@@ -71,7 +71,7 @@ public class AddressResource {
     @Path("addressList")
     @Produces(MediaType.APPLICATION_JSON)
     public Pagenation<Address> brandPage(@BeanParam AddressForm form, @BeanParam Pagenation<Address> page) throws Exception {
-        page.setPageNo(1);
+        page.setPageSize(1);
         page.setPageSize(10);
         return addressBiz.addressPage(form,page);
     }

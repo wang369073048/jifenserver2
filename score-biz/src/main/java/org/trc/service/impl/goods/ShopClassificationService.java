@@ -26,10 +26,10 @@ public class ShopClassificationService extends BaseService<ShopClassificationDO,
     private IShopClassificationMapper shopClassificationMapper;
     @Override
     public Pagenation<ShopClassificationDO> queryEntityByPage(ShopClassificationDO param, Pagenation<ShopClassificationDO> pagenation) {
-        Page page = PageHelper.startPage(pagenation.getPageNo(), pagenation.getPageSize());
+        Page page = PageHelper.startPage(pagenation.getPageIndex(), pagenation.getPageSize());
         List<ShopClassificationDO> list = shopClassificationMapper.queryEntity(param);
-        pagenation.setTotalCount(page.getTotal());
-        pagenation.setResult(list);
+        pagenation.setTotalData(page.getTotal());
+        pagenation.setInfos(list);
         return pagenation;
     }
 

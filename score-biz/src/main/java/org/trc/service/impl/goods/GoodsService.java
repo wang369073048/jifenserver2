@@ -42,19 +42,19 @@ public class GoodsService extends BaseService<GoodsDO,Long> implements IGoodsSer
     @Override
     public Pagenation<GoodsDO> selectListByParams(GoodsDO goodsDO, Pagenation<GoodsDO> pagenation) {
         //int totalCount = goodsMapper.selectCount(goodsDO);
-        Page page = PageHelper.startPage(pagenation.getPageNo(), pagenation.getPageSize());
+        Page page = PageHelper.startPage(pagenation.getPageIndex(), pagenation.getPageSize());
         List<GoodsDO> list = goodsMapper.selectListByParams(goodsDO);
-        pagenation.setTotalCount(page.getTotal());
-        pagenation.setResult(list);
+        pagenation.setTotalData(page.getTotal());
+        pagenation.setInfos(list);
         return pagenation;
     }
 
     @Override
     public Pagenation<GoodsDO> queryGoodsDOListExceptRecommendForPage(GoodsDO query, Pagenation<GoodsDO> pagenation) {
-        Page page = PageHelper.startPage(pagenation.getPageNo(), pagenation.getPageSize());
+        Page page = PageHelper.startPage(pagenation.getPageIndex(), pagenation.getPageSize());
         List<GoodsDO> list = goodsMapper.selectListExceptRecommendByPage(query);
-        pagenation.setTotalCount(page.getTotal());
-        pagenation.setResult(list);
+        pagenation.setTotalData(page.getTotal());
+        pagenation.setInfos(list);
         return pagenation;
     }
 
@@ -65,10 +65,10 @@ public class GoodsService extends BaseService<GoodsDO,Long> implements IGoodsSer
 
     @Override
     public Pagenation<GoodsDO> selectListByClassification(GoodsQuery goodsQuery, Pagenation<GoodsDO> pagenation) {
-        Page page = PageHelper.startPage(pagenation.getPageNo(), pagenation.getPageSize());
+        Page page = PageHelper.startPage(pagenation.getPageIndex(), pagenation.getPageSize());
         List<GoodsDO> list = goodsMapper.selectListByClassification(goodsQuery);
-        pagenation.setTotalCount(page.getTotal());
-        pagenation.setResult(list);
+        pagenation.setTotalData(page.getTotal());
+        pagenation.setInfos(list);
         return pagenation;
     }
 
@@ -79,10 +79,10 @@ public class GoodsService extends BaseService<GoodsDO,Long> implements IGoodsSer
 
     @Override
     public Pagenation<ActivityPrizesDO> queryActivityPrizes(ActivityPrizesDO paramG, Pagenation<ActivityPrizesDO> pagenation) {
-        Page page = PageHelper.startPage(pagenation.getPageNo(), pagenation.getPageSize());
+        Page page = PageHelper.startPage(pagenation.getPageIndex(), pagenation.getPageSize());
         List<ActivityPrizesDO> list = goodsMapper.queryActivityPrizes(paramG);
-        pagenation.setTotalCount(page.getTotal());
-        pagenation.setResult(list);
+        pagenation.setTotalData(page.getTotal());
+        pagenation.setInfos(list);
         return pagenation;
     }
 }

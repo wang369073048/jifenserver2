@@ -73,7 +73,7 @@ public class FlowAdminResource {
                 queryDto.setOperateTimeMax(new Date(endTime));
             }
             Pagenation<ScoreChange> scoreChangePage = scoreChangeRecordBiz.queryScoreChangeForPlatAdmin(queryDto, page);
-            List<ScoreChange> scoreChanges = scoreChangePage.getResult();
+            List<ScoreChange> scoreChanges = scoreChangePage.getInfos();
             if (ListUtils.isNotEmpty(scoreChanges)) {
                 for(int i = 0; i < scoreChanges.size(); i++){
                     ScoreChange scoreChange = scoreChanges.get(i);
