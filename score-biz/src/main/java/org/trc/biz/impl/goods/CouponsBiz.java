@@ -168,7 +168,7 @@ public class CouponsBiz implements ICouponsBiz{
     	List<CardItemDO> duplicateCardItem = cardItemService.checkCardItem(cardItemList);
         StringBuilder duplicateCode = new StringBuilder("");
         for(CardItemDO cardItem : duplicateCardItem){
-            duplicateCode.append(cardItem.getCode()).append("     ");
+            duplicateCode.append(cardItem.getCode()).append("       ");
         }
         throw new CardCouponException(ExceptionEnum.COUPON_CODE_IMPORT_EXCEPTION, "批量导入卡券失败!券码重复:"+duplicateCode.toString());
     }
