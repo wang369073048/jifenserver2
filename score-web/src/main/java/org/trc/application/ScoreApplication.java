@@ -16,7 +16,8 @@ public class ScoreApplication extends ResourceConfig{
         register(JacksonJsonProvider.class);
         register(MultiPartFeature.class);
         packages("org.trc.resource");
-        //property(ServerProperties.BV_SEND_ERROR_IN_RESPONSE, true);
-        //property(ServerProperties.BV_DISABLE_VALIDATE_ON_EXECUTABLE_OVERRIDE_CHECK, true);
+        packages("org.trc.filter");
+        property(ServerProperties.BV_SEND_ERROR_IN_RESPONSE, true);
+        property(ServerProperties.BV_DISABLE_VALIDATE_ON_EXECUTABLE_OVERRIDE_CHECK, true);
     }
 }
