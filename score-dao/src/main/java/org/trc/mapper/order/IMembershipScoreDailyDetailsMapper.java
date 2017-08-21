@@ -14,7 +14,7 @@ import java.util.Map;
  * comments:
  * since Date： 2017/7/25
  */
-public interface IMembershipDcoreDailyDetailsMapper extends BaseMapper<MembershipScoreDailyDetailsDO> {
+public interface IMembershipScoreDailyDetailsMapper extends BaseMapper<MembershipScoreDailyDetailsDO> {
 
     List<MembershipScoreDailyDetailsDO> selectListByParams(SettlementQuery SettlementQuery);
 
