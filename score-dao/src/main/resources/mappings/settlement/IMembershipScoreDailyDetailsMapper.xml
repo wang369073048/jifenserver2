@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="org.trc.mapper.order.IMembershipDcoreDailyDetailsMapper">
+<mapper namespace="org.trc.mapper.settlement.IMembershipScoreDailyDetailsMapper">
     <select id="selectListByParams" parameterType="org.trc.domain.query.SettlementQuery" resultType="org.trc.domain.order.MembershipScoreDailyDetailsDO">
         select * from membership_score_daily_details
         <where>

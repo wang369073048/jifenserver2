@@ -1,4 +1,4 @@
-package org.trc.resource.admin;
+package org.trc.resource.settlement;
 
 import com.tairanchina.md.account.user.model.UserDO;
 import com.tairanchina.md.account.user.service.UserService;
@@ -11,7 +11,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.trc.biz.order.INewOrderBiz;
-import org.trc.biz.order.ISettlementBiz;
+import org.trc.biz.settlement.ISettlementBiz;
 import org.trc.constants.ScoreAdminConstants;
 import org.trc.constants.TemporaryContext;
 import org.trc.domain.dto.ExportOrderDTO;

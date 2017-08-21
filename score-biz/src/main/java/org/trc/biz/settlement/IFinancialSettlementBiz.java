@@ -1,4 +1,4 @@
-package org.trc.biz.order;
+package org.trc.biz.settlement;
 
 import org.trc.domain.query.SettlementQuery;
 import org.trc.domain.order.ConsumptionSummaryDO;

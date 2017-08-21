@@ -17,7 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.trc.biz.auth.IAuthBiz;
 import org.trc.biz.order.INewOrderBiz;
-import org.trc.biz.order.ISettlementBiz;
+import org.trc.biz.settlement.ISettlementBiz;
 import org.trc.biz.shop.IShopBiz;
 import org.trc.constants.ScoreAdminConstants;
 import org.trc.domain.auth.Auth;

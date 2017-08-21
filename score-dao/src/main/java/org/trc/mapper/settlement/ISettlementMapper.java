@@ -1,4 +1,4 @@
-package org.trc.mapper.order;
+package org.trc.mapper.settlement;
 
 import org.trc.domain.order.SettlementDO;
 import org.trc.util.BaseMapper;

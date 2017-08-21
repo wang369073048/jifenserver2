@@ -1,4 +1,4 @@
-package org.trc.mapper.order;
+package org.trc.mapper.settlement;
 
 import org.trc.domain.dto.ConsumptionSummaryStatisticalDataDTO;
 import org.trc.domain.dto.SettlementIntervalDTO;

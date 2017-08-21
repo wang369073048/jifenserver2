@@ -1,9 +1,10 @@
-package org.trc.mapper.order;
+package org.trc.service.settlement;
 
+import org.trc.IBaseService;
 import org.trc.domain.dto.SettlementIntervalDTO;
 import org.trc.domain.query.SettlementQuery;
 import org.trc.domain.order.MembershipScoreDailyDetailsDO;
-import org.trc.util.BaseMapper;
+import org.trc.util.Pagenation;
 
 import java.util.List;
 import java.util.Map;
@@ -14,9 +15,7 @@ import java.util.Map;
  * comments:
  * since Date： 2017/7/25
  */
-public interface IMembershipScoreDailyDetailsMapper extends BaseMapper<MembershipScoreDailyDetailsDO> {
-
-    List<MembershipScoreDailyDetailsDO> selectListByParams(SettlementQuery SettlementQuery);
+public interface IMembershipScoreDailyDetailsService extends IBaseService<MembershipScoreDailyDetailsDO,Long> {
 
     MembershipScoreDailyDetailsDO getLastMembershipDcoreDailyDetails(String userId);
 
@@ -26,7 +25,8 @@ public interface IMembershipScoreDailyDetailsMapper extends BaseMapper<Membershi
 
     MembershipScoreDailyDetailsDO generateMembershipDcoreDailyDetailsForConsume(Map timeInterval);
 
+    Pagenation<MembershipScoreDailyDetailsDO> selectListByParams(SettlementQuery SettlementQuery, Pagenation<MembershipScoreDailyDetailsDO> pageRequest );
+
     List<MembershipScoreDailyDetailsDO> queryMembershipScoreDailyDetailForExport(SettlementQuery settlementQuery);
 
-    SettlementIntervalDTO getSettlementIntervalForMembershipScoreDailyDetail(SettlementQuery settlementQuery);
-}
+    SettlementIntervalDTO getSettlementIntervalForMembershipScoreDailyDetail(SettlementQuery settlementQuery);}
