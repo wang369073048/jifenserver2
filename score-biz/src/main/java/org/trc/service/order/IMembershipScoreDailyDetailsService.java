@@ -15,7 +15,7 @@ import java.util.Map;
  * comments:
  * since Date： 2017/7/25
  */
-public interface IMembershipDcoreDailyDetailsService extends IBaseService<MembershipScoreDailyDetailsDO,Long> {
+public interface IMembershipScoreDailyDetailsService extends IBaseService<MembershipScoreDailyDetailsDO,Long> {
 
     MembershipScoreDailyDetailsDO getLastMembershipDcoreDailyDetails(String userId);
 

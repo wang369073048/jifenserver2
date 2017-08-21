@@ -10,6 +10,7 @@ import org.springframework.dao.QueryTimeoutException;
 import org.trc.enums.CommonExceptionEnum;
 import org.trc.enums.ExceptionEnum;
 import org.trc.exception.BannerException;
+import org.trc.exception.CardCouponException;
 import org.trc.exception.ConfigException;
 import org.trc.exception.FileException;
 import org.trc.exception.ParamValidException;
@@ -59,6 +60,9 @@ public class ExceptionUtil {
 			}else if (StringUtils.equals(exceptionName, BannerException.class.getSimpleName())) {
 				BannerException bannerException = (BannerException)e;
 				exceptionEnum = bannerException.getExceptionEnum();
+			}else if (StringUtils.equals(exceptionName, CardCouponException.class.getSimpleName())) {
+				CardCouponException cardCouponException = (CardCouponException)e;
+				exceptionEnum = cardCouponException.getExceptionEnum();
 			}else{
 				exceptionEnum = ExceptionEnum.SYSTEM_EXCEPTION;
 			}
