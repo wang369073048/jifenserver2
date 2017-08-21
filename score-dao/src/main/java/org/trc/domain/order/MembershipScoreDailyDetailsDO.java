@@ -3,21 +3,40 @@ package org.trc.domain.order;
 import java.io.Serializable;
 import java.util.Date;
 
+import javax.persistence.Column;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Table;
+
+@Table(name = "membership_score_daily_details")
 public class MembershipScoreDailyDetailsDO implements Serializable {
 
+
+	/**
+	 * 主键ID
+	 */
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long    id;
+	
+	@Column(name = "userId")
+    private String userId;
+	
+	@Column(name = "accountDay")
+    private String accountDay;
 
-    private String  userId;
+	@Column(name = "exchangeInNum")
+    private Long exchangeInNum;
 
-    private String  accountDay;
+	@Column(name = "consumeNum")
+    private Long consumeNum;
 
-    private Long    exchangeInNum;
+	@Column(name = "balance")
+    private Long  balance;
 
-    private Long    consumeNum;
-
-    private Long    balance;
-
-    private Date    createTime;
+	@Column(name = "createTime")
+    private Date createTime;
 
     public Long getId() {
         return id;

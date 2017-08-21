@@ -1,4 +1,4 @@
-package org.trc.service.impl.order;
+package org.trc.service.impl.settlement;
 
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
@@ -7,10 +7,10 @@ import org.springframework.stereotype.Service;
 import org.trc.domain.dto.ConsumptionSummaryStatisticalDataDTO;
 import org.trc.domain.dto.SettlementIntervalDTO;
 import org.trc.domain.query.SettlementQuery;
+import org.trc.mapper.settlement.IConsumptionSummaryMapper;
 import org.trc.domain.order.ConsumptionSummaryDO;
-import org.trc.mapper.order.IConsumptionSummaryMapper;
 import org.trc.service.impl.BaseService;
-import org.trc.service.order.IConsumptionSummaryService;
+import org.trc.service.settlement.IConsumptionSummaryService;
 import org.trc.util.Pagenation;
 
 import java.util.Date;

@@ -1,4 +1,4 @@
-package org.trc.resource.admin;
+package org.trc.resource.settlement;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
@@ -10,7 +10,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import org.trc.biz.order.IFinancialSettlementBiz;
+import org.trc.biz.settlement.IFinancialSettlementBiz;
 import org.trc.constants.ScoreAdminConstants;
 import org.trc.domain.dto.ConsumptionSummaryStatisticalDataDTO;
 import org.trc.domain.dto.SettlementIntervalDTO;

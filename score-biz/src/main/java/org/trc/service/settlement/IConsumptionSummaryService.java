@@ -1,4 +1,4 @@
-package org.trc.service.order;
+package org.trc.service.settlement;
 
 import org.trc.IBaseService;
 import org.trc.domain.dto.ConsumptionSummaryStatisticalDataDTO;

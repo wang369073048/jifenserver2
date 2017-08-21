@@ -1,9 +1,9 @@
-package org.trc.biz.impl.order;
+package org.trc.biz.impl.settlement;
 
 import org.springframework.stereotype.Service;
-import org.trc.biz.order.ISettlementBiz;
+import org.trc.biz.settlement.ISettlementBiz;
 import org.trc.domain.order.SettlementDO;
-import org.trc.service.order.ISettlementService;
+import org.trc.service.settlement.ISettlementService;
 import org.trc.util.Pagenation;
 
 /**

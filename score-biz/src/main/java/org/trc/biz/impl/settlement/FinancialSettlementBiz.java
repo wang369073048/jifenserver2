@@ -1,11 +1,11 @@
-package org.trc.biz.impl.order;
+package org.trc.biz.impl.settlement;
 
 import com.txframework.util.Assert;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.trc.biz.order.IFinancialSettlementBiz;
+import org.trc.biz.settlement.IFinancialSettlementBiz;
 import org.trc.constants.TemporaryContext;
 import org.trc.domain.query.SettlementQuery;
 import org.trc.domain.order.ConsumptionSummaryDO;
@@ -14,8 +14,8 @@ import org.trc.domain.order.MembershipScoreDailyDetailsDO;
 import org.trc.domain.dto.SettlementIntervalDTO;
 import org.trc.enums.ExceptionEnum;
 import org.trc.exception.BusinessException;
-import org.trc.service.order.IConsumptionSummaryService;
-import org.trc.service.order.IMembershipDcoreDailyDetailsService;
+import org.trc.service.settlement.IConsumptionSummaryService;
+import org.trc.service.settlement.IMembershipScoreDailyDetailsService;
 import org.trc.util.Pagenation;
 
 import java.util.HashMap;
@@ -34,7 +34,7 @@ public class FinancialSettlementBiz implements IFinancialSettlementBiz{
     @Autowired
     private IConsumptionSummaryService consumptionSummaryService;
     @Autowired
-    private IMembershipDcoreDailyDetailsService membershipDcoreDailyDetailsService;
+    private IMembershipScoreDailyDetailsService membershipScoreDailyDetailsService;
     @Override
     public Pagenation<ConsumptionSummaryDO> queryConsumptionSummary(SettlementQuery settlementQuery, Pagenation<ConsumptionSummaryDO> pageRequest) {
         return null;
@@ -70,7 +70,7 @@ public class FinancialSettlementBiz implements IFinancialSettlementBiz{
         try {
             Assert.notNull(pageRequest, "分页参数不能为空");
             Assert.notNull(settlementQuery, "传入参数不能为空");
-            return membershipDcoreDailyDetailsService.selectListByParams(settlementQuery, pageRequest);
+            return membershipScoreDailyDetailsService.selectListByParams(settlementQuery, pageRequest);
         } catch (IllegalArgumentException e) {
             logger.error("多条件查询MembershipDcoreDailyDetailsDO校验参数异常!",e);
             throw new BusinessException(ExceptionEnum.PARAM_CHECK_EXCEPTION,e.getMessage());
@@ -87,7 +87,7 @@ public class FinancialSettlementBiz implements IFinancialSettlementBiz{
 
     @Override
     public List<MembershipScoreDailyDetailsDO> queryMembershipScoreDailyDetailForExport(SettlementQuery settlementQuery) {
-        return membershipDcoreDailyDetailsService.queryMembershipScoreDailyDetailForExport(settlementQuery);
+        return membershipScoreDailyDetailsService.queryMembershipScoreDailyDetailForExport(settlementQuery);
     }
 
     @Override
@@ -117,6 +117,6 @@ public class FinancialSettlementBiz implements IFinancialSettlementBiz{
 
     @Override
     public SettlementIntervalDTO getSettlementIntervalForMembershipScoreDailyDetail(SettlementQuery settlementQuery) {
-        return null;
+    	return membershipScoreDailyDetailsService.getSettlementIntervalForMembershipScoreDailyDetail(settlementQuery);
     }
 }
