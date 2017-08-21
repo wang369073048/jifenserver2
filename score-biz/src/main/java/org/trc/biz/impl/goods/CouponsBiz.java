@@ -135,6 +135,7 @@ public class CouponsBiz implements ICouponsBiz{
     @Override
     @Transactional(propagation= Propagation.REQUIRED,rollbackFor=Exception.class)
     public int importCardItem(String batchNumber, Long shopId, List<CardItemDO> cardItemList) {
+    	validateCardItems(cardItemList);//add by xab 2017-08-08
         CardCouponsDO cardCoupons = new CardCouponsDO();
         cardCoupons.setBatchNumber(batchNumber);
         cardCoupons.setIsDeleted(0);
@@ -142,23 +143,34 @@ public class CouponsBiz implements ICouponsBiz{
         if(null == cardCoupon){
             throw new CardCouponException(ExceptionEnum.COUPON_QUERY_EXCEPTION, "批次号:" + batchNumber + "对应的卡券不存在!");
         }
+        
         int addQuantity = 0;
         try {
             //批量插入卡券
             addQuantity = cardItemService.batchInsert(cardItemList);
         }catch (DataAccessException e){
             logger.error("批量插入发生异常!");
-            List<CardItemDO> duplicateCardItem = cardItemService.checkCardItem(cardItemList);
-            StringBuilder duplicateCode = new StringBuilder("");
-            for(CardItemDO cardItem : duplicateCardItem){
-                duplicateCode.append(cardItem.getCode()).append("   ");
-            }
-            throw new CardCouponException(ExceptionEnum.COUPON_SAVE_EXCEPTION, "批量导入卡券失败!异常卡券编码为:"+duplicateCode.toString());
+            throw new CardCouponException(ExceptionEnum.COUPON_SAVE_EXCEPTION, "批量导入异常:"+e.getMessage());
         }
         //更新卡券明细
         cardCoupon.setStock(cardCoupon.getStock()+addQuantity);
         couponsService.updateStockById(cardCoupon);
         return addQuantity;
+    }
+    
+    private void validateCardItems(List<CardItemDO> cardItemList) {
+    	if(null == cardItemList || cardItemList.size() <= 0){
+            throw new CardCouponException(ExceptionEnum.COUPON_CODE_IMPORT_EXCEPTION, "导入文件数据为空，请检查文件!");
+        }
+    	if(cardItemList.size() > 10000 ){
+            throw new CardCouponException(ExceptionEnum.COUPON_CODE_IMPORT_EXCEPTION, "系统一次导入量最大为10000条，请检查数据重新导入!");
+        }
+    	List<CardItemDO> duplicateCardItem = cardItemService.checkCardItem(cardItemList);
+        StringBuilder duplicateCode = new StringBuilder("");
+        for(CardItemDO cardItem : duplicateCardItem){
+            duplicateCode.append(cardItem.getCode()).append("       ");
+        }
+        throw new CardCouponException(ExceptionEnum.COUPON_CODE_IMPORT_EXCEPTION, "批量导入卡券失败!券码重复:"+duplicateCode.toString());
     }
 
     @Override

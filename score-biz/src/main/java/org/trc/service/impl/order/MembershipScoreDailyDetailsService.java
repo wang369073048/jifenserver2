@@ -7,9 +7,9 @@ import org.springframework.stereotype.Service;
 import org.trc.domain.dto.SettlementIntervalDTO;
 import org.trc.domain.query.SettlementQuery;
 import org.trc.domain.order.MembershipScoreDailyDetailsDO;
-import org.trc.mapper.order.IMembershipDcoreDailyDetailsMapper;
+import org.trc.mapper.order.IMembershipScoreDailyDetailsMapper;
 import org.trc.service.impl.BaseService;
-import org.trc.service.order.IMembershipDcoreDailyDetailsService;
+import org.trc.service.order.IMembershipScoreDailyDetailsService;
 import org.trc.util.Pagenation;
 
 import java.util.List;
@@ -22,9 +22,9 @@ import java.util.Map;
  * since Date： 2017/7/25
  */
 @Service("membershipDcoreDailyDetailsService")
-public class MembershipDcoreDailyDetailsService extends BaseService<MembershipScoreDailyDetailsDO,Long> implements IMembershipDcoreDailyDetailsService{
+public class MembershipScoreDailyDetailsService extends BaseService<MembershipScoreDailyDetailsDO,Long> implements IMembershipScoreDailyDetailsService{
     @Autowired
-    private IMembershipDcoreDailyDetailsMapper membershipDcoreDailyDetailsMapper;
+    private IMembershipScoreDailyDetailsMapper membershipDcoreDailyDetailsMapper;
     @Override
     public MembershipScoreDailyDetailsDO getLastMembershipDcoreDailyDetails(String userId) {
         return null;
