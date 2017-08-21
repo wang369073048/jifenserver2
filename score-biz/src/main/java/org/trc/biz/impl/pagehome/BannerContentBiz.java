@@ -105,7 +105,7 @@ public class BannerContentBiz implements IBannerContentBiz{
         try{
             Assert.notNull(page, "分页参数不能为空");
             Assert.notNull(queryModel, "查询参数不能为空");
-            Example example = new Example(Banner.class);
+            Example example = new Example(BannerContent.class);
             Example.Criteria criteria = example.createCriteria();
             if (null != queryModel.getShopId()){ //商铺ID
                 criteria.andEqualTo("shopId",queryModel.getShopId());
