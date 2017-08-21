@@ -1,7 +1,7 @@
 package org.trc.service.settlement;
 
 import org.trc.IBaseService;
-import org.trc.domain.order.SettlementDO;
+import org.trc.domain.settlement.SettlementDO;
 import org.trc.util.Pagenation;
 
 

@@ -1,12 +1,13 @@
 package org.trc.biz.impl.order;
 
-import com.trc.mall.externalservice.HttpBaseAck;
-import com.trc.mall.externalservice.LogisticAck;
-import com.trc.mall.externalservice.LogisticTrace;
-import com.trc.mall.externalservice.TrcExpress100;
-import com.trc.mall.externalservice.dto.TrcExpressDto;
+import java.io.IOException;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.List;
+
+import javax.annotation.Resource;
+
 import org.apache.commons.lang.StringUtils;
-import org.apache.poi.util.SystemOutLogger;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,25 +22,35 @@ import org.trc.constants.OrderStatus;
 import org.trc.constants.OrderType;
 import org.trc.domain.dto.ExportOrderDTO;
 import org.trc.domain.dto.OrderDTO;
-import org.trc.domain.query.SettlementQuery;
 import org.trc.domain.goods.CardItemDO;
 import org.trc.domain.luckydraw.WinningRecordDO;
-import org.trc.domain.order.*;
+import org.trc.domain.order.LogisticsCodeDO;
+import org.trc.domain.order.LogisticsDO;
+import org.trc.domain.order.OrderAddressDO;
+import org.trc.domain.order.OrderLocusDO;
+import org.trc.domain.order.OrdersDO;
+import org.trc.domain.order.OrdersExtendDO;
+import org.trc.domain.query.SettlementQuery;
+import org.trc.domain.settlement.SettlementDO;
 import org.trc.domain.shop.ShopDO;
 import org.trc.enums.ExceptionEnum;
 import org.trc.exception.BusinessException;
 import org.trc.exception.GoodsException;
 import org.trc.exception.OrderException;
 import org.trc.service.luckydraw.IWinningRecordService;
-import org.trc.service.order.*;
+import org.trc.service.order.ILogisticsService;
+import org.trc.service.order.IOrderAddressService;
+import org.trc.service.order.IOrderLocusService;
+import org.trc.service.order.IOrderService;
+import org.trc.service.order.IOrdersExtendService;
 import org.trc.service.shop.IShopService;
 import org.trc.util.Pagenation;
 
-import javax.annotation.Resource;
-import java.io.IOException;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
+import com.trc.mall.externalservice.HttpBaseAck;
+import com.trc.mall.externalservice.LogisticAck;
+import com.trc.mall.externalservice.LogisticTrace;
+import com.trc.mall.externalservice.TrcExpress100;
+import com.trc.mall.externalservice.dto.TrcExpressDto;
 
 /**
  * author: hzwzhen

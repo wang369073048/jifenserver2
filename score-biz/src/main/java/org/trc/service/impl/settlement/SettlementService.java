@@ -1,16 +1,17 @@
 package org.trc.service.impl.settlement;
 
-import com.github.pagehelper.Page;
-import com.github.pagehelper.PageHelper;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.trc.domain.order.SettlementDO;
+import org.trc.domain.settlement.SettlementDO;
 import org.trc.mapper.settlement.ISettlementMapper;
 import org.trc.service.impl.BaseService;
 import org.trc.service.settlement.ISettlementService;
 import org.trc.util.Pagenation;
 
-import java.util.List;
+import com.github.pagehelper.Page;
+import com.github.pagehelper.PageHelper;
 
 /**
  * author: hzwzhen
