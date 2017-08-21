@@ -82,10 +82,10 @@ public class WinningRecordService extends BaseService<WinningRecordDO,Long> impl
 
     @Override
     public Pagenation<ActivityDetailDO> selectActivityDetailByParams(ActivityDetailDO param, Pagenation<ActivityDetailDO> pagenation) {
-        Page page = PageHelper.startPage(pagenation.getPageNo(), pagenation.getPageSize());
+        Page page = PageHelper.startPage(pagenation.getPageIndex(), pagenation.getPageSize());
         List<ActivityDetailDO> list = winningRecordMapper.selectActivityDetailByParams(param);
-        pagenation.setTotalCount(page.getTotal());
-        pagenation.setResult(list);
+        pagenation.setTotalData(page.getTotal());
+        pagenation.setInfos(list);
         return pagenation;
     }
 
@@ -96,10 +96,10 @@ public class WinningRecordService extends BaseService<WinningRecordDO,Long> impl
 
     @Override
     public Pagenation<WinningRecordDTO> selectByParams(WinningRecordDTO param, Pagenation<WinningRecordDTO> pagenation) {
-        Page page = PageHelper.startPage(pagenation.getPageNo(), pagenation.getPageSize());
+        Page page = PageHelper.startPage(pagenation.getPageIndex(), pagenation.getPageSize());
         List<WinningRecordDTO> list = winningRecordMapper.selectByParams(param);
-        pagenation.setTotalCount(page.getTotal());
-        pagenation.setResult(list);
+        pagenation.setTotalData(page.getTotal());
+        pagenation.setInfos(list);
         return pagenation;
     }
 }

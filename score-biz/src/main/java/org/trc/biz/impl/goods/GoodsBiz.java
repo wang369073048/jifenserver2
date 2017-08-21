@@ -190,8 +190,8 @@ public class GoodsBiz implements IGoodsBiz{
             Assert.notNull(pageRequest, "分页参数不能为空");
             Assert.notNull(goodsQuery, "传入参数不能为空");
             Pagenation<GoodsDO> page= goodsService.selectListByClassification(goodsQuery, pageRequest);
-            if(page != null && page.getResult() != null && page.getResult().size() > 0) {
-                for(GoodsDO item : page.getResult()){
+            if(page != null && page.getInfos() != null && page.getInfos().size() > 0) {
+                for(GoodsDO item : page.getInfos()){
                     List<ShopClassificationDO> shopClassifications = _listShopClassificationByGoodsId(item.getId());
                     item.setShopClassificationList(shopClassifications);
                     PurchaseRestrictionsDO param = new PurchaseRestrictionsDO();

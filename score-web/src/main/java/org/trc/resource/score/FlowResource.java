@@ -85,7 +85,7 @@ public class FlowResource {
             queryDto.setOperateTimeMax(new Date(endDate));
         }
         Pagenation<ScoreChange> scoreChangePge = scoreChangeRecordBiz.queryScoreChangeForShopAdmin(queryDto, page);
-        List<ScoreChange> scoreChanges = scoreChangePge.getResult();
+        List<ScoreChange> scoreChanges = scoreChangePge.getInfos();
         if (ListUtils.isNotEmpty(scoreChanges)) {
                 for (int i= 0 ; i < scoreChanges.size();i++) {
                     ScoreChange scoreChange = scoreChanges.get(i);

@@ -47,10 +47,10 @@ public class MembershipScoreDailyDetailsService extends BaseService<MembershipSc
 
     @Override
     public Pagenation<MembershipScoreDailyDetailsDO> selectListByParams(SettlementQuery settlementQuery, Pagenation<MembershipScoreDailyDetailsDO> pagenation) {
-        Page page = PageHelper.startPage(pagenation.getPageNo(), pagenation.getPageSize());
+        Page page = PageHelper.startPage(pagenation.getPageIndex(), pagenation.getPageSize());
         List<MembershipScoreDailyDetailsDO> list = membershipScoreDailyDetailsMapper.selectListByParams(settlementQuery);
-        pagenation.setTotalCount(page.getTotal());
-        pagenation.setResult(list);
+        pagenation.setTotalData(page.getTotal());
+        pagenation.setInfos(list);
         return pagenation;
     }
 

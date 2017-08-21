@@ -389,8 +389,8 @@ public class OrderResource {
         settlementQuery.setStartTime(new Date(startTime));
         settlementQuery.setEndTime(new Date(endTime));
         Pagenation<OrdersDO> orderPage = newOrderBiz.queryOrdersByParams(settlementQuery, page);
-        if (orderPage != null && ListUtils.isNotEmpty(orderPage.getResult()) && orderPage.getResult().size() > 0) {
-            List<OrdersDO> ordersDOList = orderPage.getResult();
+        if (orderPage != null && ListUtils.isNotEmpty(orderPage.getInfos()) && orderPage.getInfos().size() > 0) {
+            List<OrdersDO> ordersDOList = orderPage.getInfos();
             for (int i= 0; i < ordersDOList.size();i++) {
                 OrdersDO ordersDO = ordersDOList.get(i);
                 if(ordersDO.getOrderAddressDO()!=null) {

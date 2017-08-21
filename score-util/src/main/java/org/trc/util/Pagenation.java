@@ -18,8 +18,8 @@ public class Pagenation<T> implements Serializable {
     /*
     当前页数
      */
-    @QueryParam("pageNo")
-    protected int pageNo = 1;
+    @QueryParam("pageIndex")
+    protected int pageIndex = 1;
     /*
     开始记录行数
      */
@@ -32,8 +32,8 @@ public class Pagenation<T> implements Serializable {
     protected int pageSize = 10;
 
     // -- 返回结果 --//
-    protected List<T> result = new ArrayList<T>();
-    protected long totalCount = -1;
+    protected List<T> infos = new ArrayList<T>();
+    protected long totalData = -1;
 
     public String appcode = "1";
 
@@ -69,25 +69,25 @@ public class Pagenation<T> implements Serializable {
     /**
      * 获得当前页的页号,序号从1开始,默认为1.
      */
-    public int getPageNo() {
-        return pageNo;
+    public int getPageIndex() {
+        return pageIndex;
     }
 
     /**
      * 设置当前页的页号,序号从1开始,低于1时自动调整为1.
      */
-    public void setPageNo(final int pageNo) {
-        this.pageNo = pageNo;
-        if (pageNo < 1) {
-            this.pageNo = 1;
+    public void setPageIndex(final int pageIndex) {
+        this.pageIndex = pageIndex;
+        if (pageIndex < 1) {
+            this.pageIndex = 1;
         }
     }
 
     /**
-     * 返回Page对象自身的setPageNo函数,可用于连续设置。
+     * 返回Page对象自身的setpageIndex函数,可用于连续设置。
      */
-    public Pagenation<T> pageNo(final int thePageNo) {
-        setPageNo(thePageNo);
+    public Pagenation<T> pageIndex(final int thePageIndex) {
+        setPageIndex(thePageIndex);
         return this;
     }
 
@@ -119,49 +119,49 @@ public class Pagenation<T> implements Serializable {
     }
 
     /**
-     * 根据pageNo和pageSize计算当前页第一条记录在总结果集中的位置,序号从1开始.
+     * 根据pageIndex和pageSize计算当前页第一条记录在总结果集中的位置,序号从1开始.
      */
     public int getFirst() {
-        return ((pageNo - 1) * pageSize) + 1;
+        return ((pageIndex - 1) * pageSize) + 1;
     }
 
     /**
      * 获得页内的记录列表.
      */
-    public List<T> getResult() {
-        return result;
+    public List<T> getInfos() {
+        return infos;
     }
 
     /**
      * 设置页内的记录列表.
      */
-    public void setResult(final List<T> result) {
-        this.result = result;
+    public void setInfos(final List<T> infos) {
+        this.infos = infos;
     }
 
     /**
      * 获得总记录数, 默认值为-1.
      */
-    public long getTotalCount() {
-        return totalCount;
+    public long getTotalData() {
+        return totalData;
     }
 
     /**
      * 设置总记录数.
      */
-    public void setTotalCount(final long totalCount) {
-        this.totalCount = totalCount;
+    public void setTotalData(final long totalData) {
+        this.totalData = totalData;
     }
 
     /**
      * 根据pageSize与totalCount计算总页数, 默认值为-1.
      */
-    public long getTotalPages() {
-        if (totalCount < 0) {
+    public long getTotalPage() {
+        if (totalData < 0) {
             return -1;
         }
-        long count = totalCount / pageSize;
-        if (totalCount % pageSize > 0) {
+        long count = totalData / pageSize;
+        if (totalData % pageSize > 0) {
             count++;
         }
         return count;
@@ -171,7 +171,7 @@ public class Pagenation<T> implements Serializable {
      * 是否还有下一页.
      */
     public boolean isHasNext() {
-        return (pageNo + 1 <= getTotalPages());
+        return (pageIndex + 1 <= getTotalPage());
     }
 
     /**
@@ -179,9 +179,9 @@ public class Pagenation<T> implements Serializable {
      */
     public int getNextPage() {
         if (isHasNext()) {
-            return pageNo + 1;
+            return pageIndex + 1;
         } else {
-            return pageNo;
+            return pageIndex;
         }
     }
 
@@ -189,7 +189,7 @@ public class Pagenation<T> implements Serializable {
      * 是否还有上一页.
      */
     public boolean isHasPre() {
-        return (pageNo - 1 >= 1);
+        return (pageIndex - 1 >= 1);
     }
 
     /**
@@ -197,9 +197,9 @@ public class Pagenation<T> implements Serializable {
      */
     public int getPrePage() {
         if (isHasPre()) {
-            return pageNo - 1;
+            return pageIndex - 1;
         } else {
-            return pageNo;
+            return pageIndex;
         }
     }
 

@@ -287,7 +287,7 @@ public class GoodsResource {
         param.setWhetherPrizes(whetherPrizes);
         param.setClassificationId(classificationId);
         page =  goodsBiz.queryGoodsDOListForClassification(param,page);
-        List<GoodsDO> goodsDOs = page.getResult();
+        List<GoodsDO> goodsDOs = page.getInfos();
         if (ListUtils.isNotEmpty(goodsDOs)){
             for (GoodsDO goodsDO : goodsDOs) {
                 if(CollectionUtils.isNotEmpty(goodsDO.getShopClassificationList())){

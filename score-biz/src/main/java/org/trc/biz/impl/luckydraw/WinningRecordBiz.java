@@ -76,7 +76,7 @@ public class WinningRecordBiz implements IWinningRecordBiz{
             Assert.notNull(pageRequest, "分页参数不能为空");
             Assert.notNull(param, "传入参数不能为空");
             pageRequest = winningRecordService.selectByParams(param, pageRequest);
-            List<WinningRecordDTO> list = pageRequest.getResult();
+            List<WinningRecordDTO> list = pageRequest.getInfos();
             for(WinningRecordDTO item : list){
                 if(StringUtils.isNotBlank(item.getOrderNum())) {
                     OrdersDO ordersDO = new OrdersDO();
@@ -114,7 +114,7 @@ public class WinningRecordBiz implements IWinningRecordBiz{
             Assert.notNull(pageRequest, "分页参数不能为空");
             Assert.notNull(param, "传入参数不能为空");
             pageRequest = winningRecordService.selectActivityDetailByParams(param, pageRequest);
-            List<ActivityDetailDO> list = pageRequest.getResult();
+            List<ActivityDetailDO> list = pageRequest.getInfos();
             for(ActivityDetailDO activityDetail : list){
                 activityDetail.setShopName(shopBiz.getShopDOById(activityDetail.getShopId()).getShopName());
             }

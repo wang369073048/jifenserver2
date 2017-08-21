@@ -43,10 +43,10 @@ public class GoodsRecommendService extends BaseService<GoodsRecommendDO,Long> im
 
     @Override
     public Pagenation<GoodsRecommendDTO> selectGoodsRecommendsByPage(GoodsRecommendDTO query, Pagenation<GoodsRecommendDTO> pagenation) {
-        Page page = PageHelper.startPage(pagenation.getPageNo(), pagenation.getPageSize());
+        Page page = PageHelper.startPage(pagenation.getPageIndex(), pagenation.getPageSize());
         List<GoodsRecommendDTO> list = goodsRecommendMapper.selectGoodsRecommendsByPage(query);
-        pagenation.setTotalCount(page.getTotal());
-        pagenation.setResult(list);
+        pagenation.setTotalData(page.getTotal());
+        pagenation.setInfos(list);
         return pagenation;
     }
 

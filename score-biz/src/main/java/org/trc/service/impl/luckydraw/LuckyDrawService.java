@@ -35,10 +35,10 @@ public class LuckyDrawService extends BaseService<LuckyDrawDO,Long> implements I
 
     @Override
     public Pagenation<LuckyDrawDO> selectByParams(LuckyDrawDO luckyDraw, Pagenation<LuckyDrawDO> pagenation) {
-        Page page = PageHelper.startPage(pagenation.getPageNo(), pagenation.getPageSize());
+        Page page = PageHelper.startPage(pagenation.getPageIndex(), pagenation.getPageSize());
         List<LuckyDrawDO> list = luckyDrawMapper.selectByParams(luckyDraw);
-        pagenation.setTotalCount(page.getTotal());
-        pagenation.setResult(list);
+        pagenation.setTotalData(page.getTotal());
+        pagenation.setInfos(list);
         return pagenation;
     }
 }

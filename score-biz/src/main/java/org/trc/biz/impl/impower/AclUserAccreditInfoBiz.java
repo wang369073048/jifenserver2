@@ -80,20 +80,20 @@ public class AclUserAccreditInfoBiz extends CommonBiz implements IAclUserAccredi
      */
     @Override
     public Pagenation<AclUserAddPageDate> userAccreditInfoPage(UserAccreditInfoForm form, Pagenation<AclUserAddPageDate> page){
-        PageHelper.startPage(page.getPageNo(), page.getPageSize());
+        PageHelper.startPage(page.getPageIndex(), page.getPageSize());
         Map<String, Object> map = new HashMap<>();
         map.put("name", form.getName());
         map.put("phone", form.getPhone());
         map.put("isValid", form.getIsValid());
         List<AclUserAccreditInfo> pageDateList = userAccreditInfoService.selectAccreditInfoList(map);
-        List<AclUserAddPageDate> pageDateRoleList = page.getResult();
+        List<AclUserAddPageDate> pageDateRoleList = page.getInfos();
         handleUserName(userAccreditInfoService,pageDateList);
         if (pageDateList != null && !pageDateList.isEmpty() && pageDateList.size() > 0) {//1.按要求查处需要的授权用户
             pageDateRoleList = handleRolesStr(pageDateList);
         }
         int count = userAccreditInfoService.selectCountUser(map);
-        page.setTotalCount(count);
-        page.setResult(pageDateRoleList);
+        page.setTotalData(count);
+        page.setInfos(pageDateRoleList);
         return page;
     }
 
