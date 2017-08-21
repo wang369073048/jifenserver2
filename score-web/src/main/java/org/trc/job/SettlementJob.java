@@ -72,7 +72,7 @@ public class SettlementJob extends BaseJob{
         now.set(Calendar.SECOND,0);
         now.set(Calendar.MILLISECOND,0);
         Date dailySettlementTime = now.getTime();
-        logger.info("--SettlementJob 日结时间:" + dailySettlementTime + ",账户个数:" + pageRequest.getTotalCount());
+        logger.info("--SettlementJob 日结时间:" + dailySettlementTime + ",账户个数:" + pageRequest.getTotalData());
         for(ShopDO shop : shopDOList){
             SettlementDO lastSettlement = settlementMapper.getLastSettlement(shop.getId());
             if(null!=lastSettlement){

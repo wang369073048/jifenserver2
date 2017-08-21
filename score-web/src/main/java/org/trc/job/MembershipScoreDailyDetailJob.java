@@ -68,7 +68,7 @@ public class MembershipScoreDailyDetailJob extends BaseJob {
         for(int i = 1 ; i < totalPage ; i++){
             Pagenation<Score> pageRequest = new Pagenation<Score>();
             pageRequest.setPageSize(1000);
-            pageRequest.setPageNo(i);
+            pageRequest.setPageIndex(i);
             List<Score> scoreList = scoreService.queryBuyerScore(pageRequest);
             //循环处理所有积分账户
             _settlementBatchMembershipDcoreDailyDetail(scoreList, time, dailySettlementTime);

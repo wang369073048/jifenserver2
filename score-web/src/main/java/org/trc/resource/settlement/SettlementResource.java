@@ -1,10 +1,23 @@
 package org.trc.resource.settlement;
 
-import com.tairanchina.md.account.user.model.UserDO;
-import com.tairanchina.md.account.user.service.UserService;
-import com.tairanchina.md.api.QueryType;
-import com.txframework.util.DateUtils;
-import com.txframework.util.ListUtils;
+import java.io.ByteArrayOutputStream;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+
+import javax.annotation.Resource;
+import javax.validation.constraints.NotNull;
+import javax.ws.rs.BeanParam;
+import javax.ws.rs.GET;
+import javax.ws.rs.Path;
+import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
+import javax.ws.rs.core.HttpHeaders;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
+
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -17,26 +30,20 @@ import org.trc.constants.TemporaryContext;
 import org.trc.domain.dto.ExportOrderDTO;
 import org.trc.domain.dto.OrderQuery;
 import org.trc.domain.order.OrdersDO;
-import org.trc.domain.order.SettlementDO;
 import org.trc.domain.query.SettlementQuery;
+import org.trc.domain.settlement.SettlementDO;
 import org.trc.enums.ExceptionEnum;
 import org.trc.exception.OrderException;
-import org.trc.util.*;
+import org.trc.util.CellDefinition;
+import org.trc.util.ExportExcel;
+import org.trc.util.FatherToChildUtils;
+import org.trc.util.Pagenation;
 
-import javax.annotation.Resource;
-import javax.validation.constraints.NotNull;
-import javax.ws.rs.*;
-import javax.ws.rs.core.HttpHeaders;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
-import java.io.ByteArrayOutputStream;
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-
-import static org.trc.util.ResultUtil.createSucssAppResult;
+import com.tairanchina.md.account.user.model.UserDO;
+import com.tairanchina.md.account.user.service.UserService;
+import com.tairanchina.md.api.QueryType;
+import com.txframework.util.DateUtils;
+import com.txframework.util.ListUtils;
 
 
 /**

@@ -1,14 +1,32 @@
 package org.trc.resource.order;
 
-import com.alibaba.fastjson.JSONObject;
-import com.tairanchina.md.account.user.model.UserDO;
-import com.tairanchina.md.account.user.service.UserService;
-import com.tairanchina.md.api.QueryType;
-import com.trc.mall.externalservice.HttpBaseAck;
-import com.trc.mall.externalservice.LogisticAck;
-import com.trc.mall.externalservice.dto.TrcExpressDto;
-import com.txframework.util.DateUtils;
-import com.txframework.util.ListUtils;
+import static org.trc.util.ResultUtil.createFailAppResult;
+import static org.trc.util.ResultUtil.createSucssAppResult;
+
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.List;
+
+import javax.annotation.Resource;
+import javax.validation.constraints.NotNull;
+import javax.ws.rs.BeanParam;
+import javax.ws.rs.FormParam;
+import javax.ws.rs.GET;
+import javax.ws.rs.POST;
+import javax.ws.rs.Path;
+import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
+import javax.ws.rs.container.ContainerRequestContext;
+import javax.ws.rs.core.Context;
+import javax.ws.rs.core.HttpHeaders;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
+
 import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.slf4j.Logger;
@@ -24,35 +42,29 @@ import org.trc.domain.auth.Auth;
 import org.trc.domain.dto.ExportOrderDTO;
 import org.trc.domain.dto.OrderDTO;
 import org.trc.domain.dto.OrderQuery;
-import org.trc.domain.query.SettlementQuery;
 import org.trc.domain.order.LogisticsDO;
 import org.trc.domain.order.OrdersDO;
-import org.trc.domain.order.SettlementDO;
+import org.trc.domain.query.SettlementQuery;
+import org.trc.domain.settlement.SettlementDO;
 import org.trc.domain.shop.ManagerDO;
 import org.trc.enums.ExceptionEnum;
 import org.trc.exception.OrderException;
 import org.trc.exception.ShopException;
-import org.trc.util.*;
+import org.trc.util.AppResult;
+import org.trc.util.CellDefinition;
+import org.trc.util.ExportExcel;
+import org.trc.util.FatherToChildUtils;
+import org.trc.util.Pagenation;
 
-import javax.annotation.Resource;
-import javax.validation.constraints.NotNull;
-import javax.ws.rs.*;
-import javax.ws.rs.container.ContainerRequestContext;
-import javax.ws.rs.core.Context;
-import javax.ws.rs.core.HttpHeaders;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
-
-import static org.trc.util.ResultUtil.createFailAppResult;
-import static org.trc.util.ResultUtil.createSucssAppResult;
+import com.alibaba.fastjson.JSONObject;
+import com.tairanchina.md.account.user.model.UserDO;
+import com.tairanchina.md.account.user.service.UserService;
+import com.tairanchina.md.api.QueryType;
+import com.trc.mall.externalservice.HttpBaseAck;
+import com.trc.mall.externalservice.LogisticAck;
+import com.trc.mall.externalservice.dto.TrcExpressDto;
+import com.txframework.util.DateUtils;
+import com.txframework.util.ListUtils;
 
 /**
  * author: hzwzhen
