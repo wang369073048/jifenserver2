@@ -124,6 +124,12 @@ public class MembershipScoreDailyDetailJob extends BaseJob {
             //获取积分消费汇总
             MembershipScoreDailyDetailsDO consumeRsesult = membershipScoreDailyDetailsMapper.generateMembershipScoreDailyDetailsForConsume(params);
             membershipDcoreDailyDetailsDO.setConsumeNum(null!=consumeRsesult?consumeRsesult.getConsumeNum():0l);
+            //add by xab 获取抽奖消费汇总 
+            MembershipScoreDailyDetailsDO lotteryConsumeRsesult = membershipScoreDailyDetailsMapper.generateMembershipScoreDailyDetailsForLotteryConsume(params);
+            membershipDcoreDailyDetailsDO.setLotteryConsumeNum(null!=lotteryConsumeRsesult?lotteryConsumeRsesult.getLotteryConsumeNum():0l);
+            //add by xab 获取消费冲正[也就是退积分]汇总
+            MembershipScoreDailyDetailsDO consumeCorrectRsesult = membershipScoreDailyDetailsMapper.generateMembershipScoreDailyDetailsForConsumeCorrect(params);
+            membershipDcoreDailyDetailsDO.setConsumeCorrectNum(null!=consumeCorrectRsesult?consumeCorrectRsesult.getConsumeCorrectNum():0l);
             membershipScoreDailyDetailsMapper.insertMembershipScoreDailyDetails(membershipDcoreDailyDetailsDO);
         }
     }

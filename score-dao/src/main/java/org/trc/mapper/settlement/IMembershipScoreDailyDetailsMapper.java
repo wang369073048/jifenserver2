@@ -25,6 +25,21 @@ public interface IMembershipScoreDailyDetailsMapper extends BaseMapper<Membershi
     MembershipScoreDailyDetailsDO generateMembershipScoreDailyDetailsForExchangeIn(Map timeInterval);
 
     MembershipScoreDailyDetailsDO generateMembershipScoreDailyDetailsForConsume(Map timeInterval);
+    
+    /**
+     * @Description add by xab 获取抽奖消费汇总 
+     * @param timeInterval
+     * @return MembershipScoreDailyDetailsDO
+     */
+    MembershipScoreDailyDetailsDO generateMembershipScoreDailyDetailsForLotteryConsume(Map timeInterval);
+    
+    /**
+     * 
+     * @Description add by xab 获取消费冲正[也就是退积分]汇总
+     * @param timeInterval
+     * @return MembershipScoreDailyDetailsDO
+     */
+    MembershipScoreDailyDetailsDO generateMembershipScoreDailyDetailsForConsumeCorrect(Map timeInterval);
 
     List<MembershipScoreDailyDetailsDO> queryMembershipScoreDailyDetailForExport(SettlementQuery settlementQuery);
 

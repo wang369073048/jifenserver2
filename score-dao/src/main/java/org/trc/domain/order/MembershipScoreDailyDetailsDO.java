@@ -31,6 +31,12 @@ public class MembershipScoreDailyDetailsDO implements Serializable {
 
 	@Column(name = "consumeNum")
     private Long consumeNum;
+	
+	@Column(name = "lotteryConsumeNum")
+    private Long lotteryConsumeNum;//add by xab 抽奖消费积分
+	
+	@Column(name = "consumeCorrectNum")
+    private Long consumeCorrectNum;//add by xab 消费冲正，也就是退积分
 
 	@Column(name = "balance")
     private Long  balance;
@@ -93,8 +99,24 @@ public class MembershipScoreDailyDetailsDO implements Serializable {
     public void setCreateTime(Date createTime) {
         this.createTime = createTime;
     }
+    
+    public Long getLotteryConsumeNum() {
+		return lotteryConsumeNum;
+	}
 
-    @Override
+	public void setLotteryConsumeNum(Long lotteryConsumeNum) {
+		this.lotteryConsumeNum = lotteryConsumeNum;
+	}
+
+	public Long getConsumeCorrectNum() {
+		return consumeCorrectNum;
+	}
+
+	public void setConsumeCorrectNum(Long consumeCorrectNum) {
+		this.consumeCorrectNum = consumeCorrectNum;
+	}
+
+	@Override
     public String toString() {
         return "MembershipDcoreDailyDetailsDO{" +
                 "id=" + id +
@@ -102,6 +124,8 @@ public class MembershipScoreDailyDetailsDO implements Serializable {
                 ", accountDay='" + accountDay + '\'' +
                 ", exchangeInNum=" + exchangeInNum +
                 ", consumeNum=" + consumeNum +
+                ", lotteryConsumeNum=" + lotteryConsumeNum +
+                ", consumeCorrectNum=" + consumeCorrectNum +
                 ", balance=" + balance +
                 ", createTime=" + createTime +
                 '}';
