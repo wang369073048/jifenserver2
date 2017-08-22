@@ -98,6 +98,11 @@ public class OrderDTO implements Serializable{
     private Date confirmTime;
 
     /**
+     * 退款时间
+     */
+    private Date returnTime;
+
+    /**
      * 创建时间
      */
     private Date createTime;
@@ -168,7 +173,7 @@ public class OrderDTO implements Serializable{
     public Integer payment;
 
     /**
-     * 1未发货(已兑换);2已发货;3已完成(已收货);4已取消
+     * 1未发货(已兑换);2已发货;3已完成(已收货);4已取消;5已退款
      */
     public Integer orderState;
 
@@ -470,7 +475,15 @@ public class OrderDTO implements Serializable{
 	public void setAvatar(String avatar) {
 		this.avatar = avatar;
 	}
-	
+
+    public Date getReturnTime() {
+        return returnTime;
+    }
+
+    public void setReturnTime(Date returnTime) {
+        this.returnTime = returnTime;
+    }
+
     @Override
     public String toString() {
         return "OrderDTO{" +

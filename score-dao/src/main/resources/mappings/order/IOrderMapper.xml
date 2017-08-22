@@ -151,4 +151,27 @@
         ORDER BY
         shopId ASC,createTime ASC
     </select>
+
+    <select id="selectRefundOrdersByParams" parameterType="org.trc.domain.query.SettlementQuery" resultType="org.trc.domain.dto.OrderDTO">
+        select ord.userId,ord.createTime, ordx.returnTime,ord.orderNum, ord.shopId, sh.shopName,ord.username, ord.barcode, ord.goodsName,ord.payment,ord.goodsCount
+        from orders ord ,orders_extend ordx,shop sh
+        <where>
+            ord.id = ordx.orderId and ord.shopId = sh.id
+            <if test="shopId != null">
+                and ord.shopId = #{shopId}
+            </if>
+            <if test="userId != null">
+                and ord.userId = #{userId}
+            </if>
+            <if test="startTime !=null">
+                AND <![CDATA[DATE_FORMAT(ordx.retureTime, '%Y-%m-%d')>=  DATE_FORMAT(#{startTime}, '%Y-%m-%d')   ]]>
+            </if>
+            <if test="endTime !=null">
+                AND <![CDATA[DATE_FORMAT(ordx.retureTime, '%Y-%m-%d') <= DATE_FORMAT(#{endTime}, '%Y-%m-%d')    ]]>
+            </if>
+            and ord.source = 1
+            and ord.orderState = 5
+        </where>
+        ORDER BY ordx.returnTime desc
+    </select>
 </mapper>

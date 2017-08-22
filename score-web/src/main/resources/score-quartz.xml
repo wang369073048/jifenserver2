@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans-4.1.xsd">
+
+    <bean id="dealWithExpiredScoreJob" class="org.trc.aop.TestJob">
+    </bean>
+    <bean id="exchangeTcoinCompensateJobDetail" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+        <property name="targetObject" ref="dealWithExpiredScoreJob"/>
+        <property name="targetMethod" value="execute"/>
+    </bean>
+
+    <!-- ======================== 调度触发器 ======================== -->
+    <bean id="exchangeTcoinCompensateJobCronTrigger" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
+        <property name="jobDetail" ref="exchangeTcoinCompensateJobDetail"/>
+        <property name="cronExpression" value="0 0/1 * * * ?"/>
+    </bean>
+    <!-- ======================== 调度工厂 ======================== -->
+    <bean id="schedulerFactory" class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
+        <property name="triggers">
+            <list>
+                <ref bean="exchangeTcoinCompensateJobCronTrigger"/>
+            </list>
+        </property>
+    </bean>
+
+</beans>

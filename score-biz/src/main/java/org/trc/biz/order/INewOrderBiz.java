@@ -44,6 +44,13 @@ public interface INewOrderBiz {
     Pagenation<OrdersDO> queryOrdersDOListForPage(OrderDTO ordersDO, Pagenation<OrdersDO> page);
 
     /**
+     * 多条件查询(不分页)
+     *
+     * @param ordersDO
+     */
+    List<OrdersDO> queryOrdersDOList(OrderDTO ordersDO);
+
+    /**
      * 查询订单
      *
      * @param ordersDO
@@ -108,6 +115,21 @@ public interface INewOrderBiz {
      * @return PageRequest<OrdersDO>
      */
     Pagenation<OrdersDO> queryOrdersByParams(SettlementQuery settlementQuery, Pagenation<OrdersDO> pageRequest);
+
+    /**
+     * 多条件查询退款结算信息(分页)
+     * @param settlementQuery SettlementQuery
+     * @param pageRequest PageRequest<OrdersDO>
+     * @return PageRequest<OrdersDO>
+     */
+    Pagenation<OrderDTO> queryRefundOrdersByParams(SettlementQuery settlementQuery, Pagenation<OrderDTO> pageRequest);
+
+    /**
+     * 多条件查询退款结算信息(不分页)
+     * @param settlementQuery
+     * @return
+     */
+    List<OrderDTO> queryRefundOrdersByParamsForExport(SettlementQuery settlementQuery);
 
     /**
      * 查询待结算信息

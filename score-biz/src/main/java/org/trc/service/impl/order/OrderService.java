@@ -53,6 +53,20 @@ public class OrderService extends BaseService<OrdersDO,Long> implements IOrderSe
     }
 
     @Override
+    public Pagenation<OrderDTO> selectRefundOrdersByParams(SettlementQuery settlementQuery, Pagenation<OrderDTO> pagenation) {
+        Page page = PageHelper.startPage(pagenation.getPageIndex(), pagenation.getPageSize());
+        List<OrderDTO> list = orderMapper.selectRefundOrdersByParams(settlementQuery);
+        pagenation.setTotalData(page.getTotal());
+        pagenation.setInfos(list);
+        return pagenation;
+    }
+
+    @Override
+    public List<OrderDTO> queryRefundOrdersByParamsForExport(SettlementQuery settlementQuery) {
+        return orderMapper.selectRefundOrdersByParams(settlementQuery);
+    }
+
+    @Override
     public int selectCountByParams(OrdersDO ordersDO) {
         return 0;
     }

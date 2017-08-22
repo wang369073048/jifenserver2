@@ -8,6 +8,7 @@ import org.trc.domain.order.OrdersDO;
 import org.trc.domain.query.SettlementQuery;
 import org.trc.domain.settlement.SettlementDO;
 import org.trc.util.BaseMapper;
+import org.trc.util.Pagenation;
 
 /**
  * author: hzwzhen
@@ -40,4 +41,6 @@ public interface IOrderMapper extends BaseMapper<OrdersDO>{
     List<ExportOrderDTO> queryOrderAndAddressForExport(SettlementQuery settlementQuery);
 
     List<ExportOrderDTO> queryOrdersForExport(SettlementQuery settlementQuery);
+
+    List<OrderDTO> selectRefundOrdersByParams(SettlementQuery settlementQuery);
 }
