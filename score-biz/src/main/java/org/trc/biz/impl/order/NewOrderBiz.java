@@ -3,7 +3,9 @@ package org.trc.biz.impl.order;
 import java.io.IOException;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.annotation.Resource;
 
@@ -452,7 +454,11 @@ public class NewOrderBiz implements INewOrderBiz {
 
     @Override
     public int confirmOrder(Integer confirmState, Integer originalState, Date time) {
-        return 0;
+    	Map<String,Object> params = new HashMap<>();
+        params.put("confirmState", confirmState);
+        params.put("originalState", originalState);
+        params.put("time", time);
+        return orderService.confirmOrder(params);
     }
 
     @Override

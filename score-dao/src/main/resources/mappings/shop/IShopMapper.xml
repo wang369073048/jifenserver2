@@ -22,23 +22,15 @@
 
 
     <!--多条件查询表信息(分页) -->
-    <select id="selectListByParams" parameterType="com.trc.mall.model.ShopDO" resultType="com.trc.mall.model.ShopDO">
+    <select id="selectListByParams" parameterType="org.trc.domain.shop.ShopDO" resultType="org.trc.domain.shop.ShopDO">
         SELECT
         <include refid="allSelectionColumn"/>
         FROM shop
-        <where>
-            <if test="shopName != null">
-                and shopName = #{shopName}
-            </if>
-            <if test="channelCode != null">
-                and channelCode = #{channelCode}
-            </if>
-            <if test="isDeleted != null">
-                and isDeleted = #{isDeleted}
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              = #{isDeleted}
             </if>
         </where>
     </select>
-    <select id="selectCountByParams" parameterType="com.trc.mall.model.ShopDO" resultType="int">
+    <select id="selectCountByParams" parameterType="org.trc.domain.shop.ShopDO" resultType="int">
         SELECT COUNT(id) FROM shop
         <where>
             <if test="shopName != null">
@@ -54,7 +46,7 @@
     </select>
 
     <!-- 添加数据 -->
-    <insert id="insert" parameterType="com.trc.mall.model.ShopDO">
+    <insert id="insert" parameterType="org.trc.domain.shop.ShopDO">
         <selectKey resultType="Long" order="AFTER" keyProperty="id">
             SELECT LAST_INSERT_ID() AS id
         </selectKey>
@@ -83,7 +75,7 @@
     </insert>
 
     <!-- 根据ID更新信息-->
-    <update id="updateById" parameterType="com.trc.mall.model.ShopDO">
+    <update id="updateById" parameterType="org.trc.domain.shop.ShopDO">
         UPDATE shop SET
         <if test="shopName != null and shopName != ''">
             shopName = #{shopName},
