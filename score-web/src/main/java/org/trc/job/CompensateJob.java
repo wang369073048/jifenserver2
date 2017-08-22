@@ -1,17 +1,15 @@
 package org.trc.job;
 
-import com.trc.mall.model.RequestFlow;
-import com.trc.mall.operation.*;
-import com.trc.mall.service.RequestFlowService;
-import org.trc.util.IpUtil;
-import com.trc.mall.util.ThreadPoolUtil;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.transaction.annotation.Transactional;
-
-import javax.annotation.Resource;
 import java.net.SocketException;
 import java.util.List;
+
+import javax.annotation.Resource;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Transactional;
+import org.trc.util.IpUtil;
 
 /**
  * Created by george on 2017/7/20.
@@ -20,13 +18,13 @@ public class CompensateJob extends BaseJob{
 
     private Logger logger = LoggerFactory.getLogger(CompensateJob.class);
 
-    @Resource
-    private RequestFlowService requestFlowService;
+    @Autowired
+    private IRequestFlowService requestFlowService;
 
-    @Resource
+    @Autowired
     private ExchangeFinancialCard exchangeFinancialCard;
 
-    @Resource
+    @Autowired
     private GainFinancialCard gainFinancialCard;
 
     private boolean _checkIp(){

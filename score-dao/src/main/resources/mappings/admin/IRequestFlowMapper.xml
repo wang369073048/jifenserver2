@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="org.trc.mapper.admin.IRequestFlowMapper">
+
+    <!-- 添加数据 -->
+    <insert id="insert" parameterType="org.trc.domain.admin.RequestFlow">
+        <selectKey resultType="Long" order="AFTER" keyProperty="id">
+            SELECT LAST_INSERT_ID() AS id
+        </selectKey>
+        INSERT INTO request_flow(
+            requester,
+            responder,
+            type,
+            requestNum,
+            status,
+            requestParam,
+            responseResult,
+            requestTime,
+            remark,
+            createTime,
+            updateTime
+        )VALUES(
+            #{requester},
+            #{responder},
+            #{type},
+            #{requestNum},
+            #{status},
+            #{requestParam},
+            #{responseResult},
+            #{requestTime},
+            #{remark},
+            #{createTime},
+            #{updateTime}
+        )
+    </insert>
+
+    <!-- 根据ID更新信息-->
+    <update id="modify" parameterType="org.trc.domain.admin.RequestFlow">
+        UPDATE request_flow
+        <set>
+            <if test="status != null ">
+                status = #{status},
+            </if>
+            <if test="responseResult != null ">
+                responseResult = #{responseResult},
+            </if>
+        </set>
+        WHERE id = #{id}
+    </update>
+
+    <select id="getEntity" parameterType="org.trc.domain.admin.RequestFlow" resultType="org.trc.domain.admin.RequestFlow">
+        select * from request_flow
+        <where>
+            <if test="id!=null">
+              and id = #{id}
+            </if>
+            <if test="requestNum!=null">
+                and requestNum = #{requestNum}
+            </if>
+            <if test="type!=null">
+                and type = #{type}
+            </if>
+        </where>
+    </select>
+
+    <select id="listEntity" parameterType="org.trc.domain.admin.RequestFlow" resultType="org.trc.domain.admin.RequestFlow">
+        select * from request_flow
+        <where>
+            <if test="type!=null">
+                and type = #{type}
+            </if>
+            <if test="statusList != null and statusList.size() > 0">
+                and status in
+                <foreach collection="statusList" item="item" open="(" close=")" separator="," >
+                    #{item}
+                </foreach>
+            </if>
+        </where>
+    </select>
+
+    <select id="listRequestFlowForExchangeTcoinCompensate" parameterType="org.trc.domain.admin.RequestFlow" resultType="org.trc.domain.admin.RequestFlow">
+        select * from request_flow
+        where type = 'TCOIN_EXCHANGE_IN' and status in ('INITIAL', 'EXCHANGE_SUCCESS_PRODUCE_FAILURE', 'SOCKET_TIME_OUT')
+        AND <![CDATA[ createTime < SUBDATE(now(), INTERVAL 60 SECOND) ]]>
+        ORDER BY
+        requestTime ASC
+    </select>
+
+    <select id="listRequestFlowForGainLotteryScoreCompensate" parameterType="org.trc.domain.admin.RequestFlow" resultType="org.trc.domain.admin.RequestFlow">
+        select * from request_flow
+        where type = 'GAIN_LOTTERY_SCORE' and status in ('INITIAL', 'FAILURE')
+        AND <![CDATA[ createTime < SUBDATE(now(), INTERVAL 60 SECOND) ]]>
+        ORDER BY
+        requestTime ASC
+    </select>
+
+    <select id="listRequestFlowForExchangeFinancialCardCompensate" parameterType="org.trc.domain.admin.RequestFlow" resultType="org.trc.domain.admin.RequestFlow">
+        select * from request_flow
+        where type = 'EXCHANGE_FINANCIAL_COUPONS' and status in ('INITIAL', 'FAILURE')
+        AND <![CDATA[ createTime < SUBDATE(now(), INTERVAL 60 SECOND) ]]>
+        ORDER BY
+        requestTime ASC
+    </select>
+
+    <select id="listRequestFlowForGainTcoinCompensate" parameterType="org.trc.domain.admin.RequestFlow" resultType="org.trc.domain.admin.RequestFlow">
+        select * from request_flow
+        where type = 'LUCKY_DRAW_GAIN_T_COINS' and status in ('INITIAL', 'FAILURE', 'SOCKET_TIME_OUT')
+        AND <![CDATA[ createTime < SUBDATE(now(), INTERVAL 60 SECOND) ]]>
+        ORDER BY
+        requestTime ASC
+    </select>
+
+    <select id="listRequestFlowForGainScoreCompensate" parameterType="org.trc.domain.admin.RequestFlow" resultType="org.trc.domain.admin.RequestFlow">
+        select * from request_flow
+        where type = 'LUCKY_DRAW_GAIN_SCORE_COINS' and status in ('INITIAL', 'GAIN_FAILURE', 'GAIN_SOCKET_TIME_OUT', 'GAIN_SUCCESS_EXCHANGE_FAILURE', 'EXCHANGE_SOCKET_TIME_OUT', 'EXCHANGE_SUCCESS_PRODUCE_FAILURE')
+        AND <![CDATA[ createTime < SUBDATE(now(), INTERVAL 60 SECOND) ]]>
+        ORDER BY
+        requestTime ASC
+    </select>
+
+    <select id="listRequestFlowForGainFinancialCardCompensate" parameterType="org.trc.domain.admin.RequestFlow" resultType="org.trc.domain.admin.RequestFlow">
+        select * from request_flow
+        where type = 'LUCKY_DRAW_GAIN_FINANCIAL_COUPONS' and status in ('INITIAL', 'FAILURE')
+        AND <![CDATA[ createTime < SUBDATE(now(), INTERVAL 60 SECOND) ]]>
+        ORDER BY
+        requestTime ASC
+    </select>
+
+</mapper>

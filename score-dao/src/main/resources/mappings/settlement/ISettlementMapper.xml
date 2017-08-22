@@ -23,7 +23,7 @@
     </sql>
 
     <!--多条件查询表信息(分页) -->
-    <select id="selectListByParams" parameterType="org.trc.domain.order.SettlementDO" resultType="org.trc.domain.order.SettlementDO">
+    <select id="selectListByParams" parameterType="org.trc.domain.order.SettlementDO" resultType="org.trc.domain.settlement.SettlementDO">
         SELECT <include refid="allSelectionColumn"/> FROM settlement
         <where>
             <if test="shopId != null ">
@@ -32,5 +32,66 @@
         </where>
         order by createTime desc
     </select>
+    
+     <select id="getLastSettlement" parameterType="java.lang.Long" resultType="org.trc.domain.settlement.SettlementDO">
+        SELECT <include refid="allSelectionColumn"/> FROM settlement
+        where shopId = #{shopId}
+        order by accountDay desc limit 1
+    </select>
+
+    <!-- 添加数据 -->
+    <insert id="insert" parameterType="org.trc.domain.settlement.SettlementDO">
+        <selectKey resultType="Long" order="AFTER" keyProperty="id">
+        SELECT LAST_INSERT_ID() AS id
+        </selectKey>
+        INSERT INTO settlement(
+        shopId,
+        balance,
+        previousBalance,
+        accountDay,
+        billNum,
+        shopName,
+        quantity,
+        totalAmount,
+        totalFreight,
+        startTime,
+        endTime,
+        <if test="settlementTime != null ">
+            settlementTime,
+        </if>
+        settlementState,
+        createTime
+        )VALUES(
+        #{shopId},
+        #{balance},
+        #{previousBalance},
+        #{accountDay},
+        #{billNum},
+        #{shopName},
+        #{quantity},
+        #{totalAmount},
+        #{totalFreight},
+        #{startTime},
+        #{endTime},
+        <if test="settlementTime != null ">
+            #{settlementTime},
+        </if>
+        #{settlementState},
+        #{createTime})
+    </insert>
+
+    <!-- 根据ID更新信息-->
+    <update id="updateById" parameterType="org.trc.domain.settlement.SettlementDO">
+        UPDATE settlement
+        <set>
+            <if test="settlementState != null ">
+                settlementState = #{settlementState},
+            </if>
+            <if test="settlementTime != null ">
+                settlementTime = #{settlementTime},
+            </if>
+        </set>
+        WHERE id = #{id}
+    </update>
 
 </mapper>
