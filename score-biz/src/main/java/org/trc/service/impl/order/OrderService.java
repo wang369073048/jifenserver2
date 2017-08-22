@@ -103,7 +103,7 @@ public class OrderService extends BaseService<OrdersDO,Long> implements IOrderSe
 
     @Override
     public int confirmOrder(Map<String, Object> params) {
-        return 0;
+        return orderMapper.confirmOrder(params);
     }
 
     @Override

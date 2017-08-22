@@ -2,6 +2,8 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="org.trc.mapper.order.IOrderMapper" >
 
+	SettlementDO getSettlementByParams(SettlementQuery settlementQuery);
+
     <!-- 所有查询字段 -->
     <sql id="allSelectionColumn">
         id,
@@ -28,7 +30,37 @@
         confirmTime,
         updateTime
     </sql>
-
+    
+    <select id="getSettlementByParams" parameterType="org.trc.domain.query.SettlementQuery" resultType="org.trc.domain.settlement.SettlementDO">
+        SELECT
+        shopId as shopId,
+        count(id) as quantity,
+        sum(payment) as totalAmount,
+        sum(freight) as totalFreight,
+        #{startTime} as startTime,
+        #{endTime} as endTime
+        FROM
+        orders
+        <where>
+            <if test="shopId != null">
+                and shopId = #{shopId}
+            </if>
+            <if test="orderStates != null and orderStates.size() > 0">
+                and orderState in
+                <foreach item="item" index="index" collection="orderStates" open="(" separator="," close=")">
+                    #{orderStates[${index}]}
+                </foreach>
+            </if>
+            AND <![CDATA[createTime >= #{startTime}
+            AND createTime < #{endTime}]]>
+            and source = 1
+        </where>
+        GROUP BY
+        shopId
+        ORDER BY
+        shopId ASC
+    </select>
+    
     <!--多条件查询表信息(分页) -->
     <select id="selectListByParams" parameterType="org.trc.domain.dto.OrderDTO" resultType="org.trc.domain.order.OrdersDO">
         SELECT <include refid="allSelectionColumn"/>
@@ -173,5 +205,47 @@
             and ord.orderState = 5
         </where>
         ORDER BY ordx.returnTime desc
+    </select>
+    
+    
+    <!--自动确认收货,默认处理按规则排序前1000条-->
+    <update id ="confirmOrder" parameterType="java.util.Map">
+        UPDATE orders SET orderState = #{confirmState}, confirmTime = #{time} where orderState = #{originalState} and <![CDATA[ deliveryTime < DATE_SUB(#{time},INTERVAL 15 DAY) ]]>
+    </update>
+
+    <!--统计待发货数量 -->
+    <select id="quantityToBeReceived" parameterType=org.trc.domain.order.OrdersDO resultType="java.lang.Integer">
+        SELECT count(id)
+        FROM orders
+        <where>
+            <if test="orderState != null">
+                and orderState = #{orderState}
+            </if>
+            <if test="userId != null">
+                and userId = #{userId}
+            </if>
+            <if test="shopId != null">
+                and shopId = #{shopId}
+            </if>
+            and source = 1
+        </where>
+    </select>
+
+    <!--统计待发货数量 -->
+    <select id="quantityToBeDelivered" parameterType="org.trc.domain.order.OrdersDO" resultType="java.lang.Integer">
+        SELECT count(id)
+        FROM orders
+        <where>
+            <if test="orderState != null">
+                and orderState = #{orderState}
+            </if>
+            <if test="userId != null">
+                and userId = #{userId}
+            </if>
+            <if test="shopId != null">
+                and shopId = #{shopId}
+            </if>
+            and source = 1
+        </where>
     </select>
 </mapper>

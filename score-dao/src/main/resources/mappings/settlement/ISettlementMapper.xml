@@ -23,7 +23,7 @@
     </sql>
 
     <!--多条件查询表信息(分页) -->
-    <select id="selectListByParams" parameterType="org.trc.domain.order.SettlementDO" resultType="org.trc.domain.settlement.SettlementDO">
+    <select id="selectListByParams" parameterType="org.trc.domain.settlement.SettlementDO" resultType="org.trc.domain.settlement.SettlementDO">
         SELECT <include refid="allSelectionColumn"/> FROM settlement
         <where>
             <if test="shopId != null ">

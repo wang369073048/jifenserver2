@@ -1,7 +1,107 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="org.trc.mapper.settlement.IConsumptionSummaryMapper" >
-    <select id="queryMonthConsumptionSummary" parameterType="org.trc.domain.query.SettlementQuery" resultType="org.trc.domain.order.ConsumptionSummaryDO">
+    
+    <!-- 所有查询字段 -->
+   	<sql id="allSelectionColumn">
+        id,
+        userId,
+        accountDay,
+        shopId,
+        phone,
+        exchangeInNum,
+        consumeNum,
+        createTime
+	</sql>
+   	
+    <!-- 添加数据 -->
+    <insert id="insertConsumptionSummary" parameterType="org.trc.domain.order.ConsumptionSummaryDO">
+        <selectKey resultType="Long" order="AFTER" keyProperty="id">
+        SELECT LAST_INSERT_ID() AS id
+        </selectKey>
+        INSERT INTO consumption_summary(
+            userId,
+            accountDay,
+            shopId,
+            phone,
+            exchangeInNum,
+            consumeNum,
+            createTime
+        )VALUES(
+            #{userId},
+            #{accountDay},
+            #{shopId},
+            #{phone},
+            #{exchangeInNum},
+            #{consumeNum},
+            #{createTime}
+        )
+    </insert>
+
+    <!-- 根据ID更新信息-->
+    <update id="updateConsumptionSummary" parameterType="org.trc.domain.order.ConsumptionSummaryDO">
+        UPDATE consumption_summary
+        <set>
+            <if test="consumeNum != null ">
+                consumeNum = #{consumeNum},
+            </if>
+        </set>
+        WHERE id = #{id}
+    </update>
+
+    <select id="getLastConsumptionSummary" resultType="org.trc.domain.order.ConsumptionSummaryDO">
+        select * from consumption_summary
+        order by accountDay desc,createTime desc limit 1
+    </select>
+
+    <select id="selectListByParams" parameterType="com.trc.mall.query.SettlementQuery" resultType="org.trc.domain.order.ConsumptionSummaryDO">
+        select * from consumption_summary
+        <where>
+            <if test="shopId != null ">
+                AND shopId = #{shopId}
+            </if>
+            <if test="phone != null ">
+                AND phone = #{phone}
+            </if>
+            AND <![CDATA[ UNIX_TIMESTAMP(accountDay) >= unix_timestamp(#{startTime})
+            AND UNIX_TIMESTAMP(accountDay) < unix_timestamp(#{endTime})]]>
+        </where>
+    </select>
+
+    <select id="getConsumptionSummaryByParams" parameterType="java.util.Map" resultType="org.trc.domain.order.ConsumptionSummaryDO">
+        select * from consumption_summary
+        <where>
+            <if test="userId != null ">
+                AND userId = #{userId}
+            </if>
+            <if test="accountDay != null ">
+                AND accountDay = #{accountDay}
+            </if>
+            <if test="shopId != null ">
+                AND shopId = #{shopId}
+            </if>
+        </where>
+    </select>
+
+    <select id="generateConsumptionSummarySDForConsume" parameterType="java.util.Map" resultType="org.trc.domain.order.ConsumptionSummaryDO">
+        select count(*) as totalConsumptionCount,
+        sum(score) as consumptionNum
+        from score_change
+        <where>
+            state = 0
+            AND businessCode = 'income'
+            <if test="shopId != null ">
+                AND shopId = #{shopId}
+            </if>
+            <if test="phone != null ">
+                AND theOtherUserName = #{phone}
+            </if>
+            AND <![CDATA[ createTime >= #{startTime}
+            AND createTime < #{endTime}]]>
+        </where>
+    </select> 
+    asfas
+<select id="queryMonthConsumptionSummary" parameterType="org.trc.domain.query.SettlementQuery" resultType="org.trc.domain.order.ConsumptionSummaryDO">
         select userId, shopId, phone, left(accountDay,7) as accountDay, SUM(exchangeInNum) as exchangeInNum, SUM(consumeNum) as consumeNum  from consumption_summary
         <where>
             <if test="shopId != null and shopId != ''">
@@ -76,6 +176,71 @@
             </if>
             AND <![CDATA[ createTime >= #{startTime}
             AND createTime < #{endTime}]]>
+        </where>
+    </select>
+    <select id="generateConsumptionSummaryForExchangeIn" parameterType="java.util.Map" resultType="org.trc.domain.order.ConsumptionSummaryDO">
+        SELECT
+            userId,
+            exchangeCurrency,
+            userName as phone,
+            sum(score) as exchangeInNum
+        FROM
+        score_change
+        WHERE
+        state = 0
+        AND businessCode = 'exchangeIn'
+        <if test="exchangeCurrency != null ">
+            AND exchangeCurrency = #{exchangeCurrency}
+        </if>
+        <if test="phone != null ">
+            AND userName = #{phone}
+        </if>
+        AND <![CDATA[createTime >= #{startTime}
+        AND createTime < #{endTime}]]>
+        GROUP BY
+        userId,
+        exchangeCurrency,
+        userName
+        ORDER BY
+        userId DESC,
+        exchangeCurrency DESC,
+        userName DESC
+    </select>
+
+    <select id="generateConsumptionSummaryForConsume" parameterType="java.util.Map" resultType="org.trc.domain.order.ConsumptionSummaryDO">
+        SELECT
+        theOtherUserId as userId,
+        shopId,
+        theOtherUserName as phone,
+        sum(score) as consumeNum
+        FROM
+        score_change
+        WHERE
+        state = 0
+        AND businessCode = 'income'
+        AND <![CDATA[createTime >= #{startTime}
+        AND createTime < #{endTime}]]>
+        GROUP BY
+        theOtherUserId,
+        shopId,
+        theOtherUserName
+        ORDER BY
+        theOtherUserId DESC,
+        shopId DESC,
+        theOtherUserName DESC;
+    </select>
+
+    <select id="getSettlementInterval" parameterType="org.trc.domain.query.SettlementQuery" resultType="org.trc.domain.dto.SettlementIntervalDTO" >
+        select min(accountDay) as startAccountDay, MAX(accountDay) as endAccountDay from consumption_summary
+        <where>
+            <if test="shopId != null ">
+                AND shopId = #{shopId}
+            </if>
+            <if test="phone != null ">
+                AND phone = #{phone}
+            </if>
+            AND <![CDATA[ UNIX_TIMESTAMP(accountDay) >= unix_timestamp(#{startTime})
+            AND UNIX_TIMESTAMP(accountDay) < unix_timestamp(#{endTime})]]>
         </where>
     </select>
 </mapper>
