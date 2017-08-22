@@ -1,5 +1,6 @@
 package org.trc.util;
 
+import javax.ws.rs.DefaultValue;
 import javax.ws.rs.QueryParam;
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -18,6 +19,7 @@ public class Pagenation<T> implements Serializable {
     /*
     当前页数
      */
+    @DefaultValue("1")
     @QueryParam("pageNo")
     protected int pageNo = 1;
     /*
@@ -28,8 +30,9 @@ public class Pagenation<T> implements Serializable {
     /*
     每页记录条数
      */
+    @DefaultValue("20")
     @QueryParam("pageSize")
-    protected int pageSize = 10;
+    protected int pageSize = 20;
 
     // -- 返回结果 --//
     protected List<T> result = new ArrayList<T>();
