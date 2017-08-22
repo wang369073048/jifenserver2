@@ -3,23 +3,25 @@ package org.trc.job;
 import java.net.SocketException;
 import java.util.List;
 
-import javax.annotation.Resource;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
+import org.trc.biz.admin.IRequestFlowBiz;
+import org.trc.domain.admin.RequestFlow;
+import org.trc.operation.ExchangeFinancialCard;
+import org.trc.operation.GainFinancialCard;
 import org.trc.util.IpUtil;
 
 /**
- * Created by george on 2017/7/20.
+ * Created by wangzhen
  */
 public class CompensateJob extends BaseJob{
 
     private Logger logger = LoggerFactory.getLogger(CompensateJob.class);
 
     @Autowired
-    private IRequestFlowService requestFlowService;
+    private IRequestFlowBiz requestFlowBiz;
 
     @Autowired
     private ExchangeFinancialCard exchangeFinancialCard;
@@ -48,7 +50,7 @@ public class CompensateJob extends BaseJob{
         if(!_checkIp()){
             return ;
         }
-        List<RequestFlow> requestFlowList = requestFlowService.listRequestFlowForGainTcoinCompensate();
+        List<RequestFlow> requestFlowList = requestFlowBiz.listRequestFlowForGainTcoinCompensate();
         for(RequestFlow item : requestFlowList){
             ThreadPoolUtil.execute(new GainTcoin(item));
         }
@@ -59,7 +61,7 @@ public class CompensateJob extends BaseJob{
         if(!_checkIp()){
             return ;
         }
-        List<RequestFlow> requestFlowList = requestFlowService.listRequestFlowForGainScoreCompensate();
+        List<RequestFlow> requestFlowList = requestFlowBiz.listRequestFlowForGainScoreCompensate();
         for(RequestFlow item : requestFlowList){
             ThreadPoolUtil.execute(new GainScore(item));
         }
@@ -70,7 +72,7 @@ public class CompensateJob extends BaseJob{
         if(!_checkIp()){
             return ;
         }
-        List<RequestFlow> requestFlowList = requestFlowService.listRequestFlowForExchangeFinancialCardCompensate();
+        List<RequestFlow> requestFlowList = requestFlowBiz.listRequestFlowForExchangeFinancialCardCompensate();
         for(RequestFlow item : requestFlowList){
             exchangeFinancialCard.execute(item);
         }
