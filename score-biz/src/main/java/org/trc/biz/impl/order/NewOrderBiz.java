@@ -140,6 +140,11 @@ public class NewOrderBiz implements INewOrderBiz {
         }
     }
 
+    @Override
+    public List<OrdersDO> queryOrdersDOList(OrderDTO ordersDO) {
+        return null;
+    }
+
     /**
      * 查询订单
      *
@@ -373,6 +378,19 @@ public class NewOrderBiz implements INewOrderBiz {
         Assert.notNull(pageRequest, "分页参数不能为空");
         Assert.notNull(settlementQuery, "传入参数不能为空");
         return orderService.selectOrdersByParams(settlementQuery,pageRequest);
+    }
+
+    @Override
+    public Pagenation<OrderDTO> queryRefundOrdersByParams(SettlementQuery settlementQuery, Pagenation<OrderDTO> pageRequest) {
+        Assert.notNull(pageRequest, "分页参数不能为空");
+        Assert.notNull(settlementQuery, "传入参数不能为空");
+        return orderService.selectRefundOrdersByParams(settlementQuery,pageRequest);
+    }
+
+    @Override
+    public List<OrderDTO> queryRefundOrdersByParamsForExport(SettlementQuery settlementQuery) {
+        Assert.notNull(settlementQuery, "传入参数不能为空");
+        return orderService.queryRefundOrdersByParamsForExport(settlementQuery);
     }
 
     @Override

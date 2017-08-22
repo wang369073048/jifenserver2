@@ -41,6 +41,15 @@ public interface IOrderService extends IBaseService<OrdersDO,Long>{
      */
     Pagenation<OrdersDO> selectOrdersByParams(SettlementQuery settlementQuery, Pagenation<OrdersDO> pageRequest);
 
+    Pagenation<OrderDTO> selectRefundOrdersByParams(SettlementQuery settlementQuery, Pagenation<OrderDTO> pageRequest);
+
+    /**
+     * 多条件查询退款结算信息(不分页)
+     * @param settlementQuery
+     * @return
+     */
+    List<OrderDTO> queryRefundOrdersByParamsForExport(SettlementQuery settlementQuery);
+
     int selectCountByParams(OrdersDO ordersDO);
 
     /**

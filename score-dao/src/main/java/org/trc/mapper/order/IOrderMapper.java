@@ -5,6 +5,7 @@ import org.trc.domain.dto.OrderDTO;
 import org.trc.domain.query.SettlementQuery;
 import org.trc.domain.order.OrdersDO;
 import org.trc.util.BaseMapper;
+import org.trc.util.Pagenation;
 
 import java.util.List;
 
@@ -32,4 +33,6 @@ public interface IOrderMapper extends BaseMapper<OrdersDO>{
     List<ExportOrderDTO> queryOrderAndAddressForExport(SettlementQuery settlementQuery);
 
     List<ExportOrderDTO> queryOrdersForExport(SettlementQuery settlementQuery);
+
+    List<OrderDTO> selectRefundOrdersByParams(SettlementQuery settlementQuery);
 }
