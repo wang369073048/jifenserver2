@@ -1,15 +1,15 @@
 package org.trc.service.order;
 
+import java.util.List;
+import java.util.Map;
+
 import org.trc.IBaseService;
 import org.trc.domain.dto.ExportOrderDTO;
 import org.trc.domain.dto.OrderDTO;
-import org.trc.domain.query.SettlementQuery;
 import org.trc.domain.order.OrdersDO;
-import org.trc.domain.order.SettlementDO;
+import org.trc.domain.query.SettlementQuery;
+import org.trc.domain.settlement.SettlementDO;
 import org.trc.util.Pagenation;
-
-import java.util.List;
-import java.util.Map;
 
 /**
  * author: hzwzhen

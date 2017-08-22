@@ -1,17 +1,22 @@
 package org.trc.biz.order;
 
-import com.trc.mall.externalservice.HttpBaseAck;
-import com.trc.mall.externalservice.LogisticAck;
-import com.trc.mall.externalservice.dto.TrcExpressDto;
-import org.trc.domain.dto.ExportOrderDTO;
-import org.trc.domain.dto.OrderDTO;
-import org.trc.domain.query.SettlementQuery;
-import org.trc.domain.order.*;
-import org.trc.util.Pagenation;
-
 import java.io.IOException;
 import java.util.Date;
 import java.util.List;
+
+import org.trc.domain.dto.ExportOrderDTO;
+import org.trc.domain.dto.OrderDTO;
+import org.trc.domain.order.LogisticsDO;
+import org.trc.domain.order.OrderAddressDO;
+import org.trc.domain.order.OrdersDO;
+import org.trc.domain.order.OrdersExtendDO;
+import org.trc.domain.query.SettlementQuery;
+import org.trc.domain.settlement.SettlementDO;
+import org.trc.util.Pagenation;
+
+import com.trc.mall.externalservice.HttpBaseAck;
+import com.trc.mall.externalservice.LogisticAck;
+import com.trc.mall.externalservice.dto.TrcExpressDto;
 
 /**
  * author: hzwzhen

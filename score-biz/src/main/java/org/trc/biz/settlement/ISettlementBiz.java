@@ -1,7 +1,6 @@
 package org.trc.biz.settlement;
 
-import com.txframework.core.jdbc.PageRequest;
-import org.trc.domain.order.SettlementDO;
+import org.trc.domain.settlement.SettlementDO;
 import org.trc.util.Pagenation;
 
 /**

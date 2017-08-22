@@ -1,7 +1,10 @@
 package org.trc.service.score;
 
+import java.util.List;
+
 import org.trc.IBaseService;
 import org.trc.domain.score.Score;
+import org.trc.util.Pagenation;
 
 /**
  * author: hzwzhen
@@ -16,4 +19,8 @@ public interface IScoreService extends IBaseService<Score,Long>{
 	Score getScoreByUserId(String userId);
 	
 	int insertScore(Score score);
+	
+	List<Score> queryBuyerScore(Pagenation<Score> pageRequest);
+	
+	Integer getScoreCountByType(String userType);
 }

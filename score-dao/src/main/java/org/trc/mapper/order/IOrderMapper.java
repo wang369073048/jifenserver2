@@ -1,13 +1,14 @@
 package org.trc.mapper.order;
 
+import java.util.List;
+
 import org.trc.domain.dto.ExportOrderDTO;
 import org.trc.domain.dto.OrderDTO;
-import org.trc.domain.query.SettlementQuery;
 import org.trc.domain.order.OrdersDO;
+import org.trc.domain.query.SettlementQuery;
+import org.trc.domain.settlement.SettlementDO;
 import org.trc.util.BaseMapper;
 import org.trc.util.Pagenation;
-
-import java.util.List;
 
 /**
  * author: hzwzhen
@@ -29,6 +30,13 @@ public interface IOrderMapper extends BaseMapper<OrdersDO>{
      * @return List<OrdersDO>
      */
     List<OrdersDO> selectOrdersByParams(SettlementQuery settlementQuery);
+    
+    /**
+	 * 查询待结算信息
+	 * @param settlementQuery
+	 * @return
+	 */
+	SettlementDO getSettlementByParams(SettlementQuery settlementQuery);
 
     List<ExportOrderDTO> queryOrderAndAddressForExport(SettlementQuery settlementQuery);
 

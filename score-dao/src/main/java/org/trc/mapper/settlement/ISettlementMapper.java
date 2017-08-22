@@ -1,9 +1,9 @@
 package org.trc.mapper.settlement;
 
-import org.trc.domain.order.SettlementDO;
-import org.trc.util.BaseMapper;
-
 import java.util.List;
+
+import org.trc.domain.settlement.SettlementDO;
+import org.trc.util.BaseMapper;
 
 /**
  * author: hzwzhen

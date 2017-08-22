@@ -18,13 +18,13 @@ public interface IMembershipScoreDailyDetailsMapper extends BaseMapper<Membershi
 
     List<MembershipScoreDailyDetailsDO> selectListByParams(SettlementQuery SettlementQuery);
 
-    MembershipScoreDailyDetailsDO getLastMembershipDcoreDailyDetails(String userId);
+    MembershipScoreDailyDetailsDO getLastMembershipScoreDailyDetails(String userId);
 
-    int insertMembershipDcoreDailyDetails(MembershipScoreDailyDetailsDO membershipDcoreDailyDetailsDO);
+    int insertMembershipScoreDailyDetails(MembershipScoreDailyDetailsDO membershipDcoreDailyDetailsDO);
 
-    MembershipScoreDailyDetailsDO generateMembershipDcoreDailyDetailsForExchangeIn(Map timeInterval);
+    MembershipScoreDailyDetailsDO generateMembershipScoreDailyDetailsForExchangeIn(Map timeInterval);
 
-    MembershipScoreDailyDetailsDO generateMembershipDcoreDailyDetailsForConsume(Map timeInterval);
+    MembershipScoreDailyDetailsDO generateMembershipScoreDailyDetailsForConsume(Map timeInterval);
 
     List<MembershipScoreDailyDetailsDO> queryMembershipScoreDailyDetailForExport(SettlementQuery settlementQuery);
 

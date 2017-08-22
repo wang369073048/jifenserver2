@@ -64,4 +64,19 @@
     <select id="getScoreByUserId" parameterType="java.lang.String" resultType="org.trc.domain.score.Score">
         select * from score where userId = #{userId}
     </select>
+    
+    <select id="queryBuyerScore"
+            resultType="org.trc.domain.score.Score">
+        select * from score where userType = 'BUYER'
+    </select>
+    
+     <select id="getScoreCountByType"
+            resultType="java.lang.Integer">
+        select count(*) from score
+        <where>
+            <if test="userType != null">
+                and userType = #{userType}
+            </if>
+        </where>
+    </select>
 </mapper>
