@@ -75,7 +75,7 @@ public class FinancialSettlementBiz implements IFinancialSettlementBiz{
             logger.error("多条件查询MembershipDcoreDailyDetailsDO校验参数异常!",e);
             throw new BusinessException(ExceptionEnum.PARAM_CHECK_EXCEPTION,e.getMessage());
         } catch (Exception e) {
-            logger.error("多条件查询GoodsDO信息异常!", e);
+            logger.error("多条件查询MembershipDcoreDailyDetailsDO信息异常!", e);
             throw new BusinessException(ExceptionEnum.QUERY_LIST_EXCEPTION,"多条件查询MembershipDcoreDailyDetailsDO信息异常!");
         }
     }
