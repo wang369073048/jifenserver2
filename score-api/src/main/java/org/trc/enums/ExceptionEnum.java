@@ -28,6 +28,8 @@ public enum ExceptionEnum {
     QUERY_LIST_EXCEPTION("4000305","查询列表异常"),
     INSERT_EXCEPTION("4000306","新增异常"),
     UPDATE_EXCEPTION("4000307","更新异常"),
+    ENTITY_NOT_EXIST("4000308","实体不存在"),
+    GET_EXCEPTION ("4000309","查询出错"),//查找出错
 
     FILE_UPLOAD_EXCEPTION("1000100","文件上传异常"),
     FILE_DOWNLOAD_EXCEPTION("1000101","文件下载异常"),
@@ -87,6 +89,7 @@ public enum ExceptionEnum {
     COUPON_CODE_IMPORT_EXCEPTION("840102","券码导入EXCEL异常"),
     COUPON_DELETE_EXCEPTION("840103","卡券删除异常"),
     COUPON_UPDATE_EXCEPTION("840104","卡券更新异常"),
+    COUPON_UNDER_STOCK_EXCEPTION("840105","卡券库存不足"),
 
     CATEGORY_QUERY_EXCEPTION("850100","bannerContent查询异常"),
     CATEGORY_SAVE_EXCEPTION("850101","bannerContent保存异常"),

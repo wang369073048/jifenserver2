@@ -22,5 +22,7 @@ public interface ICardItemMapper extends BaseMapper<CardItemDO> {
     int batchInsert(List<CardItemDO> list);
 
     List<CardItemDO> checkCardItem(List<CardItemDO> list);
+
+    int releaseCardCoupons(CardItemDO param);
 }
 

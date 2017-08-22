@@ -244,6 +244,11 @@ public class GoodsBiz implements IGoodsBiz{
     }
 
     @Override
+    public GoodsDO getGoodsDOByParam(GoodsDO goodsDO) {
+        return goodsService.selectOne(goodsDO);
+    }
+
+    @Override
     public GoodsDO getGoodsDOById(Long id, Integer whetherPrizes, Integer isUp) {
         try {
             Assert.isTrue(id != null,"查询Id不能为空!");
@@ -401,6 +406,71 @@ public class GoodsBiz implements IGoodsBiz{
             logger.error(e.getMessage());
             throw new BusinessException(ExceptionEnum.UPDATE_EXCEPTION, e.getMessage());
         }
+    }
+
+    @Override
+    public int prizeOrderAssociationProcessing(Long goodsId, Integer quantity, int version) {
+        try {
+            //修改奖品库存数与兑换数
+            GoodsDO goodsDO = new GoodsDO();
+            goodsDO.setId(goodsId);
+            goodsDO.setExchangeQuantity(quantity);
+            goodsDO.setVersionLock(version);
+            //判断是否需要生成快照
+            GoodsDO originalGoodsDO = goodsService.getPrizeGoodsById(goodsId);
+            if(null != originalGoodsDO.getUpdateTime() && originalGoodsDO.getUpdateTime().after(originalGoodsDO.getSnapshotTime())){
+                GoodsSnapshotDO goodsSnapshotDO = _convertToGoodsSnapshotDO(originalGoodsDO);
+                goodsSnapshotMapper.insert(goodsSnapshotDO);
+                goodsDO.setSnapshotTime(new Date());
+            }
+            //1.判断奖品库存
+            int remaining = originalGoodsDO.getStock() - goodsDO.getExchangeQuantity();
+            //2.操作库存
+            int result = goodsMapper.orderAssociationProcessing(goodsDO);
+            //3.到预警值
+            if(originalGoodsDO.getStockWarn() >= remaining)	{
+                ShopDO shopDo = shopService.getShopDOById(originalGoodsDO.getShopId());
+                ThreadPoolUtil.execute(new SMSTask("商品(" + originalGoodsDO.getGoodsName() + ")达到库存预警",shopDo.getWarnPhone()));
+            }
+            if(remaining < 0){
+                logger.info("奖品:"+originalGoodsDO.getGoodsName()+"库存不充足，请补足!");
+                throw new BusinessException(GoodsException.INVENTORY_SHORTAGE, "商品库存不足，请补足!");
+            }
+            if(result != 1){
+                logger.error("奖品订单相关操作ID=>[" + goodsId + "]的GoodsDO异常!");
+                throw new BusinessException(GoodsException.UPDATE_EXCEPTION, "奖品订单相关操作ID=>[" + goodsId + "]的GoodsDO异常!");
+            }
+            logger.info("奖品订单相关操作ID=>[" + goodsId + "]的GoodsDO成功!");
+            return result;
+        } catch (IllegalArgumentException e) {
+            logger.error("奖品订单相关操作校验参数异常!",e);
+            throw new BusinessException(GoodsException.ABNORMAL_PARAMETER,e.getMessage());
+        } catch (Exception e) {
+            logger.error("奖品订单相关操作ID=>[" + goodsId + "]的GoodsDO信息异常",e);
+            throw new BusinessException(GoodsException.UPDATE_EXCEPTION, "奖品订单相关操作ID=>[" + goodsId + "]的GoodsDO信息异常");
+        }
+    }
+
+    private GoodsSnapshotDO _convertToGoodsSnapshotDO(GoodsDO goodsDO) {
+        GoodsSnapshotDO goodsSnapshotDO = new GoodsSnapshotDO();
+        goodsSnapshotDO.setGoodsId(goodsDO.getId());
+        goodsSnapshotDO.setShopId(goodsDO.getShopId());
+        goodsSnapshotDO.setCategory(goodsDO.getCategory());
+        goodsSnapshotDO.setVersion(goodsDO.getVersionLock());
+        goodsSnapshotDO.setBrandName(goodsDO.getBrandName());
+        goodsSnapshotDO.setGoodsName(goodsDO.getGoodsName());
+        goodsSnapshotDO.setBatchNumber(goodsDO.getBatchNumber());
+        goodsSnapshotDO.setGoodsSn(goodsDO.getGoodsSn());
+        goodsSnapshotDO.setMainImg(goodsDO.getMainImg());
+        goodsSnapshotDO.setMediumImg(goodsDO.getMediumImg());
+        goodsSnapshotDO.setPriceMarket(goodsDO.getPriceMarket());
+        goodsSnapshotDO.setPriceScore(goodsDO.getPriceScore());
+        goodsSnapshotDO.setTargetUrl(goodsDO.getTargetUrl());
+        goodsSnapshotDO.setContent(goodsDO.getContent());
+        goodsSnapshotDO.setValidStartTime(goodsDO.getValidStartTime());
+        goodsSnapshotDO.setValidEndTime(goodsDO.getValidEndTime());
+        goodsSnapshotDO.setCreateTime(new Date());
+        return goodsSnapshotDO;
     }
 
     private void validateForAdd(GoodsDO goodsDO) {

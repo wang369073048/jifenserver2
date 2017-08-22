@@ -70,6 +70,9 @@ public interface IGoodsBiz {
      */
     GoodsDO getGoodsDOById(Long id, Integer isUp);
 
+
+    GoodsDO getGoodsDOByParam(GoodsDO goodsDO);
+
     /**
      * 根据ID查询
      * @param id Long
@@ -148,6 +151,16 @@ public interface IGoodsBiz {
     CouponDto checkEid(String eid) throws IOException, URISyntaxException;
 
     void setClassification(List<Long> goodsList, List<GoodsClassificationRelationshipDO> gcrList);
+
+    /**
+     * 奖品订单相关操作，库存变更允许为负数
+     * @param goodsId
+     * @param quantity
+     * @param version
+     * @return
+     */
+    int prizeOrderAssociationProcessing(Long goodsId, Integer quantity, int version);
+
 
 
 }

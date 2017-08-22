@@ -29,10 +29,7 @@ public class OrderService extends BaseService<OrdersDO,Long> implements IOrderSe
 
     @Autowired
     private IOrderMapper orderMapper;
-    @Override
-    public OrdersDO selectByParams(OrdersDO ordersDO) {
-        return null;
-    }
+
 
     @Override
     public Pagenation<OrdersDO> selectListByParams(OrderDTO ordersDO, Pagenation<OrdersDO> pagenation) {
@@ -76,10 +73,7 @@ public class OrderService extends BaseService<OrdersDO,Long> implements IOrderSe
         return 0;
     }
 
-    @Override
-    public int updateById(OrdersDO ordersDO) {
-        return 0;
-    }
+
 
     @Override
     public int deleteById(Long id) {

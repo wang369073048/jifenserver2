@@ -37,4 +37,11 @@ public interface ICategoryService extends IBaseService<CategoryDO,Long>{
      */
     int updateIsDeletedById(CategoryDO categoryDO);
 
+    /**
+     * 根据ID查询
+     * @param id Long
+     * @return CategoryDO
+     */
+    CategoryDO getCategoryDOById(Long id);
+
 }

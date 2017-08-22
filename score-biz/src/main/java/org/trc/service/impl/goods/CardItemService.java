@@ -44,4 +44,9 @@ public class CardItemService extends BaseService<CardItemDO,Long> implements ICa
     public List<CardItemDO> checkCardItem(List<CardItemDO> list) {
         return cardItemMapper.checkCardItem(list);
     }
+
+    @Override
+    public int releaseCardCoupons(CardItemDO param) {
+        return cardItemMapper.releaseCardCoupons(param);
+    }
 }
