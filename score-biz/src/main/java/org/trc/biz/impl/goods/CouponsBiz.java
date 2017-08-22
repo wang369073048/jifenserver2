@@ -17,6 +17,7 @@ import org.trc.domain.goods.CardItemDO;
 import org.trc.domain.goods.CategoryDO;
 import org.trc.domain.goods.GoodsDO;
 import org.trc.enums.ExceptionEnum;
+import org.trc.exception.BusinessException;
 import org.trc.exception.CardCouponException;
 import org.trc.form.goods.CardCouponsForm;
 import org.trc.service.goods.*;
@@ -210,8 +211,23 @@ public class CouponsBiz implements ICouponsBiz{
     }
 
     @Override
+    @Transactional(propagation= Propagation.REQUIRED,rollbackFor=Exception.class)
     public List<CardItemDO> releaseCardCoupons(CardItemDO cardItem) {
-        return null;
+        cardItemService.releaseCardCoupons(cardItem);
+        //更新卡券库存
+        CardCouponsDO param = new CardCouponsDO();
+        param.setBatchNumber(cardItem.getBatchNumber());
+        CardCouponsDO old = couponsService.selectOne(param);
+        Integer stock = old.getStock() - cardItem.getQuantity();
+        if(stock < 0){
+            throw new BusinessException(ExceptionEnum.COUPON_UNDER_STOCK_EXCEPTION, "卡券库存不足!");
+        }
+        param.setId(old.getId());
+        param.setStock(stock);
+        param.setVersion(old.getVersion());
+        param.setUpdateTime(cardItem.getReleaseTime());
+        couponsService.updateStockById(param);
+        return cardItemService.select(cardItem);
     }
 
     @Override

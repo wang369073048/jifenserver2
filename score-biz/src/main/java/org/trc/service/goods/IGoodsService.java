@@ -70,4 +70,5 @@ public interface IGoodsService extends IBaseService<GoodsDO,Long>{
     int selectCountByParams(GoodsDO goodsDO);
 
     Pagenation<ActivityPrizesDO> queryActivityPrizes(ActivityPrizesDO paramG, Pagenation<ActivityPrizesDO> pageRequest);
+
 }

@@ -74,4 +74,24 @@
             )
         </where>
     </select>
+
+    <!-- 根据批次号更新信息-->
+    <update id="releaseCardCoupons" parameterType="org.trc.domain.goods.CardItemDO">
+        UPDATE card_item
+        <set>
+            <if test="state != null">
+                state = #{state},
+            </if>
+            <if test="userId != null">
+                userId = #{userId},
+            </if>
+            <if test="orderCode != null">
+                orderCode = #{orderCode},
+            </if>
+            <if test="releaseTime != null">
+                releaseTime = #{releaseTime},
+            </if>
+        </set>
+        WHERE batchNumber = #{batchNumber} and state = 0 limit #{quantity}
+    </update>
 </mapper>

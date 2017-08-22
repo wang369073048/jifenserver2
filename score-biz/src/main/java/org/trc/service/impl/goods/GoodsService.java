@@ -85,4 +85,6 @@ public class GoodsService extends BaseService<GoodsDO,Long> implements IGoodsSer
         pagenation.setInfos(list);
         return pagenation;
     }
+
+
 }

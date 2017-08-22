@@ -15,6 +15,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
+import org.trc.biz.admin.IRequestFlowBiz;
 import org.trc.constants.BusinessSide;
 import org.trc.constants.BusinessType;
 import org.trc.domain.admin.RequestFlow;
@@ -37,7 +38,7 @@ public class ExchangeFinancialCard {
     private TrCouponOperation trCouponOperation;
 
     @Resource
-    private IRequestFlowService requestFlowService;
+    private IRequestFlowBiz requestFlowBiz;
 
     private boolean _validate(RequestFlow requestFlow){
         try {
@@ -61,7 +62,7 @@ public class ExchangeFinancialCard {
             return ;
         }
         if(null == requestFlow.getId()){
-            requestFlow = requestFlowService.insert(requestFlow);
+            requestFlow = requestFlowBiz.insert(requestFlow);
         }
         GainFinancialCardDto gfcParam = JSON.parseObject(requestFlow.getRequestParam(), GainFinancialCardDto.class);
         if(RequestFlow.Status.INITIAL.equals(requestFlow.getStatus()) || RequestFlow.Status.FAILURE.equals(requestFlow.getStatus())){
@@ -71,31 +72,31 @@ public class ExchangeFinancialCard {
                     if(CouponDto.SUCCESS_CODE.equals(resultAck.getData().getCode())) {
                         logger.info("用户：" + gfcParam.getUserId() + "兑换金融卡券:" + gfcParam.getEid() + ",请求号为:" + gfcParam.getRequestNo() + "兑奖成功!");
                         //发放成功，设置状态
-                        requestFlowService.modify(requestFlow.getId(), RequestFlow.Status.SUCCESS, null);
+                        requestFlowBiz.modify(requestFlow.getId(), RequestFlow.Status.SUCCESS, null);
                         return;
                     }else{
                         //发放失败，设置状态
-                        requestFlowService.modify(requestFlow.getId(), RequestFlow.Status.FAILURE, resultAck.getData().getMessage());
+                        requestFlowBiz.modify(requestFlow.getId(), RequestFlow.Status.FAILURE, resultAck.getData().getMessage());
                         return;
                     }
                 }
                 //发放失败，设置状态
-                requestFlowService.modify(requestFlow.getId(), RequestFlow.Status.UNKNOWN, null);
+                requestFlowBiz.modify(requestFlow.getId(), RequestFlow.Status.UNKNOWN, null);
                 return;
             } catch (ConnectTimeoutException e) {
-                requestFlowService.modify(requestFlow.getId(), RequestFlow.Status.FAILURE, null);
+                requestFlowBiz.modify(requestFlow.getId(), RequestFlow.Status.FAILURE, null);
                 logger.error("卡券兑换服务请求超时不可用!等待重试!"+requestFlow.getRequestNum());
                 return ;
             } catch (SocketTimeoutException e) {
-                requestFlowService.modify(requestFlow.getId(), RequestFlow.Status.SOCKET_TIME_OUT, null);
+                requestFlowBiz.modify(requestFlow.getId(), RequestFlow.Status.SOCKET_TIME_OUT, null);
                 logger.error("卡券兑换服务响应超时不可用!等待人工确认!"+requestFlow.getRequestNum());
                 return ;
             } catch (ClientProtocolException e) {
-                requestFlowService.modify(requestFlow.getId(), RequestFlow.Status.FAILURE, null);
+                requestFlowBiz.modify(requestFlow.getId(), RequestFlow.Status.FAILURE, null);
                 logger.error("卡券兑换服务协议错误不可用!等待重试!"+requestFlow.getRequestNum());
                 return ;
             } catch (IOException e) {
-                requestFlowService.modify(requestFlow.getId(), RequestFlow.Status.FAILURE, null);
+                requestFlowBiz.modify(requestFlow.getId(), RequestFlow.Status.FAILURE, null);
                 logger.error("卡券兑换服务io未知异常!等待重试!"+requestFlow.getRequestNum());
                 return ;
             }

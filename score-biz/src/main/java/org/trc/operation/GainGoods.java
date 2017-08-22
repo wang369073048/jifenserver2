@@ -1,29 +1,38 @@
 package org.trc.operation;
 
 import com.alibaba.fastjson.JSONObject;
-import com.trc.mall.constants.*;
-import com.trc.mall.exception.BusinessException;
-import com.trc.mall.mapper.luckydraw.WinningRecordMapper;
-import com.trc.mall.mapper.orders.OrdersMapper;
-import com.trc.mall.model.*;
-import com.trc.mall.service.CategoryService;
-import com.trc.mall.service.CouponsService;
-import com.trc.mall.service.GoodsService;
-import com.trc.mall.service.RequestFlowService;
-import com.trc.mall.task.SMSTask;
-import com.trc.mall.util.ThreadPoolUtil;
-import com.txframework.core.spring.SpringContextHolder;
 import com.txframework.util.Assert;
 import com.txframework.util.DateUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.transaction.annotation.Transactional;
+import org.trc.biz.admin.IRequestFlowBiz;
+import org.trc.biz.goods.ICouponsBiz;
+import org.trc.biz.goods.IGoodsBiz;
+import org.trc.constants.*;
+import org.trc.domain.admin.RequestFlow;
+import org.trc.domain.goods.CardCouponsDO;
+import org.trc.domain.goods.CardItemDO;
+import org.trc.domain.goods.CategoryDO;
+import org.trc.domain.goods.GoodsDO;
+import org.trc.domain.luckydraw.WinningRecordDO;
+import org.trc.domain.order.OrdersDO;
+import org.trc.exception.BusinessException;
+import org.trc.framework.core.spring.SpringContextHolder;
+import org.trc.service.goods.ICategoryService;
+import org.trc.service.goods.ICouponsService;
+import org.trc.service.goods.IGoodsService;
+import org.trc.service.luckydraw.IWinningRecordService;
+import org.trc.service.order.IOrderService;
+import org.trc.task.SMSTask;
+import org.trc.util.ThreadPoolUtil;
 
 import java.text.MessageFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+
 
 /**
  * Created by george on 2017/7/19.
@@ -32,28 +41,28 @@ public class GainGoods implements Runnable{
 
     private Logger logger = LoggerFactory.getLogger(GainGoods.class);
 
-    private static GoodsService goodsService;
+    private static IGoodsBiz goodsBiz;
 
-    private static CategoryService categoryService;
+    private static ICategoryService categoryService;
 
-    private static CouponsService couponsService;
+    private static ICouponsBiz couponsBiz;
 
-    private static OrdersMapper ordersMapper;
+    private static IOrderService ordersService;
 
-    private static WinningRecordMapper winningRecordMapper;
+    private static IWinningRecordService winningRecordService;
 
     private static GainFinancialCard gainFinancialCard;
 
-    private static RequestFlowService requestFlowService;
+    private static IRequestFlowBiz requestFlowBiz;
 
     static {
-        goodsService = (GoodsService) SpringContextHolder.getBean("goodsService");
-        categoryService = (CategoryService) SpringContextHolder.getBean("categoryService");
-        couponsService = (CouponsService) SpringContextHolder.getBean("couponsService");
-        ordersMapper = (OrdersMapper) SpringContextHolder.getBean("ordersMapper");
-        winningRecordMapper = (WinningRecordMapper) SpringContextHolder.getBean("winningRecordMapper");
+        goodsBiz = (IGoodsBiz) SpringContextHolder.getBean("goodsBiz");
+        categoryService = (ICategoryService) SpringContextHolder.getBean("categoryService");
+        couponsBiz = (ICouponsBiz) SpringContextHolder.getBean("couponsBiz");
+        ordersService = (IOrderService) SpringContextHolder.getBean("ordersService");
+        winningRecordService = (IWinningRecordService) SpringContextHolder.getBean("winningRecordService");
         gainFinancialCard = (GainFinancialCard) SpringContextHolder.getBean("gainFinancialCard");
-        requestFlowService = (RequestFlowService)SpringContextHolder.getBean("requestFlowService");
+        requestFlowBiz = (IRequestFlowBiz)SpringContextHolder.getBean("requestFlowBiz");
     }
 
     private WinningRecordDO winningRecord;
@@ -87,7 +96,10 @@ public class GainGoods implements Runnable{
             return;
         }
         //生成订单
-        GoodsDO goods = goodsService.getPrizeGoodsById(winningRecord.getGoodsId());
+        GoodsDO goodsDO = new GoodsDO();
+        goodsDO.setId(winningRecord.getGoodsId());
+        goodsDO.setWhetherPrizes(1);
+        GoodsDO goods = goodsBiz.getGoodsDOByParam(goodsDO);
         CategoryDO category = categoryService.getCategoryDOById(goods.getCategory());
         Date createTime = Calendar.getInstance().getTime();
         OrdersDO ordersDO;
@@ -97,7 +109,7 @@ public class GainGoods implements Runnable{
             } else if (winningRecord.getState().equals(LuckyDraw.WinningState.PAYMENT_FAILURE)) {
                 OrdersDO param = new OrdersDO();
                 param.setOrderNum(winningRecord.getOrderNum());
-                ordersDO = ordersMapper.selectByParams(param);
+                ordersDO = ordersService.selectOne(param);
             } else {
                 logger.error("中奖记录状态暂不需要处理!" + winningRecord.toString());
                 return;
@@ -105,12 +117,12 @@ public class GainGoods implements Runnable{
         } catch (BusinessException e){
             logger.error("奖品库存不足，订单生成失败!");
             winningRecord.setState(LuckyDraw.WinningState.PRIZE_ORDER_IS_NOT_GENERATED);
-            winningRecordMapper.updateState(winningRecord);
+            winningRecordService.updateState(winningRecord);
             return;
         } catch (Exception e){
             logger.error("抽奖订单生成失败，发生未知!");
             winningRecord.setState(LuckyDraw.WinningState.PRIZE_ORDER_UNKNOWN_ERROR);
-            winningRecordMapper.updateState(winningRecord);
+            winningRecordService.updateState(winningRecord);
             return;
         }
         if(0 == category.getIsVirtual()){
@@ -130,13 +142,13 @@ public class GainGoods implements Runnable{
                     ciParam.setQuantity(ordersDO.getGoodsCount());
                     ciParam.setReleaseTime(createTime);
                     //发券
-                    List<CardItemDO> cardItemList = couponsService.releaseCardCoupons(ciParam);
+                    List<CardItemDO> cardItemList = couponsBiz.releaseCardCoupons(ciParam);
                     StringBuilder couponCode = new StringBuilder("");
                     for (CardItemDO cardItem : cardItemList) {
                         couponCode.append(cardItem.getCode()).append("  ");
                     }
                     //调用短信发送
-                    CardCouponsDO cardCouponsDO = couponsService.selectByBatchNumer(ordersDO.getShopId(), goods.getBatchNumber());
+                    CardCouponsDO cardCouponsDO = couponsBiz.selectByBatchNumer(ordersDO.getShopId(), goods.getBatchNumber());
                     String smsContentPattern = "亲爱的{0}，您已成功兑换{1}共{2}份，兑换码为{3}，有效期至{4}，请于有效期内尽快使用。使用方法及订单详情，请前往泰然城积分商城查看，泰然城服务热线0571-96056。请勿轻易转发，谨防诈骗。。";
                     String smsContent = MessageFormat.format(smsContentPattern, ordersDO.getUsername(), goods.getGoodsName(), cardItemList.size(), couponCode.toString(),
                             DateUtils.format(cardCouponsDO.getValidEndTime(), DateUtils.TIME_PATTERN));
@@ -144,18 +156,18 @@ public class GainGoods implements Runnable{
                     OrdersDO param = new OrdersDO();
                     param.setId(ordersDO.getId());
                     param.setOrderState(OrderStatus.TRANSACTION_SUCCESS);
-                    ordersMapper.updateById(param);
+                    ordersService.updateByPrimaryKeySelective(param);
                     winningRecord.setState(LuckyDraw.WinningState.ALREADY_ISSUED);
-                    winningRecordMapper.updateState(winningRecord);
+                    winningRecordService.updateState(winningRecord);
                     logger.debug("抽奖中外部卡券发券成功!");
                 } catch (Exception e){
                     logger.error("外部卡券发券失败!" + ciParam.toString());
                     OrdersDO param = new OrdersDO();
                     param.setId(ordersDO.getId());
                     param.setOrderState(OrderStatus.WAITING_FOR_DELIVERY);
-                    ordersMapper.updateById(param);
+                    ordersService.updateByPrimaryKeySelective(param);
                     winningRecord.setState(LuckyDraw.WinningState.PAYMENT_FAILURE);
-                    winningRecordMapper.updateState(winningRecord);
+                    winningRecordService.updateState(winningRecord);
                 }
                 break;
             case Category.FINANCIAL_CARD:
@@ -163,7 +175,7 @@ public class GainGoods implements Runnable{
                 if(winningRecord.getState().equals(LuckyDraw.WinningState.PAYMENT_FAILURE) || winningRecord.getState().equals(LuckyDraw.WinningState.PRIZE_ORDER_IS_NOT_GENERATED)){
                     RequestFlow param = new RequestFlow();
                     param.setRequestNum(winningRecord.getRequestNo());
-                    RequestFlow requestFlow = requestFlowService.getEntity(param);
+                    RequestFlow requestFlow = requestFlowBiz.getEntity(param);
                     _deal(requestFlow, ordersDO);
                 } else if(winningRecord.getState().equals(LuckyDraw.WinningState.UNISSUED)){
                     JSONObject requestParam = new JSONObject();
@@ -185,12 +197,12 @@ public class GainGoods implements Runnable{
             OrdersDO oParam = new OrdersDO();
             oParam.setId(ordersDO.getId());
             oParam.setOrderState(OrderStatus.TRANSACTION_SUCCESS);
-            ordersMapper.updateById(oParam);
+            ordersService.updateByPrimaryKeySelective(oParam);
         } else{
             OrdersDO oParam = new OrdersDO();
             oParam.setId(ordersDO.getId());
             oParam.setOrderState(OrderStatus.WAITING_FOR_DELIVERY);
-            ordersMapper.updateById(oParam);
+            ordersService.updateByPrimaryKeySelective(oParam);
         }
     }
 
@@ -210,7 +222,7 @@ public class GainGoods implements Runnable{
         ordersDO.setShopId(goods.getShopId());
         ordersDO.setUserId(winningRecord.getUserId());
         ordersDO.setUsername(winningRecord.getLotteryPhone());
-        ordersDO.setDeleted(false);
+        ordersDO.setIsDeleted(false);
         ordersDO.setCreateTime(createTime);
         ordersDO.setUpdateTime(createTime);
         if (category.getIsVirtual() == 0) {
@@ -221,7 +233,7 @@ public class GainGoods implements Runnable{
             ordersDO.setOrderType(OrderType.EXTERNAL_CARD_ORDER);
         }
         //生成奖品订单后，商品相应操作
-        goodsService.prizeOrderAssociationProcessing(ordersDO.getGoodsId(), ordersDO.getGoodsCount(), ordersDO.getGoodsVersion());
+        goodsBiz.prizeOrderAssociationProcessing(ordersDO.getGoodsId(), ordersDO.getGoodsCount(), ordersDO.getGoodsVersion());
         ordersDO.setOrderState(OrderStatus.WAITING_FOR_DELIVERY);
         ordersMapper.insert(ordersDO);
         return ordersDO;

@@ -11,7 +11,10 @@ import org.trc.biz.admin.IRequestFlowBiz;
 import org.trc.domain.admin.RequestFlow;
 import org.trc.operation.ExchangeFinancialCard;
 import org.trc.operation.GainFinancialCard;
+import org.trc.operation.GainScore;
+import org.trc.operation.GainTcoin;
 import org.trc.util.IpUtil;
+import org.trc.util.ThreadPoolUtil;
 
 /**
  * Created by wangzhen
@@ -83,7 +86,7 @@ public class CompensateJob extends BaseJob{
         if(!_checkIp()){
             return ;
         }
-        List<RequestFlow> requestFlowList = requestFlowService.listRequestFlowForGainFinancialCardCompensate();
+        List<RequestFlow> requestFlowList = requestFlowBiz.listRequestFlowForGainFinancialCardCompensate();
         for(RequestFlow item : requestFlowList){
             gainFinancialCard.execute(item);
         }

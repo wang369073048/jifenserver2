@@ -20,12 +20,6 @@ import org.trc.util.Pagenation;
 public interface IOrderService extends IBaseService<OrdersDO,Long>{
 
     /**
-     * 根据ID查询表数据
-     * @return OrdersDO
-     */
-    OrdersDO selectByParams(OrdersDO ordersDO);
-
-    /**
      * 多条件查询表信息(分页)
      * @param ordersDO OrdersDO
      * @param pageRequest PageRequest<OrdersDO>
@@ -59,12 +53,7 @@ public interface IOrderService extends IBaseService<OrdersDO,Long>{
      */
     int insert(OrdersDO ordersDO);
 
-    /**
-     * 根据ID更新信息
-     * @param ordersDO OrdersDO
-     * @return int
-     */
-    int updateById(OrdersDO ordersDO);
+
 
     /**
      * 根据ID删除信息

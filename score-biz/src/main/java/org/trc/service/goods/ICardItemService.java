@@ -22,4 +22,6 @@ public interface ICardItemService extends IBaseService<CardItemDO,Long>{
     int batchInsert(List<CardItemDO> list);
 
     List<CardItemDO> checkCardItem(List<CardItemDO> list);
+
+    int releaseCardCoupons(CardItemDO param);
 }
