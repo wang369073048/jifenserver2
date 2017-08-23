@@ -182,7 +182,7 @@
     </select>
 
     <select id="selectRefundOrdersByParams" parameterType="org.trc.domain.query.SettlementQuery" resultType="org.trc.domain.dto.OrderDTO">
-        select ord.createTime, ordx.returnTime,ord.orderNum, ord.shopId, ord.username, ord.barcode, ord.goodsName,ord.payment,ord.goodsCount
+        select ord.createTime, ordx.returnTime,ord.orderNum, ord.shopId, ord.username, ord.barcode, ord.goodsName,ord.payment scoreCount,ord.goodsCount
         from orders ord ,orders_extend ordx,shop sh
         <where>
             ord.id = ordx.orderId and ord.
