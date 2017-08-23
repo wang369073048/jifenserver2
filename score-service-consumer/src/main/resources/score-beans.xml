@@ -23,6 +23,10 @@
         <property name="APPKEY" value="${kdniao.APPKEY}" />
     </bean>
 
+    <bean id="tairanCouponOperation" class="com.trc.mall.externalservice.TairanCouponOperation">
+        <property name="baseUrl" value="${trc.baseUrl}" />
+    </bean>
+
     <bean id="qinniuForm" class="org.trc.form.QinniuForm">
         <property name="accessKey" value="${access.key}"/>
         <property name="secretKey" value="${secret.key}"/>

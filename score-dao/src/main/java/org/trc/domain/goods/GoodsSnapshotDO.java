@@ -19,13 +19,13 @@ public class GoodsSnapshotDO implements Serializable{
 	/**
     * 商品id
     */
-	@Column(name = "")
+	@Column(name = "goodsId")
 	private Long goodsId;
 
 	/**
 	 * 店铺id
 	 */
-	@Column(name = "")
+	@Column(name = "shopId")
 	private Long shopId;
 
 	/**
@@ -41,13 +41,13 @@ public class GoodsSnapshotDO implements Serializable{
 	/**
     * 品牌名称
     */
-	@Column(name = "")
+	@Column(name = "brandName")
 	private String brandName;
 
 	/**
     * 商品名称
     */
-	@Column(name = "")
+	@Column(name = "goodsName")
 	private String goodsName;
 
 	/**

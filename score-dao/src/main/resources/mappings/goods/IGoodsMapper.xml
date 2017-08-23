@@ -229,4 +229,16 @@
             and whetherPrizes = 1 and isDeleted = 0 and (( autoUpTime is null and autoDownTime is null ) or ( now() > autoUpTime and now() <![CDATA[ < ]]> autoDownTime))
         </where>
     </select>
+
+    <!-- 根据id扣减库存,添加兑换数量-->
+    <update id="orderAssociationProcessing" parameterType="org.trc.domain.goods.GoodsDO">
+        UPDATE goods SET
+        versionLock = versionLock+1,
+        stock = stock - #{exchangeQuantity},
+        <if test="snapshotTime != null ">
+            snapshotTime = #{snapshotTime},
+        </if>
+        exchangeQuantity = exchangeQuantity + #{exchangeQuantity}
+        WHERE id = #{id} and versionLock = #{versionLock}
+    </update>
 </mapper>

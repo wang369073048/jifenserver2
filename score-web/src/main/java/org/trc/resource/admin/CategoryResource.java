@@ -52,7 +52,7 @@ public class CategoryResource {
     @POST
     public AppResult<JSONObject> createCategory(@NotBlank @FormParam("categoryName") String categoryName,
                                                 @FormParam("isVirtual") Integer isVirtual,
-                                                @NotBlank @FormParam("logoUrl") String logoUrl,
+                                                @FormParam("logoUrl") String logoUrl,
                                                 @NotNull @FormParam("sort") Integer sort,
                                                 @FormParam("description") String description,
                                                 @FormParam("pid") Long pid,

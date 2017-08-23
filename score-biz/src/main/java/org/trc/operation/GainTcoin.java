@@ -1,24 +1,26 @@
 package org.trc.operation;
 
 import com.alibaba.fastjson.JSON;
-import com.trc.mall.constants.BusinessSide;
-import com.trc.mall.constants.BusinessType;
-import com.trc.mall.constants.LuckyDraw;
+
 import com.trc.mall.externalservice.HttpBaseAck;
 import com.trc.mall.externalservice.TcoinOperation;
 import com.trc.mall.externalservice.dto.TcoinAccountDto;
-import com.trc.mall.mapper.luckydraw.WinningRecordMapper;
-import com.trc.mall.model.RequestFlow;
-import com.trc.mall.model.WinningRecordDO;
-import com.trc.mall.operation.dto.GainTcoinDto;
-import com.trc.mall.service.RequestFlowService;
-import com.txframework.core.spring.SpringContextHolder;
+
 import com.txframework.util.Assert;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.conn.ConnectTimeoutException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.trc.biz.admin.IRequestFlowBiz;
+import org.trc.constants.BusinessSide;
+import org.trc.constants.BusinessType;
+import org.trc.constants.LuckyDraw;
+import org.trc.domain.admin.RequestFlow;
+import org.trc.domain.luckydraw.WinningRecordDO;
+import org.trc.framework.core.spring.SpringContextHolder;
+import org.trc.operation.dto.GainTcoinDto;
+import org.trc.service.luckydraw.IWinningRecordService;
 
 import java.io.IOException;
 import java.net.SocketTimeoutException;
@@ -30,16 +32,16 @@ public class GainTcoin implements Runnable{
 
     private Logger logger = LoggerFactory.getLogger(GainTcoin.class);
 
-    private static WinningRecordMapper winningRecordMapper;
+    private static IWinningRecordService winningRecordService;
 
     private static TcoinOperation tcoinOperation;
 
-    private static RequestFlowService requestFlowService;
+    private static IRequestFlowBiz requestFlowBiz;
 
     static {
-        winningRecordMapper = (WinningRecordMapper) SpringContextHolder.getBean("winningRecordMapper");
+        winningRecordService = (IWinningRecordService) SpringContextHolder.getBean("winningRecordService");
         tcoinOperation = (TcoinOperation) SpringContextHolder.getBean("tcoinOperation");
-        requestFlowService = (RequestFlowService)SpringContextHolder.getBean("requestFlowService");
+        requestFlowBiz = (IRequestFlowBiz)SpringContextHolder.getBean("requestFlowBiz");
     }
 
     private RequestFlow requestFlow;
@@ -69,12 +71,12 @@ public class GainTcoin implements Runnable{
             return ;
         }
         if(null == requestFlow.getId()){
-            requestFlow = requestFlowService.insert(requestFlow);
+            requestFlow = requestFlowBiz.insert(requestFlow);
         }
         GainTcoinDto gtParam = JSON.parseObject(requestFlow.getRequestParam(), GainTcoinDto.class);
         WinningRecordDO param = new WinningRecordDO();
         param.setRequestNo(requestFlow.getRequestNum());
-        WinningRecordDO winningRecord = winningRecordMapper.selectOne(param);
+        WinningRecordDO winningRecord = winningRecordService.selectOneForUpdate(param);
         if(LuckyDraw.WinningState.ALREADY_ISSUED == winningRecord.getState()){
             logger.info("奖品发放已完成,不能再次发放!");
             return;
@@ -86,45 +88,45 @@ public class GainTcoin implements Runnable{
                     if(TcoinAccountDto.SUCCESS_CODE.equals(resultAck.getData().getResultCode()) || TcoinAccountDto.RETRY_SUCCESS_CODE.equals(resultAck.getData().getResultCode())) {
                         logger.info("用户：" + gtParam.getUserId() + "抽奖获得T币:" + gtParam.getAmount() + ",请求号为:" + gtParam.getRequestNo() + "兑奖成功!");
                         //发放成功，设置状态
-                        requestFlowService.modify(requestFlow.getId(), RequestFlow.Status.SUCCESS, null);
+                        requestFlowBiz.modify(requestFlow.getId(), RequestFlow.Status.SUCCESS, null);
                         winningRecord.setState(LuckyDraw.WinningState.ALREADY_ISSUED);
-                        winningRecordMapper.updateState(winningRecord);
+                        winningRecordService.updateState(winningRecord);
                         return;
                     }else{
                         //发放失败，设置状态
-                        requestFlowService.modify(requestFlow.getId(), RequestFlow.Status.FAILURE, null);
+                        requestFlowBiz.modify(requestFlow.getId(), RequestFlow.Status.FAILURE, null);
                         winningRecord.setState(LuckyDraw.WinningState.PAYMENT_FAILURE);
-                        winningRecordMapper.updateState(winningRecord);
+                        winningRecordService.updateState(winningRecord);
                         return;
                     }
                 }
                 //发放失败，设置状态
-                requestFlowService.modify(requestFlow.getId(), RequestFlow.Status.UNKNOWN, null);
+                requestFlowBiz.modify(requestFlow.getId(), RequestFlow.Status.UNKNOWN, null);
                 winningRecord.setState(LuckyDraw.WinningState.PAYMENT_FAILURE);
-                winningRecordMapper.updateState(winningRecord);
+                winningRecordService.updateState(winningRecord);
                 return;
             } catch (ConnectTimeoutException e) {
-                requestFlowService.modify(requestFlow.getId(), RequestFlow.Status.FAILURE, null);
+                requestFlowBiz.modify(requestFlow.getId(), RequestFlow.Status.FAILURE, null);
                 winningRecord.setState(LuckyDraw.WinningState.PAYMENT_FAILURE);
-                winningRecordMapper.updateState(winningRecord);
+                winningRecordService.updateState(winningRecord);
                 logger.error("发放T币服务请求超时不可用!等待重试!"+requestFlow.getRequestNum());
                 return ;
             } catch (SocketTimeoutException e) {
-                requestFlowService.modify(requestFlow.getId(), RequestFlow.Status.SOCKET_TIME_OUT, null);
+                requestFlowBiz.modify(requestFlow.getId(), RequestFlow.Status.SOCKET_TIME_OUT, null);
                 winningRecord.setState(LuckyDraw.WinningState.PAYMENT_FAILURE);
-                winningRecordMapper.updateState(winningRecord);
+                winningRecordService.updateState(winningRecord);
                 logger.error("发放T币服务响应超时不可用!等待重试!"+requestFlow.getRequestNum());
                 return ;
             } catch (ClientProtocolException e) {
-                requestFlowService.modify(requestFlow.getId(), RequestFlow.Status.FAILURE, null);
+                requestFlowBiz.modify(requestFlow.getId(), RequestFlow.Status.FAILURE, null);
                 winningRecord.setState(LuckyDraw.WinningState.PAYMENT_FAILURE);
-                winningRecordMapper.updateState(winningRecord);
+                winningRecordService.updateState(winningRecord);
                 logger.error("发放T币服务协议错误不可用!等待重试!"+requestFlow.getRequestNum());
                 return ;
             } catch (IOException e) {
-                requestFlowService.modify(requestFlow.getId(), RequestFlow.Status.FAILURE, null);
+                requestFlowBiz.modify(requestFlow.getId(), RequestFlow.Status.FAILURE, null);
                 winningRecord.setState(LuckyDraw.WinningState.PAYMENT_FAILURE);
-                winningRecordMapper.updateState(winningRecord);
+                winningRecordService.updateState(winningRecord);
                 logger.error("发放T币服务io未知异常!等待重试!"+requestFlow.getRequestNum());
                 return ;
             }

@@ -1,9 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="org.trc.mapper.order.IOrderMapper" >
-
-	SettlementDO getSettlementByParams(SettlementQuery settlementQuery);
-
     <!-- 所有查询字段 -->
     <sql id="allSelectionColumn">
         id,
@@ -214,7 +211,7 @@
     </update>
 
     <!--统计待发货数量 -->
-    <select id="quantityToBeReceived" parameterType=org.trc.domain.order.OrdersDO resultType="java.lang.Integer">
+    <select id="quantityToBeReceived" parameterType="org.trc.domain.order.OrdersDO" resultType="java.lang.Integer">
         SELECT count(id)
         FROM orders
         <where>

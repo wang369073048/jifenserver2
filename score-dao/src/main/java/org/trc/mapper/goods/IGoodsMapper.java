@@ -56,4 +56,12 @@ public interface IGoodsMapper extends BaseMapper<GoodsDO> {
     int selectCountByParams(GoodsDO goodsDO);
 
     List<ActivityPrizesDO> queryActivityPrizes(ActivityPrizesDO paramG);
+
+    /**
+     * 根据id扣减库存，添加兑换数量
+     * @param goodsDO
+     * @return
+     */
+    int orderAssociationProcessing(GoodsDO goodsDO);
+
 }

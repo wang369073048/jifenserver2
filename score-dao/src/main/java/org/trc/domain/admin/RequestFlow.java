@@ -5,10 +5,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 /**
  * @JDK_version:  JDK1.8
@@ -33,11 +30,13 @@ public class RequestFlow implements Serializable {
     /**
      * 请求发起方
      */
+    @Column(name = "requester")
     private String requester;
 
     /**
      * 请求响应方
      */
+    @Column(name = "responder")
     private String responder;
 
     /**
@@ -48,6 +47,7 @@ public class RequestFlow implements Serializable {
     /**
      *  请求流水号
      */
+    @Column(name = "requestNum")
     private String requestNum;
 
     /**
@@ -58,16 +58,19 @@ public class RequestFlow implements Serializable {
     /**
      * 请求参数
      */
+    @Column(name = "requestParam")
     private String requestParam;
 
     /**
      * 应答
      */
+    @Column(name = "responseResult")
     private String responseResult;
 
     /**
      * 请求时间
      */
+    @Column(name = "requestTime")
     private Date requestTime;
 
     /**
@@ -78,13 +81,15 @@ public class RequestFlow implements Serializable {
     /**
      * 创建时间
      */
+    @Column(name = "createTime")
     private Date createTime;
 
     /**
      * 修改时间
      */
+    @Column(name = "updateTime")
     private Date updateTime;
-
+    @Transient
     private List<String> statusList;
 
     public RequestFlow(){

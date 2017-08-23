@@ -44,7 +44,7 @@
     	
    	
     <!-- 添加数据 -->
-    <insert id="insertMembershipScoreDailyDetails" parameterType="com.trc.mall.model.MembershipScoreDailyDetailsDO">
+    <insert id="insertMembershipScoreDailyDetails" parameterType="org.trc.domain.order.MembershipScoreDailyDetailsDO">
         <selectKey resultType="Long" order="AFTER" keyProperty="id">
         SELECT LAST_INSERT_ID() AS id
         </selectKey>

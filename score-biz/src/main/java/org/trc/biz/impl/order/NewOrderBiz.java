@@ -211,14 +211,14 @@ public class NewOrderBiz implements INewOrderBiz {
             Assert.notNull(ordersDO.getOrderState(), "orderState不能为空!");
             OrdersDO param = new OrdersDO();
             param.setId(ordersDO.getId());
-            OrdersDO oldOrder = orderService.selectByParams(param);
+            OrdersDO oldOrder = orderService.selectOne(param);
             if (null == oldOrder) {
                 throw new OrderException(ExceptionEnum.ORDER_QUERY_EXCEPTION, "对应的订单不存在!");
             }
             Date confirmTime = Calendar.getInstance().getTime();
             if (oldOrder.getOrderState().equals(OrderStatus.WAITING_FOR_RECEIVING) && ordersDO.getOrderState().equals(OrderStatus.TRANSACTION_SUCCESS)) {
                 ordersDO.setConfirmTime(confirmTime);
-                int result = orderService.updateById(ordersDO);
+                int result = orderService.updateByPrimaryKeySelective(ordersDO);
                 if (result < 1) {
                     throw new OrderException(ExceptionEnum.ORDER_UPDATE_EXCEPTION, "订单状态修改失败！");
                 } else {

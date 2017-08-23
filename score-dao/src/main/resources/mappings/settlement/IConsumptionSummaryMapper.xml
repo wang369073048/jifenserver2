@@ -69,7 +69,7 @@
         order by accountDay desc,createTime desc limit 1
     </select>
 
-    <select id="selectListByParams" parameterType="com.trc.mall.query.SettlementQuery" resultType="org.trc.domain.order.ConsumptionSummaryDO">
+    <select id="selectListByParams" parameterType="org.trc.domain.query.SettlementQuery" resultType="org.trc.domain.order.ConsumptionSummaryDO">
         select * from consumption_summary
         <where>
             <if test="shopId != null ">

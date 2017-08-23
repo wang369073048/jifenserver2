@@ -1,14 +1,10 @@
 package org.trc.operation;
 
 import com.alibaba.fastjson.JSON;
-import com.trc.mall.constants.BusinessSide;
-import com.trc.mall.constants.BusinessType;
+
 import com.trc.mall.externalservice.HttpBaseAck;
 import com.trc.mall.externalservice.TairanCouponOperation;
 import com.trc.mall.externalservice.dto.TairanCouponDto;
-import com.trc.mall.model.RequestFlow;
-import com.trc.mall.operation.dto.GainTairanCardDto;
-import com.trc.mall.service.RequestFlowService;
 import com.txframework.util.Assert;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.http.client.ClientProtocolException;
@@ -18,13 +14,18 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
+import org.trc.biz.admin.IRequestFlowBiz;
+import org.trc.constants.BusinessSide;
+import org.trc.constants.BusinessType;
+import org.trc.domain.admin.RequestFlow;
+import org.trc.operation.dto.GainTairanCardDto;
 
 import javax.annotation.Resource;
 import java.io.IOException;
 import java.net.SocketTimeoutException;
 
 /**
- * Created by george on 2017/7/18.
+ * Created by wangzhen.
  */
 @Component("exchangeTairanCard")
 public class ExchangeTairanCard {
@@ -35,7 +36,7 @@ public class ExchangeTairanCard {
     private TairanCouponOperation tairanCouponOperation;
 
     @Resource
-    private RequestFlowService requestFlowService;
+    private IRequestFlowBiz requestFlowBiz;
 
     private boolean _validate(RequestFlow requestFlow){
         try {
@@ -59,7 +60,7 @@ public class ExchangeTairanCard {
             return ;
         }
         if(null == requestFlow.getId()){
-            requestFlow = requestFlowService.insert(requestFlow);
+            requestFlow = requestFlowBiz.insert(requestFlow);
         }
         GainTairanCardDto gtcParam = JSON.parseObject(requestFlow.getRequestParam(), GainTairanCardDto.class);
         if(RequestFlow.Status.INITIAL.equals(requestFlow.getStatus()) || RequestFlow.Status.FAILURE.equals(requestFlow.getStatus())){
@@ -69,31 +70,31 @@ public class ExchangeTairanCard {
                     if(resultAck.getData().isStatus() && TairanCouponDto.SUCCESS_CODE.equals(resultAck.getData().getCode())) {
                         logger.info("用户：" + gtcParam.getUserId() + "兑换泰然优惠券:" + gtcParam.getEid() + ",请求号为:" + gtcParam.getRequestNo() + "兑换成功!");
                         //发放成功，设置状态
-                        requestFlowService.modify(requestFlow.getId(), RequestFlow.Status.SUCCESS, null);
+                        requestFlowBiz.modify(requestFlow.getId(), RequestFlow.Status.SUCCESS, null);
                         return;
                     }else{
                         //发放失败，设置状态
-                        requestFlowService.modify(requestFlow.getId(), RequestFlow.Status.ERROR, resultAck.getData().getMsg());
+                        requestFlowBiz.modify(requestFlow.getId(), RequestFlow.Status.ERROR, resultAck.getData().getMsg());
                         return;
                     }
                 }
                 //发放失败，设置状态
-                requestFlowService.modify(requestFlow.getId(), RequestFlow.Status.UNKNOWN, null);
+                requestFlowBiz.modify(requestFlow.getId(), RequestFlow.Status.UNKNOWN, null);
                 return;
             } catch (ConnectTimeoutException e) {
-                requestFlowService.modify(requestFlow.getId(), RequestFlow.Status.FAILURE, null);
+                requestFlowBiz.modify(requestFlow.getId(), RequestFlow.Status.FAILURE, null);
                 logger.error("泰然优惠券兑换服务请求超时不可用!等待重试!"+requestFlow.getRequestNum());
                 return ;
             } catch (SocketTimeoutException e) {
-                requestFlowService.modify(requestFlow.getId(), RequestFlow.Status.SOCKET_TIME_OUT, null);
+                requestFlowBiz.modify(requestFlow.getId(), RequestFlow.Status.SOCKET_TIME_OUT, null);
                 logger.error("泰然优惠券兑换服务响应超时不可用!等待人工确认!"+requestFlow.getRequestNum());
                 return ;
             } catch (ClientProtocolException e) {
-                requestFlowService.modify(requestFlow.getId(), RequestFlow.Status.FAILURE, null);
+                requestFlowBiz.modify(requestFlow.getId(), RequestFlow.Status.FAILURE, null);
                 logger.error("泰然优惠券兑换服务协议错误不可用!等待重试!"+requestFlow.getRequestNum());
                 return ;
             } catch (IOException e) {
-                requestFlowService.modify(requestFlow.getId(), RequestFlow.Status.FAILURE, null);
+                requestFlowBiz.modify(requestFlow.getId(), RequestFlow.Status.FAILURE, null);
                 logger.error("泰然优惠券兑换服务io未知异常!等待重试!"+requestFlow.getRequestNum());
                 return ;
             }
