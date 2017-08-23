@@ -26,7 +26,15 @@
         SELECT
         <include refid="allSelectionColumn"/>
         FROM shop
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              = #{isDeleted}
+        <where>
+            <if test="shopName != null">
+                and shopName = #{shopName}
+            </if>
+            <if test="channelCode != null">
+                and channelCode = #{channelCode}
+            </if>
+            <if test="isDeleted != null">
+                and isDeleted = #{isDeleted}
             </if>
         </where>
     </select>
@@ -44,35 +52,6 @@
             </if>
         </where>
     </select>
-
-    <!-- 添加数据 -->
-    <insert id="insert" parameterType="org.trc.domain.shop.ShopDO">
-        <selectKey resultType="Long" order="AFTER" keyProperty="id">
-            SELECT LAST_INSERT_ID() AS id
-        </selectKey>
-        INSERT INTO shop(
-        warnPhone,
-        phone,
-        userId,
-        shopName,
-        channelCode,
-        servicePhone,
-        description,
-        isDeleted,
-        createTime,
-        updateTime
-        )VALUES(
-        #{warnPhone},
-        #{phone},
-        #{userId},
-        #{shopName},
-        #{channelCode},
-        #{servicePhone},
-        #{description},
-        0,
-        #{createTime},
-        now())
-    </insert>
 
     <!-- 根据ID更新信息-->
     <update id="updateById" parameterType="org.trc.domain.shop.ShopDO">
