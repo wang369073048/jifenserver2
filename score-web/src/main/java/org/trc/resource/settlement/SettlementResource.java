@@ -149,8 +149,8 @@ public class SettlementResource {
         CellDefinition username = new CellDefinition("username", "会员手机号", CellDefinition.TEXT, 4000);
         CellDefinition barCode = new CellDefinition("barCode", "商品条码", CellDefinition.TEXT, 4000);
         CellDefinition goodsName = new CellDefinition("goodsName", "商品名称", CellDefinition.TEXT, 16000);
-        CellDefinition goodsCount = new CellDefinition("goodsCount", "兑换数量", CellDefinition.NUM_0, 4000);
-        CellDefinition payment = new CellDefinition("payment", "消费积分数量", CellDefinition.NUM_0, 4000);
+        CellDefinition goodsCount = new CellDefinition("goodsCount", "商品数量", CellDefinition.NUM_0, 4000);
+        CellDefinition payment = new CellDefinition("payment", "积分数量", CellDefinition.NUM_0, 4000);
         List<CellDefinition> cellDefinitionList = new ArrayList<>();
         cellDefinitionList.add(orderDate);
         cellDefinitionList.add(orderNum);
