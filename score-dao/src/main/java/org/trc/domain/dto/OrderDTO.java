@@ -102,6 +102,8 @@ public class OrderDTO implements Serializable{
      */
     private Date returnTime;
 
+    private Integer scoreCount;
+
     /**
      * 创建时间
      */
@@ -187,6 +189,14 @@ public class OrderDTO implements Serializable{
     public String receiverName;
 
     public String receiverPhone;
+
+    public Integer getScoreCount() {
+        return scoreCount;
+    }
+
+    public void setScoreCount(Integer scoreCount) {
+        this.scoreCount = scoreCount;
+    }
 
     public Long getId() {
         return id;
