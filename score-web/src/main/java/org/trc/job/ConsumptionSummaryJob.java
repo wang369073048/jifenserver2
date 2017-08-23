@@ -3,6 +3,8 @@ package org.trc.job;
 import org.trc.mapper.settlement.IConsumptionSummaryMapper;
 import org.trc.biz.settlement.IFinancialSettlementBiz;
 import org.trc.domain.order.ConsumptionSummaryDO;
+import org.trc.domain.order.MembershipScoreDailyDetailsDO;
+
 import com.trc.mall.util.IpUtil;
 import com.txframework.util.DateUtils;
 import org.slf4j.Logger;
@@ -85,6 +87,7 @@ public class ConsumptionSummaryJob extends BaseJob {
         Map<String,Date> params = new HashMap<>();
         params.put("startTime",startTime);
         params.put("endTime",endDate);
+        //兑入积分汇总
         List<ConsumptionSummaryDO> exchangeInSummaryDOList = consumptionSummaryMapper.generateConsumptionSummaryForExchangeIn(params);
         logger.info("--SettlementJob 日结时间:" + endDate + ",账户个数:" + exchangeInSummaryDOList.size());
         String accountDay = DateUtils.formatDate(startTime,DateUtils.DATE_PATTERN);
@@ -92,20 +95,57 @@ public class ConsumptionSummaryJob extends BaseJob {
             consumptionSummary.setAccountDay(accountDay);
             consumptionSummary.setShopId(currencyMap.get(consumptionSummary.getExchangeCurrency()));
             consumptionSummary.setConsumeNum(0l);
+            consumptionSummary.setConsumeCorrectNum(0l);
+            consumptionSummary.setLotteryConsumeNum(0l);
             consumptionSummary.setCreateTime(time);
             consumptionSummaryMapper.insertConsumptionSummary(consumptionSummary);
         }
+        //消费积分汇总
         List<ConsumptionSummaryDO> consumptionSummaryDOList = consumptionSummaryMapper.generateConsumptionSummaryForConsume(params);
         for(ConsumptionSummaryDO consumptionSummary : consumptionSummaryDOList){
             consumptionSummary.setAccountDay(accountDay);
             ConsumptionSummaryDO oldConsumptionSummary = consumptionSummaryMapper.getConsumptionSummaryByParams(consumptionSummary);
             if(null == oldConsumptionSummary){
                 consumptionSummary.setExchangeInNum(0l);
+                consumptionSummary.setConsumeCorrectNum(0l);
+                consumptionSummary.setLotteryConsumeNum(0l);
                 consumptionSummary.setCreateTime(time);
                 consumptionSummaryMapper.insertConsumptionSummary(consumptionSummary);
             }else{
                 oldConsumptionSummary.setConsumeNum(consumptionSummary.getConsumeNum());
                 consumptionSummaryMapper.updateConsumptionSummary(oldConsumptionSummary);
+            }
+        }
+        //add by xab 获取抽奖消费汇总 
+        List<ConsumptionSummaryDO> lotteryConsumeSummaryDOList = consumptionSummaryMapper.generateConsumptionSummaryForLotteryConsume(params);
+        for(ConsumptionSummaryDO lotteryConsumeSummary : lotteryConsumeSummaryDOList){
+        	lotteryConsumeSummary.setAccountDay(accountDay);
+            ConsumptionSummaryDO oldConsumptionSummary = consumptionSummaryMapper.getConsumptionSummaryByParams(lotteryConsumeSummary);
+            if(null == oldConsumptionSummary){
+            	lotteryConsumeSummary.setExchangeInNum(0l);
+            	lotteryConsumeSummary.setConsumeCorrectNum(0l);
+            	lotteryConsumeSummary.setConsumeNum(0l);
+            	lotteryConsumeSummary.setCreateTime(time);
+                consumptionSummaryMapper.insertConsumptionSummary(lotteryConsumeSummary);
+            }else{
+                oldConsumptionSummary.setLotteryConsumeNum(lotteryConsumeSummary.getLotteryConsumeNum());
+                consumptionSummaryMapper.updateConsumptionSummary(oldConsumptionSummary);
+            }
+        }
+        //add by xab 获取消费冲正[也就是退积分]汇总
+        List<ConsumptionSummaryDO> consumeCorrectSummaryDOList = consumptionSummaryMapper.generateConsumptionSummaryForConsumeCorrect(params);
+        for(ConsumptionSummaryDO consumeCorrectSummary : consumeCorrectSummaryDOList){
+        	consumeCorrectSummary.setAccountDay(accountDay);
+            ConsumptionSummaryDO oldConsumeCorrectSummary = consumptionSummaryMapper.getConsumptionSummaryByParams(consumeCorrectSummary);
+            if(null == oldConsumeCorrectSummary){
+            	consumeCorrectSummary.setExchangeInNum(0l);
+            	consumeCorrectSummary.setConsumeNum(0l);
+            	consumeCorrectSummary.setLotteryConsumeNum(0l);
+            	consumeCorrectSummary.setCreateTime(time);
+                consumptionSummaryMapper.insertConsumptionSummary(consumeCorrectSummary);
+            }else{
+                oldConsumeCorrectSummary.setConsumeCorrectNum(consumeCorrectSummary.getConsumeCorrectNum());
+                consumptionSummaryMapper.updateConsumptionSummary(oldConsumeCorrectSummary);
             }
         }
     }

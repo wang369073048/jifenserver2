@@ -11,6 +11,8 @@
         phone,
         exchangeInNum,
         consumeNum,
+        lotteryConsumeNum,
+        consumeCorrectNum
         createTime
 	</sql>
    	
@@ -26,6 +28,8 @@
             phone,
             exchangeInNum,
             consumeNum,
+            lotteryConsumeNum,
+        	consumeCorrectNum
             createTime
         )VALUES(
             #{userId},
@@ -34,6 +38,8 @@
             #{phone},
             #{exchangeInNum},
             #{consumeNum},
+            #{lotteryConsumeNum},
+            #{consumeCorrectNum},
             #{createTime}
         )
     </insert>
@@ -42,8 +48,17 @@
     <update id="updateConsumptionSummary" parameterType="org.trc.domain.order.ConsumptionSummaryDO">
         UPDATE consumption_summary
         <set>
+            <if test="exchangeInNum != null ">
+                exchangeInNum = #{exchangeInNum},
+            </if>
             <if test="consumeNum != null ">
                 consumeNum = #{consumeNum},
+            </if>
+            <if test="lotteryConsumeNum != null ">
+                lotteryConsumeNum = #{lotteryConsumeNum},
+            </if>
+            <if test="consumeCorrectNum != null ">
+                consumeCorrectNum = #{consumeCorrectNum},
             </if>
         </set>
         WHERE id = #{id}
@@ -100,9 +115,13 @@
             AND createTime < #{endTime}]]>
         </where>
     </select> 
-    asfas
-<select id="queryMonthConsumptionSummary" parameterType="org.trc.domain.query.SettlementQuery" resultType="org.trc.domain.order.ConsumptionSummaryDO">
-        select userId, shopId, phone, left(accountDay,7) as accountDay, SUM(exchangeInNum) as exchangeInNum, SUM(consumeNum) as consumeNum  from consumption_summary
+  
+   <select id="queryMonthConsumptionSummary" parameterType="org.trc.domain.query.SettlementQuery" resultType="org.trc.domain.order.ConsumptionSummaryDO">
+        select userId, shopId, phone, left(accountDay,7) as accountDay, SUM(exchangeInNum) as exchangeInNum, 
+        SUM(consumeNum) as consumeNum,
+        SUM(lotteryConsumeNum) as lotteryConsumeNum,
+        SUM(consumeCorrectNum) as consumeCorrectNum 
+        from consumption_summary
         <where>
             <if test="shopId != null and shopId != ''">
                 AND shopId = #{shopId}
@@ -207,6 +226,7 @@
         userName DESC
     </select>
 
+	<!--  注:为了取相应的值，站在卖家的角度来统计 -->
     <select id="generateConsumptionSummaryForConsume" parameterType="java.util.Map" resultType="org.trc.domain.order.ConsumptionSummaryDO">
         SELECT
         theOtherUserId as userId,
@@ -218,6 +238,54 @@
         WHERE
         state = 0
         AND businessCode = 'income'
+        AND <![CDATA[createTime >= #{startTime}
+        AND createTime < #{endTime}]]>
+        GROUP BY
+        theOtherUserId,
+        shopId,
+        theOtherUserName
+        ORDER BY
+        theOtherUserId DESC,
+        shopId DESC,
+        theOtherUserName DESC;
+    </select>
+    
+    <!-- add by xab 获取抽奖消费汇总。注:为了取相应的值，站在卖家的角度来统计 -->
+    <select id="generateConsumptionSummaryForLotteryConsume" parameterType="java.util.Map" resultType="org.trc.domain.order.ConsumptionSummaryDO">
+        SELECT
+        theOtherUserId as userId,
+        shopId,
+        theOtherUserName as phone,
+        sum(score) as lotteryConsumeNum
+        FROM
+        score_change
+        WHERE
+        state = 0
+        AND businessCode = 'lotteryIncome'
+        AND <![CDATA[createTime >= #{startTime}
+        AND createTime < #{endTime}]]>
+        GROUP BY
+        theOtherUserId,
+        shopId,
+        theOtherUserName
+        ORDER BY
+        theOtherUserId DESC,
+        shopId DESC,
+        theOtherUserName DESC;
+    </select>
+    
+    <!-- add by xab 获取消费冲正[也就是退积分]汇总 。注:为了取相应的值，站在卖家的角度来统计 -->
+    <select id="generateConsumptionSummaryForConsumeCorrect" parameterType="java.util.Map" resultType="org.trc.domain.order.ConsumptionSummaryDO">
+        SELECT
+        theOtherUserId as userId,
+        shopId,
+        theOtherUserName as phone,
+        sum(score) as lotteryConsumeNum
+        FROM
+        score_change
+        WHERE
+        state = 0
+        AND businessCode = 'incomeCorrect'
         AND <![CDATA[createTime >= #{startTime}
         AND createTime < #{endTime}]]>
         GROUP BY

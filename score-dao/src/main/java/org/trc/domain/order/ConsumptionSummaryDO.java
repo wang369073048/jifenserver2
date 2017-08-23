@@ -17,15 +17,29 @@ public class ConsumptionSummaryDO implements Serializable {
     private String userId;
     @Column(name = "accountDay")
     private String accountDay;
-    @Column(name = "exchangeCurrency")
+    /**
+     * 非持久化字段
+     */
+    @Transient
     private String exchangeCurrency;
-    @Column(name = "shopId")
+    /**
+     * 非持久化字段
+     */
+    @Transient
     private Long shopId;
+    
     private String phone;
     @Column(name = "exchangeInNum")
     private Long exchangeInNum;
     @Column(name = "consumeNum")
     private Long consumeNum;
+    
+    @Column(name = "lotteryConsumeNum")
+    private Long lotteryConsumeNum;//add by xab 抽奖消费积分
+	
+	@Column(name = "consumeCorrectNum")
+    private Long consumeCorrectNum;//add by xab 消费冲正，也就是退积分
+	
     @Column(name = "createTime")
     private Date createTime;
 
@@ -100,13 +114,30 @@ public class ConsumptionSummaryDO implements Serializable {
         this.consumeNum = consumeNum;
     }
 
-    public Date getCreateTime() {
+    public Long getLotteryConsumeNum() {
+		return lotteryConsumeNum;
+	}
+
+	public void setLotteryConsumeNum(Long lotteryConsumeNum) {
+		this.lotteryConsumeNum = lotteryConsumeNum;
+	}
+
+	public Long getConsumeCorrectNum() {
+		return consumeCorrectNum;
+	}
+
+	public void setConsumeCorrectNum(Long consumeCorrectNum) {
+		this.consumeCorrectNum = consumeCorrectNum;
+	}
+
+	public Date getCreateTime() {
         return createTime;
     }
 
     public void setCreateTime(Date createTime) {
         this.createTime = createTime;
     }
+    
 
     @Override
     public String toString() {
@@ -119,6 +150,8 @@ public class ConsumptionSummaryDO implements Serializable {
                 ", phone='" + phone + '\'' +
                 ", exchangeInNum=" + exchangeInNum +
                 ", consumeNum=" + consumeNum +
+                ", lotteryConsumeNum=" + lotteryConsumeNum +
+                ", consumeCorrectNum=" + consumeCorrectNum +
                 ", createTime=" + createTime +
                 '}';
     }
