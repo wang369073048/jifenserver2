@@ -25,7 +25,7 @@ import java.io.IOException;
 import java.net.SocketTimeoutException;
 
 /**
- * Created by george on 2017/7/18.
+ * Created by wangzhen.
  */
 @Component("exchangeTairanCard")
 public class ExchangeTairanCard {

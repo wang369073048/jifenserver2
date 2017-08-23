@@ -19,6 +19,7 @@ import org.trc.biz.goods.ICategoryBiz;
 import org.trc.biz.goods.ICouponsBiz;
 import org.trc.biz.goods.IGoodsBiz;
 import org.trc.biz.goods.IGoodsRecommendBiz;
+import org.trc.biz.shop.IShopBiz;
 import org.trc.constants.Category;
 import org.trc.constants.ExternalserviceResultCodeConstants;
 import org.trc.domain.goods.*;
@@ -72,6 +73,8 @@ public class GoodsBiz implements IGoodsBiz{
     private IPurchaseRestrictionsService purchaseRestrictionsService;
     @Autowired
     private IGoodsClassificationRelationshipService goodsClassificationRelationshipService;
+    @Autowired
+    private IShopBiz shopBiz;
 
     @Override
     @CacheEvit(key="#goodsDO.id")
@@ -421,10 +424,13 @@ public class GoodsBiz implements IGoodsBiz{
             goodsDO.setExchangeQuantity(quantity);
             goodsDO.setVersionLock(version);
             //判断是否需要生成快照
-            GoodsDO originalGoodsDO = goodsService.getPrizeGoodsById(goodsId);
-            if(null != originalGoodsDO.getUpdateTime() && originalGoodsDO.getUpdateTime().after(originalGoodsDO.getSnapshotTime())){
+            GoodsDO originalGoodsDO = new GoodsDO();
+            originalGoodsDO.setId(goodsId);
+            originalGoodsDO.setWhetherPrizes(1);
+            originalGoodsDO = goodsService.selectOne(originalGoodsDO);
+            if(null != originalGoodsDO && null != originalGoodsDO.getUpdateTime() && originalGoodsDO.getUpdateTime().after(originalGoodsDO.getSnapshotTime())){
                 GoodsSnapshotDO goodsSnapshotDO = _convertToGoodsSnapshotDO(originalGoodsDO);
-                goodsSnapshotService.insert(goodsSnapshotDO);
+                goodsSnapshotService.insertSelective(goodsSnapshotDO);
                 goodsDO.setSnapshotTime(new Date());
             }
             //1.判断奖品库存
@@ -438,7 +444,7 @@ public class GoodsBiz implements IGoodsBiz{
             }
             if(remaining < 0){
                 logger.info("奖品:"+originalGoodsDO.getGoodsName()+"库存不充足，请补足!");
-                throw new BusinessException(ExceptionEnum.INVENTORY_SHORTAGE, "商品库存不足，请补足!");
+                throw new BusinessException(ExceptionEnum.GOODS_INVENTORY_SHORTAGE, "商品库存不足，请补足!");
             }
             if(result != 1){
                 logger.error("奖品订单相关操作ID=>[" + goodsId + "]的GoodsDO异常!");

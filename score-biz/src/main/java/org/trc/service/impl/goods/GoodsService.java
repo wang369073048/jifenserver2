@@ -86,5 +86,10 @@ public class GoodsService extends BaseService<GoodsDO,Long> implements IGoodsSer
         return pagenation;
     }
 
+    @Override
+    public int orderAssociationProcessing(GoodsDO goodsDO) {
+        return goodsMapper.orderAssociationProcessing(goodsDO);
+    }
+
 
 }

@@ -101,6 +101,7 @@ public enum ExceptionEnum {
     GOODS_UPDATE_EXCEPTION("860102","商品更新异常"),
     GOODS_ID_NOT_EXIST("860103","商品Id不存在"),
     GOODS_CAN_NOT_BE_DOWNED("860104","商品不允许下架或删除"),
+    GOODS_INVENTORY_SHORTAGE("860105","商品库存不足"),
 
     GOODSRECOMMEND_QUERY_EXCEPTION("870100","推荐商品查询异常"),
     GOODSRECOMMEND_SAVE_EXCEPTION("860101","推荐商品保存异常"),

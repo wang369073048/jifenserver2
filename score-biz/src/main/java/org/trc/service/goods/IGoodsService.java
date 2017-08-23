@@ -71,4 +71,11 @@ public interface IGoodsService extends IBaseService<GoodsDO,Long>{
 
     Pagenation<ActivityPrizesDO> queryActivityPrizes(ActivityPrizesDO paramG, Pagenation<ActivityPrizesDO> pageRequest);
 
+    /**
+     * 根据id扣减库存，添加兑换数量
+     * @param goodsDO
+     * @return
+     */
+    int orderAssociationProcessing(GoodsDO goodsDO);
+
 }
