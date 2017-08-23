@@ -400,7 +400,7 @@ public class GoodsBiz implements IGoodsBiz{
         if (resultAck.isSuccess() && null != resultAck.getData() && CouponDto.SUCCESS_CODE.equals(resultAck.getCode())) {
             return resultAck.getData();
         } else {
-            throw new CouponException("41000", "虚拟卡券对应的批次号不存在!");
+            throw new CouponException(ExceptionEnum.COUPON_QUERY_EXCEPTION, "虚拟卡券对应的批次号不存在!");
         }
     }
 

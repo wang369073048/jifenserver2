@@ -4,6 +4,7 @@ import com.tairanchina.md.account.user.model.UserDO;
 import com.tairanchina.md.account.user.service.UserService;
 import com.tairanchina.md.api.QueryType;
 import com.txframework.util.DateUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.hibernate.validator.constraints.NotBlank;
 import org.slf4j.Logger;
@@ -65,7 +66,7 @@ public class RefundRescorce {
      */
     @GET
     @Path(ScoreAdminConstants.Route.Refund.SETTLEMENT)
-    public Pagenation<OrderDTO> settlement(@NotBlank@QueryParam("shopId") Long shopId,
+    public Pagenation<OrderDTO> settlement(@QueryParam("shopId") Long shopId,
                                            @QueryParam("phone") String phone,
                                            @QueryParam("startTime") Long startTime,
                                            @QueryParam("endTime") Long endTime,
@@ -74,11 +75,13 @@ public class RefundRescorce {
         List<Integer> orderStates = new ArrayList<>();
         orderStates.add(5);//5为退款
         param.setOrderStates(orderStates);
-        UserDO userDO = userService.getUserDO(QueryType.Phone, phone);
-        if (null == userDO) {
-            throw new OrderException(ExceptionEnum.ORDER_QUERY_EXCEPTION, "手机号不存在");
+        if(StringUtils.isNotBlank(phone)){
+            UserDO userDO = userService.getUserDO(QueryType.Phone, phone);
+            if (null == userDO) {
+                throw new OrderException(ExceptionEnum.ORDER_QUERY_EXCEPTION, "手机号不存在");
+            }
+            param.setUserId(userDO.getUserId());
         }
-        param.setUserId(userDO.getUserId());
         if (null != startTime) {
             param.setStartTime(new Date(startTime));
         }
@@ -106,11 +109,13 @@ public class RefundRescorce {
         SettlementQuery settlementQuery = new SettlementQuery();
         settlementQuery.setOrderState(5);//5为退款
         settlementQuery.setShopId(shopId);
-        UserDO userDO = userService.getUserDO(QueryType.Phone, phone);
-        if (null == userDO) {
-            throw new OrderException(ExceptionEnum.ORDER_QUERY_EXCEPTION, "手机号不存在");
+        if(StringUtils.isNotBlank(phone)){
+            UserDO userDO = userService.getUserDO(QueryType.Phone, phone);
+            if (null == userDO) {
+                throw new OrderException(ExceptionEnum.ORDER_QUERY_EXCEPTION, "手机号不存在");
+            }
+            settlementQuery.setUserId(userDO.getUserId());
         }
-        settlementQuery.setUserId(userDO.getUserId());
         if (null != startTime) {
             settlementQuery.setStartTime(new Date(startTime));
         }
