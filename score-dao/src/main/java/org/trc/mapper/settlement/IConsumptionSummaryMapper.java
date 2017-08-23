@@ -29,6 +29,20 @@ public interface IConsumptionSummaryMapper extends BaseMapper<ConsumptionSummary
     List<ConsumptionSummaryDO> generateConsumptionSummaryForExchangeIn(Map<String ,Date> timeInterval);
 
     List<ConsumptionSummaryDO> generateConsumptionSummaryForConsume(Map<String ,Date> timeInterval);
+    /**
+     * 
+     * @Description add by xab 获取抽奖消费汇总
+     * @param timeInterval
+     * @return
+     */
+    List<ConsumptionSummaryDO> generateConsumptionSummaryForLotteryConsume(Map<String ,Date> timeInterval);
+    /**
+     * 
+     * @Description add by xab 获取消费冲正[也就是退积分]汇总
+     * @param timeInterval
+     * @return
+     */
+    List<ConsumptionSummaryDO> generateConsumptionSummaryForConsumeCorrect(Map<String ,Date> timeInterval);
 
     List<ConsumptionSummaryDO> selectListByParams(SettlementQuery SettlementQuery);
 
