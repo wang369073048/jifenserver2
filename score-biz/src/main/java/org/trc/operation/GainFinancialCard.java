@@ -1,17 +1,11 @@
 package org.trc.operation;
 
 import com.alibaba.fastjson.JSON;
-import com.trc.mall.constants.BusinessSide;
-import com.trc.mall.constants.BusinessType;
-import com.trc.mall.constants.LuckyDraw;
+
 import com.trc.mall.externalservice.HttpBaseAck;
 import com.trc.mall.externalservice.TrCouponOperation;
 import com.trc.mall.externalservice.dto.CouponDto;
-import com.trc.mall.mapper.luckydraw.WinningRecordMapper;
-import com.trc.mall.model.RequestFlow;
-import com.trc.mall.model.WinningRecordDO;
-import com.trc.mall.operation.dto.GainFinancialCardDto;
-import com.trc.mall.service.RequestFlowService;
+
 import com.txframework.util.Assert;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.http.client.ClientProtocolException;
@@ -20,6 +14,14 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
+import org.trc.biz.admin.IRequestFlowBiz;
+import org.trc.constants.BusinessSide;
+import org.trc.constants.BusinessType;
+import org.trc.constants.LuckyDraw;
+import org.trc.domain.admin.RequestFlow;
+import org.trc.domain.luckydraw.WinningRecordDO;
+import org.trc.operation.dto.GainFinancialCardDto;
+import org.trc.service.luckydraw.IWinningRecordService;
 
 import javax.annotation.Resource;
 import java.io.IOException;
@@ -34,13 +36,13 @@ public class GainFinancialCard {
     private Logger logger = LoggerFactory.getLogger(GainFinancialCard.class);
 
     @Resource
-    private WinningRecordMapper winningRecordMapper;
+    private IWinningRecordService winningRecordService;
 
     @Resource
     private TrCouponOperation trCouponOperation;
 
     @Resource
-    private RequestFlowService requestFlowService;
+    private IRequestFlowBiz requestFlowBiz;
 
     private boolean _validate(RequestFlow requestFlow){
         try {
@@ -64,12 +66,12 @@ public class GainFinancialCard {
             return false;
         }
         if(null == requestFlow.getId()){
-            requestFlow = requestFlowService.insert(requestFlow);
+            requestFlow = requestFlowBiz.insert(requestFlow);
         }
         GainFinancialCardDto gfcParam = JSON.parseObject(requestFlow.getRequestParam(), GainFinancialCardDto.class);
         WinningRecordDO param = new WinningRecordDO();
         param.setOrderNum(requestFlow.getRequestNum());
-        WinningRecordDO winningRecord = winningRecordMapper.selectOne(param);
+        WinningRecordDO winningRecord = winningRecordService.selectOneForUpdate(param);
         if(LuckyDraw.WinningState.ALREADY_ISSUED == winningRecord.getState()){
             logger.info("奖品发放已完成,不能再次发放!");
             return true;
@@ -81,45 +83,45 @@ public class GainFinancialCard {
                     if(CouponDto.SUCCESS_CODE.equals(resultAck.getData().getCode())) {
                         logger.info("用户：" + gfcParam.getUserId() + "兑换金融卡券:" + gfcParam.getEid() + ",请求号为:" + gfcParam.getRequestNo() + "兑奖成功!");
                         //发放成功，设置状态
-                        requestFlowService.modify(requestFlow.getId(), RequestFlow.Status.SUCCESS, null);
+                        requestFlowBiz.modify(requestFlow.getId(), RequestFlow.Status.SUCCESS, null);
                         winningRecord.setState(LuckyDraw.WinningState.ALREADY_ISSUED);
-                        winningRecordMapper.updateState(winningRecord);
+                        winningRecordService.updateState(winningRecord);
                         return true;
                     }else{
                         //发放失败，设置状态
-                        requestFlowService.modify(requestFlow.getId(), RequestFlow.Status.FAILURE, resultAck.getData().getMessage());
+                        requestFlowBiz.modify(requestFlow.getId(), RequestFlow.Status.FAILURE, resultAck.getData().getMessage());
                         winningRecord.setState(LuckyDraw.WinningState.PAYMENT_FAILURE);
-                        winningRecordMapper.updateState(winningRecord);
+                        winningRecordService.updateState(winningRecord);
                         return false;
                     }
                 }
                 //发放失败，设置状态
-                requestFlowService.modify(requestFlow.getId(), RequestFlow.Status.UNKNOWN, null);
+                requestFlowBiz.modify(requestFlow.getId(), RequestFlow.Status.UNKNOWN, null);
                 winningRecord.setState(LuckyDraw.WinningState.PAYMENT_FAILURE);
-                winningRecordMapper.updateState(winningRecord);
+                winningRecordService.updateState(winningRecord);
                 return false;
             } catch (ConnectTimeoutException e) {
-                requestFlowService.modify(requestFlow.getId(), RequestFlow.Status.FAILURE, null);
+                requestFlowBiz.modify(requestFlow.getId(), RequestFlow.Status.FAILURE, null);
                 winningRecord.setState(LuckyDraw.WinningState.PAYMENT_FAILURE);
-                winningRecordMapper.updateState(winningRecord);
+                winningRecordService.updateState(winningRecord);
                 logger.error("卡券兑换服务请求超时不可用!等待重试!"+requestFlow.getRequestNum());
                 return false;
             } catch (SocketTimeoutException e) {
                 winningRecord.setState(LuckyDraw.WinningState.PAYMENT_FAILURE);
-                winningRecordMapper.updateState(winningRecord);
-                requestFlowService.modify(requestFlow.getId(), RequestFlow.Status.SOCKET_TIME_OUT, null);
+                winningRecordService.updateState(winningRecord);
+                requestFlowBiz.modify(requestFlow.getId(), RequestFlow.Status.SOCKET_TIME_OUT, null);
                 logger.error("卡券兑换服务响应超时不可用!等待人工确认!"+requestFlow.getRequestNum());
                 return false;
             } catch (ClientProtocolException e) {
                 winningRecord.setState(LuckyDraw.WinningState.PAYMENT_FAILURE);
-                winningRecordMapper.updateState(winningRecord);
-                requestFlowService.modify(requestFlow.getId(), RequestFlow.Status.FAILURE, null);
+                winningRecordService.updateState(winningRecord);
+                requestFlowBiz.modify(requestFlow.getId(), RequestFlow.Status.FAILURE, null);
                 logger.error("卡券兑换服务协议错误不可用!等待重试!"+requestFlow.getRequestNum());
                 return false;
             } catch (IOException e) {
                 winningRecord.setState(LuckyDraw.WinningState.PAYMENT_FAILURE);
-                winningRecordMapper.updateState(winningRecord);
-                requestFlowService.modify(requestFlow.getId(), RequestFlow.Status.FAILURE, null);
+                winningRecordService.updateState(winningRecord);
+                requestFlowBiz.modify(requestFlow.getId(), RequestFlow.Status.FAILURE, null);
                 logger.error("卡券兑换服务io未知异常!等待重试!"+requestFlow.getRequestNum());
                 return false;
             }

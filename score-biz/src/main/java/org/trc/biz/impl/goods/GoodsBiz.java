@@ -23,17 +23,18 @@ import org.trc.constants.Category;
 import org.trc.constants.ExternalserviceResultCodeConstants;
 import org.trc.domain.goods.*;
 import org.trc.domain.query.GoodsQuery;
+import org.trc.domain.shop.ShopDO;
 import org.trc.enums.ExceptionEnum;
 import org.trc.exception.BusinessException;
 import org.trc.exception.CardCouponException;
 import org.trc.exception.CouponException;
 import org.trc.exception.GoodsException;
-import org.trc.service.goods.IGoodsClassificationRelationshipService;
-import org.trc.service.goods.IGoodsService;
-import org.trc.service.goods.IPurchaseRestrictionsService;
-import org.trc.service.goods.IShopClassificationService;
+import org.trc.service.goods.*;
+import org.trc.task.SMSTask;
 import org.trc.util.Pagenation;
+import org.trc.util.ThreadPoolUtil;
 
+import javax.annotation.Resource;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.*;
@@ -59,6 +60,9 @@ public class GoodsBiz implements IGoodsBiz{
 
     @Autowired
     private IGoodsRecommendBiz goodsRecommendBiz;
+
+    @Resource
+    private IGoodsSnapshotService goodsSnapshotService;
 
     @Autowired
     private TrCouponOperation trCouponOperation;
@@ -420,34 +424,34 @@ public class GoodsBiz implements IGoodsBiz{
             GoodsDO originalGoodsDO = goodsService.getPrizeGoodsById(goodsId);
             if(null != originalGoodsDO.getUpdateTime() && originalGoodsDO.getUpdateTime().after(originalGoodsDO.getSnapshotTime())){
                 GoodsSnapshotDO goodsSnapshotDO = _convertToGoodsSnapshotDO(originalGoodsDO);
-                goodsSnapshotMapper.insert(goodsSnapshotDO);
+                goodsSnapshotService.insert(goodsSnapshotDO);
                 goodsDO.setSnapshotTime(new Date());
             }
             //1.判断奖品库存
             int remaining = originalGoodsDO.getStock() - goodsDO.getExchangeQuantity();
             //2.操作库存
-            int result = goodsMapper.orderAssociationProcessing(goodsDO);
+            int result = goodsService.orderAssociationProcessing(goodsDO);
             //3.到预警值
             if(originalGoodsDO.getStockWarn() >= remaining)	{
-                ShopDO shopDo = shopService.getShopDOById(originalGoodsDO.getShopId());
+                ShopDO shopDo = shopBiz.getShopDOById(originalGoodsDO.getShopId());
                 ThreadPoolUtil.execute(new SMSTask("商品(" + originalGoodsDO.getGoodsName() + ")达到库存预警",shopDo.getWarnPhone()));
             }
             if(remaining < 0){
                 logger.info("奖品:"+originalGoodsDO.getGoodsName()+"库存不充足，请补足!");
-                throw new BusinessException(GoodsException.INVENTORY_SHORTAGE, "商品库存不足，请补足!");
+                throw new BusinessException(ExceptionEnum.INVENTORY_SHORTAGE, "商品库存不足，请补足!");
             }
             if(result != 1){
                 logger.error("奖品订单相关操作ID=>[" + goodsId + "]的GoodsDO异常!");
-                throw new BusinessException(GoodsException.UPDATE_EXCEPTION, "奖品订单相关操作ID=>[" + goodsId + "]的GoodsDO异常!");
+                throw new BusinessException(ExceptionEnum.UPDATE_EXCEPTION, "奖品订单相关操作ID=>[" + goodsId + "]的GoodsDO异常!");
             }
             logger.info("奖品订单相关操作ID=>[" + goodsId + "]的GoodsDO成功!");
             return result;
         } catch (IllegalArgumentException e) {
             logger.error("奖品订单相关操作校验参数异常!",e);
-            throw new BusinessException(GoodsException.ABNORMAL_PARAMETER,e.getMessage());
+            throw new BusinessException(ExceptionEnum.PARAM_CHECK_EXCEPTION,e.getMessage());
         } catch (Exception e) {
             logger.error("奖品订单相关操作ID=>[" + goodsId + "]的GoodsDO信息异常",e);
-            throw new BusinessException(GoodsException.UPDATE_EXCEPTION, "奖品订单相关操作ID=>[" + goodsId + "]的GoodsDO信息异常");
+            throw new BusinessException(ExceptionEnum.UPDATE_EXCEPTION, "奖品订单相关操作ID=>[" + goodsId + "]的GoodsDO信息异常");
         }
     }
 

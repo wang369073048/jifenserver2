@@ -235,14 +235,14 @@ public class GainGoods implements Runnable{
         //生成奖品订单后，商品相应操作
         goodsBiz.prizeOrderAssociationProcessing(ordersDO.getGoodsId(), ordersDO.getGoodsCount(), ordersDO.getGoodsVersion());
         ordersDO.setOrderState(OrderStatus.WAITING_FOR_DELIVERY);
-        ordersMapper.insert(ordersDO);
+        ordersService.insertSelective(ordersDO);
         return ordersDO;
     }
 
     @Transactional
     private RequestFlow _inserRequestFlow(String requester, String responder, String type, String requestNum, String status, String requestParam, String responseResult, Date requestTime, String remark){
         RequestFlow requestFlow = new RequestFlow(requester, responder, type, requestNum, null==status?RequestFlow.Status.INITIAL:status, requestParam, responseResult,requestTime, remark);
-        return requestFlowService.insert(requestFlow);
+        return requestFlowBiz.insert(requestFlow);
     }
 
 }
