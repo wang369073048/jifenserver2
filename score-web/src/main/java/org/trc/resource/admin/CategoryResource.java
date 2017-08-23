@@ -96,7 +96,7 @@ public class CategoryResource {
     @Path("/{id}")
     public AppResult modifyCategory(@PathParam("id") Long id,
                                    @NotBlank @FormParam("categoryName") String categoryName,
-                                   @NotBlank @FormParam("logoUrl") String logoUrl,
+                                   @FormParam("logoUrl") String logoUrl,
                                    @NotNull @FormParam("sort") Integer sort,
                                    @FormParam("description") String description,
                                    @FormParam("pid") Long pid,

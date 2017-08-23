@@ -5,6 +5,7 @@ import com.tairanchina.md.account.user.service.UserService;
 import com.tairanchina.md.api.QueryType;
 import com.txframework.util.DateUtils;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.hibernate.validator.constraints.NotBlank;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -64,7 +65,7 @@ public class RefundRescorce {
      */
     @GET
     @Path(ScoreAdminConstants.Route.Refund.SETTLEMENT)
-    public Pagenation<OrderDTO> settlement(@QueryParam("shopId") Long shopId,
+    public Pagenation<OrderDTO> settlement(@NotBlank@QueryParam("shopId") Long shopId,
                                            @QueryParam("phone") String phone,
                                            @QueryParam("startTime") Long startTime,
                                            @QueryParam("endTime") Long endTime,
