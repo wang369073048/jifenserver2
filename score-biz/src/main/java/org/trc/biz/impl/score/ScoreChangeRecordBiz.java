@@ -9,6 +9,7 @@ import org.trc.biz.score.IScoreChangeRecordBiz;
 import org.trc.constants.ScoreCst;
 import org.trc.domain.dto.FlowDTO;
 import org.trc.domain.dto.ScoreChangeRecordQueryDTO;
+import org.trc.domain.dto.ScoreChangeRecordsDTO;
 import org.trc.domain.score.ScoreChange;
 import org.trc.enums.ExceptionEnum;
 import org.trc.exception.ScoreChangeRecordException;
@@ -41,7 +42,17 @@ public class ScoreChangeRecordBiz implements IScoreChangeRecordBiz{
 
     @Override
     public Pagenation<ScoreChange> queryScoreChangeForUser(ScoreChangeRecordQueryDTO queryDto, Pagenation<ScoreChange> pageRequest) {
-        return null;
+    	try {
+            Assert.notNull(pageRequest, "分页参数不能为空");
+            Assert.notNull(queryDto, "查询参数不能为空");
+            return scoreChangeRecordService.queryScoreChangeForUser(queryDto, pageRequest);
+        } catch (IllegalArgumentException e){
+            logger.error("查询积分流水校验参数异常!", e);
+            throw new ScoreChangeRecordException(ExceptionEnum.PARAM_CHECK_EXCEPTION, "查询积分流水校验参数异常!");
+        } catch (Exception e) {
+            logger.error("查询积分流水失败!", e);
+            throw new ScoreChangeRecordException( ExceptionEnum.SCORECHANGGE_QUERY_EXCEPTION, "查询积分流水失败!");
+        }
     }
 
     @Override
@@ -77,5 +88,25 @@ public class ScoreChangeRecordBiz implements IScoreChangeRecordBiz{
     @Override
     public List<FlowDTO> queryScoreChangeForExport(ScoreChangeRecordQueryDTO queryDto) {
         return scoreChangeRecordService.queryScoreChangeForExport(queryDto);
+    }
+    
+    @Override
+    public Pagenation<ScoreChangeRecordsDTO> queryScoreChangeRecordsForUser(ScoreChangeRecordQueryDTO queryDto, Pagenation<ScoreChangeRecordsDTO> pagenation) {
+        try {
+            Assert.notNull(pagenation, "分页参数不能为空");
+            Assert.notNull(queryDto, "查询参数不能为空");
+            return scoreChangeRecordService.queryScoreChangeRecordsForUser(queryDto, pagenation);
+        } catch (IllegalArgumentException e){
+            logger.error("查询积分流水校验参数异常!", e);
+            throw new ScoreChangeRecordException(ExceptionEnum.PARAM_CHECK_EXCEPTION, "查询积分流水校验参数异常!");
+        } catch (Exception e) {
+            logger.error("查询积分流水失败!", e);
+            throw new ScoreChangeRecordException(ExceptionEnum.SCORECHANGGE_QUERY_EXCEPTION, "查询积分流水失败!");
+        }
+    }
+    
+    @Override
+    public List<ScoreChangeRecordsDTO> queryScoreChangeRecordsForUserExport(ScoreChangeRecordQueryDTO queryDto) {
+        return scoreChangeRecordService.queryScoreChangeRecordsForUserExport(queryDto);
     }
 }
