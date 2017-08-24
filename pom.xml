@@ -18,6 +18,7 @@
         <module>score-test</module>
         <module>score-util</module>
         <module>score-web</module>
+        <module>score-web-front</module>
     </modules>
 
     <properties>
