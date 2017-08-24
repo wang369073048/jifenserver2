@@ -90,7 +90,7 @@ public class FlowResource {
                     ScoreChangeDTO scoreChangeDTO = new ScoreChangeDTO();
                     FatherToChildUtils.fatherToChild(scoreChange,scoreChangeDTO);
                     UserDO userDO = null;
-                    if(ScoreCst.BusinessCode.income.name().equals(businessCodes)){
+                    if(ScoreCst.BusinessCode.income.name().equals(scoreChange.getBusinessCode()) || ScoreCst.BusinessCode.lotteryIncome.name().equals(scoreChange.getBusinessCode())){
                         userDO = userService.getUserDO(QueryType.UserId, scoreChange.getTheOtherUserId());
                     }else {
                         userDO = userService.getUserDO(QueryType.UserId, scoreChange.getUserId());
