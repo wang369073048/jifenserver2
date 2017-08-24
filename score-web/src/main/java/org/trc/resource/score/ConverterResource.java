@@ -25,6 +25,9 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 
 
+import java.util.ArrayList;
+import java.util.List;
+
 import static org.trc.util.ResultUtil.createSucssAppResult;
 
 /**
@@ -202,7 +205,9 @@ public class ConverterResource {
         //查询权限
         Auth auth = authBiz.getAuthByUserId(userId);
         ScoreConverter scoreConverter = scoreConverterBiz.getScoreConvertByCurrency(auth.getExchangeCurrency());
-        return createSucssAppResult("获取兑换规则成功", scoreConverter);
+        List<ScoreConverter> list = new ArrayList<>();
+        list.add(scoreConverter);
+        return createSucssAppResult("获取兑换规则成功", list);
     }
 
     /**

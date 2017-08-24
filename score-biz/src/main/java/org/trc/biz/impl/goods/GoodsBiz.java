@@ -237,6 +237,9 @@ public class GoodsBiz implements IGoodsBiz{
                 logger.warn("查询结果为空!");
                 throw new GoodsException(ExceptionEnum.GOODS_ID_NOT_EXIST, "查询结果为空");
             } else {
+                //查询商品分类信息
+                List<ShopClassificationDO> list = _listShopClassificationByGoodsId(goodsDO.getId());
+                goodsDO.setShopClassificationList(list);
                 return goodsDO;
             }
         } catch (IllegalArgumentException e) {
