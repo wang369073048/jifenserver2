@@ -182,21 +182,21 @@
     </select>
 
     <select id="selectRefundOrdersByParams" parameterType="org.trc.domain.query.SettlementQuery" resultType="org.trc.domain.dto.OrderDTO">
-        select ord.createTime, ordx.returnTime,ord.orderNum, ord.shopId, ord.username, ord.barcode, ord.goodsName,ord.payment scoreCount,ord.goodsCount
+        select ord.createTime, ordx.returnTime,ord.orderNum, ord.shopId, ord.username, ord.barcode, ord.goodsName,ord.payment scoreCount,ord.goodsCount,sh.shopName
         from orders ord ,orders_extend ordx,shop sh
         <where>
-            ord.id = ordx.orderId and ord.
-            <if test="shopId != null">
+            ord.id = ordx.orderId and ord.shopId = sh.id
+            <if test="shopId != null and shopId != ''">
                 and ord.shopId = #{shopId}
             </if>
-            <if test="userId != null">
+            <if test="userId != null and userId != ''">
                 and ord.userId = #{userId}
             </if>
             <if test="startTime !=null">
-                AND <![CDATA[DATE_FORMAT(ordx.retureTime, '%Y-%m-%d')>=  DATE_FORMAT(#{startTime}, '%Y-%m-%d')   ]]>
+                AND <![CDATA[ordx.returnTime >= #{startTime}]]>
             </if>
             <if test="endTime !=null">
-                AND <![CDATA[DATE_FORMAT(ordx.retureTime, '%Y-%m-%d') <= DATE_FORMAT(#{endTime}, '%Y-%m-%d')    ]]>
+                AND <![CDATA[ordx.returnTime <= #{endTime}]]>
             </if>
             and ord.source = 1
             and ord.orderState = 5

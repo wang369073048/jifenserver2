@@ -9,6 +9,7 @@
         shopId,
         classificationName,
         pictureUrl,
+        selectPicUrl,
         sort,
         description,
         createTime,

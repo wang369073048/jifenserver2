@@ -237,6 +237,9 @@ public class GoodsBiz implements IGoodsBiz{
                 logger.warn("查询结果为空!");
                 throw new GoodsException(ExceptionEnum.GOODS_ID_NOT_EXIST, "查询结果为空");
             } else {
+                //查询商品分类信息
+                List<ShopClassificationDO> list = _listShopClassificationByGoodsId(goodsDO.getId());
+                goodsDO.setShopClassificationList(list);
                 return goodsDO;
             }
         } catch (IllegalArgumentException e) {
@@ -400,7 +403,7 @@ public class GoodsBiz implements IGoodsBiz{
         if (resultAck.isSuccess() && null != resultAck.getData() && CouponDto.SUCCESS_CODE.equals(resultAck.getCode())) {
             return resultAck.getData();
         } else {
-            throw new CouponException("41000", "虚拟卡券对应的批次号不存在!");
+            throw new CouponException(ExceptionEnum.COUPON_QUERY_EXCEPTION, "虚拟卡券对应的批次号不存在!");
         }
     }
 

@@ -32,10 +32,16 @@ public class ShopClassificationDO implements Serializable {
     private String classificationName;
 
     /**
-     * 图片
+     * 未选中图片
      */
     @Column(name = "pictureUrl")
     private String pictureUrl;
+
+    /**
+     * 选中图片
+     */
+    @Column(name = "selectPicUrl")
+    private String selectPicUrl;
 
     /**
      * 排序：介于0-100的整数，默认为10
@@ -58,6 +64,14 @@ public class ShopClassificationDO implements Serializable {
      */
     @Column(name = "updateTime")
     private Date updateTime;
+
+    public String getSelectPicUrl() {
+        return selectPicUrl;
+    }
+
+    public void setSelectPicUrl(String selectPicUrl) {
+        this.selectPicUrl = selectPicUrl;
+    }
 
     public Long getId() {
         return id;

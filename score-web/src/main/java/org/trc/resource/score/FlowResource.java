@@ -1,12 +1,10 @@
 package org.trc.resource.score;
 
-import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.tairanchina.md.account.user.model.UserDO;
 import com.tairanchina.md.account.user.service.UserService;
 import com.tairanchina.md.api.QueryType;
 import com.txframework.util.ListUtils;
-import com.txframework.util.ObjectUtils;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;

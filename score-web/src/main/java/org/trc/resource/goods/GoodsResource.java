@@ -59,15 +59,17 @@ public class GoodsResource {
      */
     @POST
     @Path(ScoreAdminConstants.Route.Goods.ENTITY)
-    public AppResult publish(@NotNull @PathParam("shopId") Long shopId, @NotNull @FormParam("category") Long category, @FormParam("brandName") String brandName,
-                             @NotEmpty @FormParam("goodsName") String goodsName, @FormParam("barcode") String barcode, @FormParam("goodsNo") String goodsNo,
-                             @FormParam("batchNumber") String batchNumber, @NotEmpty @FormParam("mainImg") String mainImg,@NotEmpty @FormParam("mediumImg") String mediumImg, @FormParam("priceMarket") Integer priceMarket,
-                             @NotNull @FormParam("priceScore") Integer priceScore, @NotNull @FormParam("stock") Integer stock, @NotNull @FormParam("stockWarn") Integer stockWarn,
-                             @FormParam("targetUrl") String targetUrl, @FormParam("validStartTime") Long validStartTime, @FormParam("validEndTime") Long validEndTime,
-                             @FormParam("autoUpTime") Long autoUpTime, @FormParam("autoDownTime") Long autoDownTime, @NotEmpty @FormParam("content") String content,
+    public AppResult publish(@NotNull(message = "shopId不能为空") @PathParam("shopId") Long shopId, @NotNull(message = "category不能为空")@FormParam("category") Long category,
+                             @FormParam("brandName") String brandName, @NotEmpty(message = "goodsName不能为空") @FormParam("goodsName") String goodsName, @FormParam("barcode") String barcode,
+                             @FormParam("goodsNo") String goodsNo, @FormParam("batchNumber") String batchNumber, @FormParam("mainImg") String mainImg,
+                             @NotEmpty(message = "mediumImg不能为空") @FormParam("mediumImg") String mediumImg, @FormParam("priceMarket") Integer priceMarket,
+                             @NotNull(message = "shopId不能为空") @FormParam("priceScore") Integer priceScore, @NotNull(message = "stock不能为空") @FormParam("stock") Integer stock,
+                             @NotNull(message = "stockWarn不能为空") @FormParam("stockWarn") Integer stockWarn, @FormParam("targetUrl") String targetUrl,
+                             @FormParam("validStartTime") Long validStartTime, @FormParam("validEndTime") Long validEndTime,
+                             @FormParam("autoUpTime") Long autoUpTime, @FormParam("autoDownTime") Long autoDownTime, @NotEmpty(message = "content不能为空") @FormParam("content") String content,
                              @FormParam("virtualExchangeQuantity") Integer virtualExchangeQuantity, @FormParam("whetherPrizes") Integer whetherPrizes,
                              @FormParam("sort") Integer sort, @FormParam("shopClassificationIds") String shopClassificationIds,
-                             @NotNull @FormParam("limitQuantity") Integer limitQuantity) {
+                             @NotNull(message = "limitQuantity不能为空") @FormParam("limitQuantity") Integer limitQuantity) {
         Date time = Calendar.getInstance().getTime();
         GoodsDO goodsDO = new GoodsDO();
         goodsDO.setShopId(shopId);
