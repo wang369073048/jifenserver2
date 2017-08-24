@@ -124,15 +124,18 @@ public class GoodsResource {
      */
     @POST
     @Path(ScoreAdminConstants.Route.Goods.ENTITY + "/{id}")
-    public AppResult modify(@NotNull @PathParam("shopId") Long shopId, @NotNull @FormParam("id") Long id, @NotNull @FormParam("category") Long category,
-                            @FormParam("brandName") String brandName, @NotEmpty @FormParam("goodsName") String goodsName, @NotEmpty @FormParam("barcode") String barcode,
+    public AppResult modify(@NotNull@PathParam("shopId") Long shopId, @NotNull(message = "id不能为空") @FormParam("id") Long id,
+                            @NotNull(message = "category不能为空") @FormParam("category") Long category,
+                            @FormParam("brandName") String brandName, @NotEmpty(message = "goodsName不能为空") @FormParam("goodsName") String goodsName,
+                            @NotEmpty(message = "barcode不能为空") @FormParam("barcode") String barcode,
                             @FormParam("goodsNo") String goodsNo, @FormParam("batchNumber") String batchNumber, @NotEmpty @FormParam("mediumImg") String mediumImg,
-                            @FormParam("priceMarket") Integer priceMarket, @NotNull @FormParam("priceScore") Integer priceScore, @NotNull @FormParam("stock") Integer stock,
-                            @NotNull @FormParam("stockWarn") Integer stockWarn, @FormParam("targetUrl") String targetUrl, @FormParam("validStartTime") Long validStartTime,
+                            @FormParam("priceMarket") Integer priceMarket, @NotNull(message = "priceScore不能为空") @FormParam("priceScore") Integer priceScore,
+                            @NotNull(message = "stock不能为空") @FormParam("stock") Integer stock,
+                            @NotNull(message = "stockWarn不能为空") @FormParam("stockWarn") Integer stockWarn, @FormParam("targetUrl") String targetUrl, @FormParam("validStartTime") Long validStartTime,
                             @FormParam("validEndTime") Long validEndTime, @FormParam("autoUpTime") Long autoUpTime, @FormParam("autoDownTime") Long autoDownTime,
-                            @NotEmpty @FormParam("content") String content, @FormParam("virtualExchangeQuantity") Integer virtualExchangeQuantity,
+                            @NotEmpty(message = "content不能为空") @FormParam("content") String content, @FormParam("virtualExchangeQuantity") Integer virtualExchangeQuantity,
                             @FormParam("whetherPrizes") Integer whetherPrizes, @FormParam("sort") Integer sort, @FormParam("shopClassificationIds") String shopClassificationIds,
-                            @NotNull @FormParam("limitQuantity") Integer limitQuantity) {
+                            @NotNull(message = "limitQuantity不能为空") @FormParam("limitQuantity") Integer limitQuantity) {
 
         GoodsDO goods = goodsBiz.getGoodsDOById(id, whetherPrizes,null);
         if (null == goods || goods.getShopId().longValue() != shopId.longValue()) {

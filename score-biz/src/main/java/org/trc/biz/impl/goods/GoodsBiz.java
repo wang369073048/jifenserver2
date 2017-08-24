@@ -240,6 +240,10 @@ public class GoodsBiz implements IGoodsBiz{
                 //查询商品分类信息
                 List<ShopClassificationDO> list = _listShopClassificationByGoodsId(goodsDO.getId());
                 goodsDO.setShopClassificationList(list);
+                PurchaseRestrictionsDO prParam = new PurchaseRestrictionsDO();
+                prParam.setGoodsId(id);
+                PurchaseRestrictionsDO result = purchaseRestrictionsService.selectOne(prParam);
+                goodsDO.setLimitQuantity(null != result ? result.getLimitQuantity() : -1);
                 return goodsDO;
             }
         } catch (IllegalArgumentException e) {
