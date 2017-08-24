@@ -1,11 +1,12 @@
 package org.trc.mapper.score;
 
+import java.util.List;
+
 import org.trc.domain.dto.FlowDTO;
 import org.trc.domain.dto.ScoreChangeRecordQueryDTO;
+import org.trc.domain.dto.ScoreChangeRecordsDTO;
 import org.trc.domain.score.ScoreChange;
 import org.trc.util.BaseMapper;
-
-import java.util.List;
 
 /**
  * author: hzwzhen
@@ -26,5 +27,14 @@ public interface IScoreChangeMapper extends BaseMapper<ScoreChange>{
     List<FlowDTO> queryScoreChangeForExport(ScoreChangeRecordQueryDTO queryDto);
 
     int correctScoreChange(ScoreChange scoreChange);
+    
+    /**
+     * 
+     * @Description add by xab 用户积分流水明细报表
+     * @param queryDto
+     * @return
+     */
+    List<ScoreChangeRecordsDTO> queryScoreChangeRecordsForUser(ScoreChangeRecordQueryDTO queryDto);
+
 
 }

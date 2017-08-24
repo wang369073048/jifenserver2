@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.trc.domain.dto.FlowDTO;
 import org.trc.domain.dto.ScoreChangeRecordQueryDTO;
+import org.trc.domain.dto.ScoreChangeRecordsDTO;
 import org.trc.domain.score.ScoreChange;
 import org.trc.mapper.score.IScoreChangeMapper;
 import org.trc.service.impl.BaseService;
@@ -57,8 +58,12 @@ public class ScoreChangeRecordService extends BaseService<ScoreChange,Long> impl
     }
 
     @Override
-    public Pagenation<ScoreChange> queryScoreChangeForUser(ScoreChangeRecordQueryDTO queryDto, Pagenation<ScoreChange> pageRequest) {
-        return null;
+    public Pagenation<ScoreChange> queryScoreChangeForUser(ScoreChangeRecordQueryDTO queryDto, Pagenation<ScoreChange> pagenation) {
+    	Page page = PageHelper.startPage(pagenation.getPageIndex(), pagenation.getPageSize());
+        List<ScoreChange> list = scoreChangeMapper.queryScoreChangeForUser(queryDto);
+        pagenation.setTotalData(page.getTotal());
+        pagenation.setInfos(list);
+        return pagenation;
     }
 
     @Override
@@ -78,9 +83,23 @@ public class ScoreChangeRecordService extends BaseService<ScoreChange,Long> impl
         pagenation.setInfos(list);
         return pagenation;
     }
-
+    
     @Override
     public List<FlowDTO> queryScoreChangeForExport(ScoreChangeRecordQueryDTO queryDto) {
         return scoreChangeMapper.queryScoreChangeForExport(queryDto);
+    }
+    
+    @Override
+    public Pagenation<ScoreChangeRecordsDTO> queryScoreChangeRecordsForUser(ScoreChangeRecordQueryDTO queryDto, Pagenation<ScoreChangeRecordsDTO> pagenation) {
+        Page page = PageHelper.startPage(pagenation.getPageIndex(), pagenation.getPageSize());
+        List<ScoreChangeRecordsDTO> list = scoreChangeMapper.queryScoreChangeRecordsForUser(queryDto);
+        pagenation.setTotalData(page.getTotal());
+        pagenation.setInfos(list);
+        return pagenation;
+    }
+    
+    @Override
+    public List<ScoreChangeRecordsDTO> queryScoreChangeRecordsForUserExport(ScoreChangeRecordQueryDTO queryDto) {
+        return scoreChangeMapper.queryScoreChangeRecordsForUser(queryDto);
     }
 }

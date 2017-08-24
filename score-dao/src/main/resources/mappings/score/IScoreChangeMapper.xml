@@ -49,6 +49,78 @@
             now()
         )
     </insert>
+    
+    <select id="queryScoreChangeForUser" parameterType="org.trc.domain.dto.ScoreChangeRecordQueryDTO"
+            resultType="org.trc.domain.score.ScoreChange">
+        select * from score_change
+        <where>
+            <if test="userId!=null">
+                and userId = #{userId}
+            </if>
+            <if test="businessCodeList != null and businessCodeList.size() > 0">
+                and businessCode in
+                <foreach item="item" index="index" collection="businessCodeList" open="(" separator="," close=")">
+                    #{businessCodeList[${index}]}
+                </foreach>
+            </if>
+            <if test="operateTimeMin!=null">
+                and operationTime <![CDATA[>=]]> #{operateTimeMin}
+            </if>
+            <if test="operateTimeMax!=null">
+                and operationTime <![CDATA[<]]> #{operateTimeMax}
+            </if>
+            and state = 0
+        </where>
+        order by createTime desc
+    </select>
+    
+    <!-- add by xab 用户积分流水明细报表 -->
+    <select id="queryScoreChangeRecordsForUser" parameterType="org.trc.domain.dto.ScoreChangeRecordQueryDTO"
+            resultType="org.trc.domain.dto.ScoreChangeRecordsDTO">
+            select 
+            sc.userId as userId,
+  			sc.orderCode as orderCode,
+			sc.theOtherUserId,
+			s.shopName as shopName,
+			sc.userName as userName,
+			sc.businessCode as businessCode,
+		    sc.score as score,
+			sc.operationTime as operationTime,
+			sc.remark as remark
+           from score_change sc left JOIN shop s ON (sc.theOtherUserId = s.userId)
+        <where>
+            <if test="userId!=null">
+                and sc.userId = #{userId}
+            </if>
+            <if test="businessCodeList != null and businessCodeList.size() > 0">
+                and sc.businessCode in
+                <foreach item="item" index="index" collection="businessCodeList" open="(" separator="," close=")">
+                    #{businessCodeList[${index}]}
+                </foreach>
+            </if>
+            <if test="businessCodeList == null or businessCodeList.size() &lt;= 0">
+                and sc.businessCode in ('exchangeIn','consume','lotteryConsume','consumeCorrect')
+            </if>
+            <choose>
+                <when test="shopId != null">
+                    and (
+                    sc.shopId = #{shopId}
+                    )
+                </when>
+            </choose>
+            <if test="operateTimeMin!=null">
+                and sc.operationTime <![CDATA[>=]]> #{operateTimeMin}
+            </if>
+            <if test="operateTimeMax!=null">
+                and sc.operationTime <![CDATA[<]]> #{operateTimeMax}
+            </if>
+            and sc.state = 0
+        </where>
+        order by operationTime desc
+    </select>
+    
+
+    
     <select id="queryScoreChangeForShopAdmin" parameterType="org.trc.domain.dto.ScoreChangeRecordQueryDTO"
             resultType="org.trc.domain.score.ScoreChange">
         select * from score_change
