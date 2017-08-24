@@ -1,5 +1,6 @@
 package org.trc.resource.settlement;
 
+import com.alibaba.fastjson.JSON;
 import com.tairanchina.md.account.user.model.UserDO;
 import com.tairanchina.md.account.user.service.UserService;
 import com.tairanchina.md.api.QueryType;
@@ -22,6 +23,7 @@ import org.trc.exception.OrderException;
 import org.trc.util.CellDefinition;
 import org.trc.util.ExportExcel;
 import org.trc.util.Pagenation;
+import org.trc.util.TxJerseyTools;
 
 import javax.annotation.Resource;
 import javax.ws.rs.*;
@@ -66,7 +68,7 @@ public class RefundRescorce {
      */
     @GET
     @Path(ScoreAdminConstants.Route.Refund.SETTLEMENT)
-    public Pagenation<OrderDTO> settlement(@QueryParam("shopId") Long shopId,
+    public Response settlement(@QueryParam("shopId") Long shopId,
                                            @QueryParam("phone") String phone,
                                            @QueryParam("startTime") Long startTime,
                                            @QueryParam("endTime") Long endTime,
@@ -89,7 +91,8 @@ public class RefundRescorce {
             param.setEndTime(new Date(endTime));
         }
         param.setShopId(shopId);
-        return newOrderBiz.queryRefundOrdersByParams(param,page);
+        newOrderBiz.queryRefundOrdersByParams(param,page);
+        return TxJerseyTools.returnSuccess(JSON.toJSONString(newOrderBiz.queryRefundOrdersByParams(param,page)));
     }
 
     /**

@@ -67,6 +67,7 @@ public class ShopClassificationResource {
 
     @POST
     public AppResult insert(@NotEmpty @FormParam("classificationName") String classificationName, @NotEmpty @FormParam("pictureUrl") String pictureUrl,
+                            @FormParam("selectPicUrl") String selectPicUrl,
                            @NotNull @FormParam("sort") Integer sort, @FormParam("description") String description,
                            @Context ContainerRequestContext requestContext) {
         //获取userId
@@ -75,6 +76,7 @@ public class ShopClassificationResource {
         ShopClassificationDO param = new ShopClassificationDO();
         param.setClassificationName(classificationName);
         param.setPictureUrl(pictureUrl);
+        param.setSelectPicUrl(selectPicUrl);
         param.setSort(sort);
         param.setDescription(description);
         param.setShopId(auth.getShopId());
