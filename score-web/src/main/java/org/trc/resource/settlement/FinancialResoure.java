@@ -179,7 +179,9 @@ public class FinancialResoure {
         CellDefinition shopName = new CellDefinition("shopName", "店铺名称", CellDefinition.TEXT, 4000);
         CellDefinition phoneCell = new CellDefinition("phone", "会员手机号", CellDefinition.TEXT, 4000);
         CellDefinition exchangeInNum = new CellDefinition("exchangeInNum", "兑入积分数量", CellDefinition.NUM_0, 4000);
-        CellDefinition consumeNum = new CellDefinition("consumeNum", "消费积分数量", CellDefinition.NUM_0, 4000);
+        CellDefinition consumeNum = new CellDefinition("consumeNum", "积分消费数量", CellDefinition.NUM_0, 4000);
+        CellDefinition lotteryConsumeNum = new CellDefinition("lotteryConsumeNum", "积分抽奖数量", CellDefinition.NUM_0, 4000);
+        CellDefinition consumeCorrectNum = new CellDefinition("consumeCorrectNum", "退积分数量", CellDefinition.NUM_0, 4000);
         List<CellDefinition> cellDefinitionList = new ArrayList<>();
         cellDefinitionList.add(userId);
         cellDefinitionList.add(accountDay);
@@ -187,6 +189,8 @@ public class FinancialResoure {
         cellDefinitionList.add(phoneCell);
         cellDefinitionList.add(exchangeInNum);
         cellDefinitionList.add(consumeNum);
+        cellDefinitionList.add(lotteryConsumeNum);
+        cellDefinitionList.add(consumeCorrectNum);
         String sheetName = "月度消费明细";
         String fileName = "月度消费明细-" + DateUtils.formatDate(settlementQuery.getStartTime(), DateUtils.DATE_PATTERN) + "-" + DateUtils.formatDate(settlementQuery.getEndTime(), DateUtils.DATE_PATTERN) + ".xls";
         fileName = URLEncoder.encode(fileName, "UTF-8");
@@ -253,13 +257,17 @@ public class FinancialResoure {
         CellDefinition userIdCell = new CellDefinition("userId", "用户Id", CellDefinition.TEXT, 13000);
         CellDefinition accountDay = new CellDefinition("accountDay", "日期", CellDefinition.TEXT, 4000);
         CellDefinition exchangeInNum = new CellDefinition("exchangeInNum", "兑入积分数量", CellDefinition.NUM_0, 4000);
-        CellDefinition consumeNum = new CellDefinition("consumeNum", "消费积分数量", CellDefinition.NUM_0, 4000);
+        CellDefinition consumeNum = new CellDefinition("consumeNum", "积分消费数量", CellDefinition.NUM_0, 4000);
+        CellDefinition lotteryConsumeNum = new CellDefinition("lotteryConsumeNum", "积分抽奖数量", CellDefinition.NUM_0, 4000);
+        CellDefinition consumeCorrectNum = new CellDefinition("consumeCorrectNum", "退积分数量", CellDefinition.NUM_0, 4000);
         CellDefinition balance = new CellDefinition("balance", "结余积分数量", CellDefinition.NUM_0, 4000);
         List<CellDefinition> cellDefinitionList = new ArrayList<>();
         cellDefinitionList.add(userIdCell);
         cellDefinitionList.add(accountDay);
         cellDefinitionList.add(exchangeInNum);
         cellDefinitionList.add(consumeNum);
+        cellDefinitionList.add(lotteryConsumeNum);
+        cellDefinitionList.add(consumeCorrectNum);
         cellDefinitionList.add(balance);
         String sheetName = "会员积分日结明细";
         String fileName = "会员积分日结明细-" + DateUtils.formatDate(settlementQuery.getStartTime(), DateUtils.DATE_PATTERN) + "-" + DateUtils.formatDate(settlementQuery.getEndTime(), DateUtils.DATE_PATTERN) + ".xls";
