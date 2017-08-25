@@ -8,6 +8,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
 @Table(name = "membership_score_daily_details")
 public class MembershipScoreDailyDetailsDO implements Serializable {
@@ -22,6 +23,9 @@ public class MembershipScoreDailyDetailsDO implements Serializable {
 	
 	@Column(name = "userId")
     private String userId;
+	
+	@Transient
+    private String userPhone;
 	
 	@Column(name = "accountDay")
     private String accountDay;
@@ -114,6 +118,14 @@ public class MembershipScoreDailyDetailsDO implements Serializable {
 
 	public void setConsumeCorrectNum(Long consumeCorrectNum) {
 		this.consumeCorrectNum = consumeCorrectNum;
+	}
+	
+	public String getUserPhone() {
+		return userPhone;
+	}
+
+	public void setUserPhone(String userPhone) {
+		this.userPhone = userPhone;
 	}
 
 	@Override

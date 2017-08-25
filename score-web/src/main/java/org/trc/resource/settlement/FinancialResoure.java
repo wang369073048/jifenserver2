@@ -2,6 +2,9 @@ package org.trc.resource.settlement;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.tairanchina.md.account.user.model.UserDO;
+import com.tairanchina.md.account.user.service.UserService;
+import com.tairanchina.md.api.QueryType;
 import com.txframework.util.DateUtils;
 import com.txframework.util.ListUtils;
 import org.apache.commons.lang.StringUtils;
@@ -12,16 +15,19 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.trc.biz.settlement.IFinancialSettlementBiz;
 import org.trc.constants.ScoreAdminConstants;
+import org.trc.constants.TemporaryContext;
 import org.trc.domain.dto.ConsumptionSummaryStatisticalDataDTO;
 import org.trc.domain.dto.SettlementIntervalDTO;
 import org.trc.domain.query.SettlementQuery;
 import org.trc.domain.order.ConsumptionSummaryDO;
 import org.trc.domain.order.MembershipScoreDailyDetailsDO;
+import org.trc.domain.order.OrdersDO;
 import org.trc.enums.ExceptionEnum;
 import org.trc.exception.BusinessException;
 import org.trc.util.*;
 import org.trc.validation.VerifyDate;
 
+import javax.annotation.Resource;
 import javax.validation.constraints.NotNull;
 import javax.ws.rs.*;
 import javax.ws.rs.core.HttpHeaders;
@@ -48,6 +54,9 @@ public class FinancialResoure {
     Logger logger = LoggerFactory.getLogger(FinancialResoure.class);
     @Autowired
     private IFinancialSettlementBiz financialSettlementBiz;
+    
+    @Resource
+    private UserService userService;
 
     @GET
     @Path(ScoreAdminConstants.Route.Financial.CONSUMPTION_SUMMARY)
@@ -221,6 +230,14 @@ public class FinancialResoure {
         settlementQuery.setEndTime(new Date(endTime));
 
         Pagenation<MembershipScoreDailyDetailsDO> result = financialSettlementBiz.queryMembershipScoreDailyDetails(settlementQuery, page);
+        if (result != null && ListUtils.isNotEmpty(result.getInfos()) && result.getInfos().size() > 0) {
+        	List<MembershipScoreDailyDetailsDO> membershipScoreDailyDetails = result.getInfos();
+            for (int i= 0; i < membershipScoreDailyDetails.size();i++) {
+            	MembershipScoreDailyDetailsDO membershipScoreDailyDetail = membershipScoreDailyDetails.get(i);
+            	UserDO userDO = userService.getUserDO(QueryType.UserId, membershipScoreDailyDetail.getUserId());
+            	membershipScoreDailyDetail.setUserPhone(userDO.getPhone());
+            }
+        }
         //获取统计结转时间区间
         SettlementIntervalDTO settlementIntervalDTO = financialSettlementBiz.getSettlementIntervalForMembershipScoreDailyDetail(settlementQuery);
         if (null != settlementIntervalDTO) {
