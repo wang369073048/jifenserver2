@@ -43,6 +43,12 @@ public class OrdersDO implements Serializable{
      */
     @Transient
     public String shopName;
+    
+    /**
+     * 非持久化属性，会员手机号
+     */
+    @Transient
+    public String userPhone;
 
     /**
      * 商品Id
@@ -421,7 +427,15 @@ public class OrdersDO implements Serializable{
         this.couponCode = couponCode;
     }
 
-    @Override
+    public String getUserPhone() {
+		return userPhone;
+	}
+
+	public void setUserPhone(String userPhone) {
+		this.userPhone = userPhone;
+	}
+
+	@Override
     public String toString() {
         return "OrdersDO{" +
                 "orderAddressDO=" + orderAddressDO +
@@ -438,6 +452,7 @@ public class OrdersDO implements Serializable{
                 ", goodsCount=" + goodsCount +
                 ", minImg='" + minImg + '\'' +
                 ", userId='" + userId + '\'' +
+                ", userPhone='" + userPhone + '\'' +
                 ", username='" + username + '\'' +
                 ", orderState=" + orderState +
                 ", orderType=" + orderType +

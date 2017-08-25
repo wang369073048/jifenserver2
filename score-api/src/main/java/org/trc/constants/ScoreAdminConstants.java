@@ -171,7 +171,7 @@ public class ScoreAdminConstants {
         public static final class ScoreChange {
             public static final String ROOT = "scoreChange";
             public static final String DETAILS = "/details";
-            public static final String EXPORT = "/settlement/export";
+            public static final String EXPORT = "/details/export";
         }
         
         public static final class Refund {

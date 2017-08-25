@@ -105,13 +105,15 @@ public class SettlementResource {
                 List<OrdersDO> ordersDOList = orderPage.getInfos();
                 for (int i= 0; i < ordersDOList.size();i++) {
                     OrdersDO ordersDO = ordersDOList.get(i);
+                    UserDO userDO = userService.getUserDO(QueryType.UserId, ordersDO.getUserId());
+                    ordersDO.setShopName(TemporaryContext.getShopNameById(ordersDO.getShopId()));
+                    ordersDO.setUserPhone(userDO.getPhone());
                     if(ordersDO.getOrderAddressDO()!=null) {
                         OrderQuery orderQuery = new OrderQuery();
                         FatherToChildUtils.fatherToChild(ordersDO,orderQuery);
                         orderQuery.setAddress(ordersDO.getOrderAddressDO().getAddress());
                         orderQuery.setReceiverName(ordersDO.getOrderAddressDO().getReceiverName());
                         orderQuery.setReceiverPhone(ordersDO.getOrderAddressDO().getPhone());
-                        orderQuery.setShopName(TemporaryContext.getShopNameById(ordersDO.getShopId()));
                         ordersDOList.set(i,orderQuery);
                     }
 
