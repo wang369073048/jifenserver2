@@ -23,13 +23,11 @@ public class ScoreSettlementService extends BaseService<ScoreSettlement,Long> im
 	
 	@Override
 	public ScoreSettlement getScoreSettlementByUserIdAndAccountDay(Map params) {
-		// TODO Auto-generated method stub
 		return soreSettlementMapper.getScoreSettlementByUserIdAndAccountDay(params);
 	}
 
 	@Override
 	public ScoreSettlement getLastScoreSettlement(Long scoreId) {
-		// TODO Auto-generated method stub
 		return soreSettlementMapper.getLastScoreSettlement(scoreId);
 	}
 
