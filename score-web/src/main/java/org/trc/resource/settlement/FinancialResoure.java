@@ -24,12 +24,15 @@ import org.trc.domain.order.MembershipScoreDailyDetailsDO;
 import org.trc.domain.order.OrdersDO;
 import org.trc.enums.ExceptionEnum;
 import org.trc.exception.BusinessException;
+import org.trc.interceptor.Admin;
 import org.trc.util.*;
 import org.trc.validation.VerifyDate;
 
 import javax.annotation.Resource;
 import javax.validation.constraints.NotNull;
 import javax.ws.rs.*;
+import javax.ws.rs.container.ContainerRequestContext;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
@@ -60,12 +63,13 @@ public class FinancialResoure {
 
     @GET
     @Path(ScoreAdminConstants.Route.Financial.CONSUMPTION_SUMMARY)
-    //@Admin
+    @Admin
     public Pagenation queryConsumptionSummary(@QueryParam("shopId") Long shopId,
                                              @QueryParam("phone") String phone,
                                              @NotNull @QueryParam("startTime") Long startTime,
                                              @NotNull @QueryParam("endTime") Long endTime,
-                                             @BeanParam Pagenation<ConsumptionSummaryDO> page) {
+                                             @BeanParam Pagenation<ConsumptionSummaryDO> page,
+                                              @Context ContainerRequestContext requestContext) {
 
         SettlementQuery settlementQuery = new SettlementQuery();
         settlementQuery.setShopId(shopId);
@@ -98,10 +102,12 @@ public class FinancialResoure {
 
     @GET
     @Path(ScoreAdminConstants.Route.Financial.CONSUMPTION_SUMMARY_EXPORT)
+    @Admin
     public Response exportConsumptionSummary(@QueryParam("shopId") Long shopId,
                                              @QueryParam("phone") String phone,
                                              @NotNull @QueryParam("startTime") Long startTime,
-                                             @NotNull @QueryParam("endTime") Long endTime) throws Exception {
+                                             @NotNull @QueryParam("endTime") Long endTime,
+                                             @Context ContainerRequestContext requestContext) throws Exception {
         SettlementQuery settlementQuery = new SettlementQuery();
         settlementQuery.setShopId(shopId);
         settlementQuery.setPhone(phone);
@@ -135,11 +141,13 @@ public class FinancialResoure {
 
     @GET
     @Path(ScoreAdminConstants.Route.Financial.MONTH_CONSUMPTION_SUMMARY)
+    @Admin
     public Pagenation queryMonthlyConsumptionSummary(@QueryParam("shopId") Long shopId,
                                                     @QueryParam("phone") String phone,
                                                     @NotNull @QueryParam("startTime") Long startTime,
                                                     @NotNull @QueryParam("endTime") Long endTime,
-                                                    @BeanParam Pagenation<ConsumptionSummaryDO> page) {
+                                                    @BeanParam Pagenation<ConsumptionSummaryDO> page,
+                                                     @Context ContainerRequestContext requestContext) {
 
         SettlementQuery settlementQuery = new SettlementQuery();
         settlementQuery.setShopId(shopId);
@@ -172,10 +180,12 @@ public class FinancialResoure {
 
     @GET
     @Path(ScoreAdminConstants.Route.Financial.MONTH_CONSUMPTION_SUMMARY_EXPORT)
+    @Admin
     public Response exportMonthConsumptionSummary(@QueryParam("shopId") Long shopId,
                                                   @QueryParam("phone") String phone,
                                                   @NotNull @QueryParam("startTime") Long startTime,
-                                                  @NotNull @QueryParam("endTime") Long endTime) throws Exception {
+                                                  @NotNull @QueryParam("endTime") Long endTime,
+                                                  @Context ContainerRequestContext requestContext) throws Exception {
         SettlementQuery settlementQuery = new SettlementQuery();
         settlementQuery.setShopId(shopId);
         settlementQuery.setPhone(phone);
@@ -214,10 +224,12 @@ public class FinancialResoure {
 
     @GET
     @Path(ScoreAdminConstants.Route.Financial.MEMBERSHIP_SCORE_DAILY_DETAILS)
+    @Admin
     public Pagenation queryMembershipScoreDailyDetail(@QueryParam("userId") String userId,
                                                     @VerifyDate @QueryParam("startTime") Long startTime,
                                                     @VerifyDate @QueryParam("endTime") Long endTime,
-                                                    @BeanParam Pagenation<MembershipScoreDailyDetailsDO> page) {
+                                                    @BeanParam Pagenation<MembershipScoreDailyDetailsDO> page,
+                                                      @Context ContainerRequestContext requestContext) {
 
         SettlementQuery settlementQuery = new SettlementQuery();
         if(StringUtils.isNotBlank(userId)){
@@ -262,9 +274,11 @@ public class FinancialResoure {
 
     @GET
     @Path(ScoreAdminConstants.Route.Financial.MEMBERSHIP_SCORE_DAILY_DETAILS_EXPORT)
+    @Admin
     public Response exportMembershipScoreDailyDetail(@QueryParam("userId") String userId,
                                                      @NotNull @QueryParam("startTime") Long startTime,
-                                                     @NotNull @QueryParam("endTime") Long endTime) throws Exception{
+                                                     @NotNull @QueryParam("endTime") Long endTime,
+                                                     @Context ContainerRequestContext requestContext) throws Exception{
         SettlementQuery settlementQuery = new SettlementQuery();
         settlementQuery.setUserId(userId);
         settlementQuery.setStartTime(new Date(startTime));

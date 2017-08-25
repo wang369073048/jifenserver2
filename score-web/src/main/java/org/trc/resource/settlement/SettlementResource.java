@@ -14,6 +14,8 @@ import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
+import javax.ws.rs.container.ContainerRequestContext;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
@@ -34,6 +36,7 @@ import org.trc.domain.query.SettlementQuery;
 import org.trc.domain.settlement.SettlementDO;
 import org.trc.enums.ExceptionEnum;
 import org.trc.exception.OrderException;
+import org.trc.interceptor.Admin;
 import org.trc.util.CellDefinition;
 import org.trc.util.ExportExcel;
 import org.trc.util.FatherToChildUtils;
@@ -67,14 +70,17 @@ public class SettlementResource {
 
 
     @GET
+    @Admin
     public Pagenation<SettlementDO> querySettlementList(@NotNull @QueryParam("shopId") Long shopId, @QueryParam("billNum") String billNum,
-                                         @BeanParam Pagenation<SettlementDO> page) {
+                                                        @Context ContainerRequestContext requestContext,
+                                                        @BeanParam Pagenation<SettlementDO> page) {
         SettlementDO settlementDO = new SettlementDO();
         settlementDO.setShopId(shopId);
         return settlementBiz.queryListByParams(settlementDO, page);
     }
 
     @GET
+    @Admin
     @Path(ScoreAdminConstants.Route.Settlement.ORDER)
     public Pagenation querySettlementOrderList(@QueryParam("shopId") Long shopId,
                                               @QueryParam("phone") String phone,
@@ -82,6 +88,7 @@ public class SettlementResource {
                                               @QueryParam("goodsName") String goodsName,
                                               @QueryParam("startTime") Long startTime,
                                               @QueryParam("endTime") Long endTime,
+                                               @Context ContainerRequestContext requestContext,
                                               @BeanParam Pagenation<OrdersDO> page) {
             SettlementQuery settlementQuery = new SettlementQuery();
             settlementQuery.setShopId(shopId);
@@ -123,11 +130,13 @@ public class SettlementResource {
     }
 
     @GET
+    @Admin
     @Path(ScoreAdminConstants.Route.Settlement.EXPORT)
     public Response exportSettlementOrderList(@QueryParam("shopId") Long shopId,
                                               @QueryParam("phone") String phone,
                                               @QueryParam("startTime") Long startTime,
-                                              @QueryParam("endTime") Long endTime) throws Exception{
+                                              @QueryParam("endTime") Long endTime,
+                                              @Context ContainerRequestContext requestContext) throws Exception{
         SettlementQuery settlementQuery = new SettlementQuery();
         settlementQuery.setShopId(shopId);
         if (org.apache.commons.lang3.StringUtils.isNotBlank(phone)) {

@@ -16,12 +16,15 @@ import org.trc.domain.dto.AuthQueryDTO;
 import org.trc.domain.shop.ShopDO;
 import org.trc.enums.ExceptionEnum;
 import org.trc.exception.ManagerException;
+import org.trc.interceptor.Admin;
 import org.trc.util.AppResult;
 import org.trc.util.Pagenation;
 
 import javax.annotation.Resource;
 import javax.validation.constraints.NotNull;
 import javax.ws.rs.*;
+import javax.ws.rs.container.ContainerRequestContext;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
@@ -54,10 +57,11 @@ public class ManagerResource {
      * @return
      */
     @POST
-    //@Admin
+    @Admin
     public AppResult<JSONObject> createManager(@NotNull @FormParam("shopId") Long shopId,
-                                   @NotEmpty @FormParam("phone") String phone,
-                                   @NotEmpty @FormParam("contactsUser") String contactsUser) {
+                                               @NotEmpty @FormParam("phone") String phone,
+                                               @NotEmpty @FormParam("contactsUser") String contactsUser,
+                                               @Context ContainerRequestContext requestContext) {
         UserDO userDO = userService.getUserDO(QueryType.Phone, phone);
         if (null == userDO) {
             throw new ManagerException(ExceptionEnum.MANAGER_SAVE_EXCEPTION, "手机号不存在");
@@ -96,10 +100,11 @@ public class ManagerResource {
      */
     @PUT
     @Path("/{id}")
-    //@Admin
+    @Admin
     public AppResult modifyManager(@PathParam("id") Long id,
                                   @NotNull @FormParam("shopId") Long shopId,
                                   @NotEmpty @FormParam("phone") String phone,
+                                   @Context ContainerRequestContext requestContext,
                                   @NotEmpty @FormParam("contactsUser") String contactsUser) {
             UserDO userDO = userService.getUserDO(QueryType.Phone, phone);
             if (null == userDO) {
@@ -126,9 +131,10 @@ public class ManagerResource {
      * @return Response
      */
     @GET
-    //@Admin
+    @Admin
     public Pagenation<Auth> getManagerList(@QueryParam("shopId") Long shopId,
                                    @QueryParam("userKeyWord") String userKeyWord,
+                                   @Context ContainerRequestContext requestContext,
                                    @BeanParam Pagenation<Auth> page) {
             AuthQueryDTO query = new AuthQueryDTO();
             query.setUserKeyword(userKeyWord);
@@ -143,8 +149,9 @@ public class ManagerResource {
      */
     @GET
     @Path("/{id}")
-    //@Admin
-    public AppResult getManagerById(@PathParam("id") Long id) {
+    @Admin
+    public AppResult getManagerById(@PathParam("id") Long id,
+                                    @Context ContainerRequestContext requestContext) {
         Auth auth = authBiz.getAuthById(id);
         return createSucssAppResult("查询店铺管理员成功!" ,auth);
     }

@@ -11,5 +11,4 @@ import org.trc.domain.shop.ManagerDO;
  */
 public interface IManagerService extends IBaseService<ManagerDO,Long> {
 
-    ManagerDO getManagerByUserId(String userId);
 }

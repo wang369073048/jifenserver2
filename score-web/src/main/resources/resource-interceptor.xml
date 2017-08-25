@@ -4,11 +4,18 @@
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.3.xsd
 	http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-4.3.xsd">
     <aop:aspectj-autoproxy proxy-target-class="true"/>
-    <bean id="adminInterceptor" class="org.trc.interceptor.AdminInterceptor">
-    </bean>
+    <bean id="adminInterceptor" class="org.trc.interceptor.AdminInterceptor"></bean>
+    <bean id="authorityInterceptor" class="org.trc.interceptor.AuthorityInterceptor"></bean>
     <aop:config>
         <!--切入点-->
         <aop:pointcut id="methodPoint" expression="execution(* org.trc.resource..*.*(..)) and  @annotation(org.trc.interceptor.Admin)"/>
         <aop:advisor pointcut-ref="methodPoint" advice-ref="adminInterceptor"/>
+    </aop:config>
+
+
+    <aop:config>
+        <!--切入点-->
+        <aop:pointcut id="methodPoint2" expression="execution(* org.trc.resource..*.*(..)) and  @annotation(org.trc.interceptor.Authority)"/>
+        <aop:advisor pointcut-ref="methodPoint2" advice-ref="authorityInterceptor"/>
     </aop:config>
 </beans>

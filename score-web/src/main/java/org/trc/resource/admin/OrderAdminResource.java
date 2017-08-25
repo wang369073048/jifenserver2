@@ -19,12 +19,15 @@ import org.trc.domain.order.LogisticsDO;
 import org.trc.domain.order.OrdersDO;
 import org.trc.enums.ExceptionEnum;
 import org.trc.exception.OrderException;
+import org.trc.interceptor.Admin;
 import org.trc.util.AppResult;
 import org.trc.util.Pagenation;
 
 import javax.annotation.Resource;
 import javax.validation.constraints.NotNull;
 import javax.ws.rs.*;
+import javax.ws.rs.container.ContainerRequestContext;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 
 import java.io.IOException;
@@ -57,9 +60,11 @@ public class OrderAdminResource {
      * @return
      */
     @GET
+    @Admin
     public Pagenation<OrdersDO> queryOrderList(@QueryParam("orderNum") String orderNum,
                                     @QueryParam("phone") String phone,
                                     @QueryParam("orderState") Integer orderState,
+                                    @Context ContainerRequestContext requestContext,
                                     @BeanParam Pagenation<OrdersDO> page) {
         OrderDTO order = new OrderDTO();
         order.setOrderNum(orderNum);
@@ -75,33 +80,33 @@ public class OrderAdminResource {
         return  newOrderBiz.queryOrdersDOListForPage(order, page);
     }
 
-    /**
-     * 物流查询接口
-     * @param id
-     * @return
-     */
-    @GET
-    @Path(ScoreAdminConstants.Route.Order.LOGISTICSTRACKING+"/{id}")
-    public AppResult<JSONObject> logisticsTracking(@NotNull @PathParam("id") Long id ){
-        LogisticsDO logistic = new LogisticsDO();
-        logistic.setOrderId(id);
-        LogisticsDO logisticsDO = newOrderBiz.getOrderLogistic(logistic);
-        if(null==logisticsDO || StringUtils.isEmpty(logisticsDO.getShipperCode()) || StringUtils.isEmpty(logisticsDO.getLogisticsNum())){
-            //TxJerseyTools.returnAbort(CommonConstants.ErrorCode.ERROR_CUSTOM);
-            throw new OrderException(ExceptionEnum.LOGISTICS_QUERY_EXCEPTION,"物流信息查询异常");
-        }
-        LogisticAck logisticAck = newOrderBiz.logisticsTracking(logisticsDO.getShipperCode(), logisticsDO.getLogisticsNum());
-        if(logisticAck.isSuccess()){
-            JSONObject json = new JSONObject();
-            json.put("success",logisticAck.isSuccess());
-            json.put("state",logisticAck.getState());
-            json.put("traces",logisticAck.getTraces());
-            return createSucssAppResult("查询物流信息成功!" ,json);
-        }else{
-            logger.error(logisticAck.getReason());
-            return createFailAppResult(logisticAck.getReason());
-        }
-    }
+//    /**
+//     * 物流查询接口
+//     * @param id
+//     * @return
+//     */
+//    @GET
+//    @Path(ScoreAdminConstants.Route.Order.LOGISTICSTRACKING+"/{id}")
+//    public AppResult<JSONObject> logisticsTracking(@NotNull @PathParam("id") Long id ){
+//        LogisticsDO logistic = new LogisticsDO();
+//        logistic.setOrderId(id);
+//        LogisticsDO logisticsDO = newOrderBiz.getOrderLogistic(logistic);
+//        if(null==logisticsDO || StringUtils.isEmpty(logisticsDO.getShipperCode()) || StringUtils.isEmpty(logisticsDO.getLogisticsNum())){
+//            //TxJerseyTools.returnAbort(CommonConstants.ErrorCode.ERROR_CUSTOM);
+//            throw new OrderException(ExceptionEnum.LOGISTICS_QUERY_EXCEPTION,"物流信息查询异常");
+//        }
+//        LogisticAck logisticAck = newOrderBiz.logisticsTracking(logisticsDO.getShipperCode(), logisticsDO.getLogisticsNum());
+//        if(logisticAck.isSuccess()){
+//            JSONObject json = new JSONObject();
+//            json.put("success",logisticAck.isSuccess());
+//            json.put("state",logisticAck.getState());
+//            json.put("traces",logisticAck.getTraces());
+//            return createSucssAppResult("查询物流信息成功!" ,json);
+//        }else{
+//            logger.error(logisticAck.getReason());
+//            return createFailAppResult(logisticAck.getReason());
+//        }
+//    }
 
     /**
      * 快递100查询物流
@@ -110,7 +115,9 @@ public class OrderAdminResource {
      */
     @GET
     @Path(ScoreAdminConstants.Route.Order.PULL+"/{id}")
-    public AppResult pull(@NotNull @PathParam("id") Long id ){
+    @Admin
+    public AppResult pull(@NotNull @PathParam("id") Long id,
+                          @Context ContainerRequestContext requestContext){
         LogisticsDO logistic = new LogisticsDO();
         logistic.setOrderId(id);
         LogisticsDO logisticsDO = newOrderBiz.getOrderLogistic(logistic);

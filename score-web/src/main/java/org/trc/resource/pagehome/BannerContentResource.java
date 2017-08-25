@@ -8,6 +8,7 @@ import org.trc.biz.pagehome.IBannerContentBiz;
 import org.trc.constants.ScoreAdminConstants;
 import org.trc.domain.pagehome.BannerContent;
 import org.trc.form.pagehome.BannerContentForm;
+import org.trc.interceptor.Authority;
 import org.trc.util.AppResult;
 import org.trc.util.Pagenation;
 
@@ -40,6 +41,7 @@ public class BannerContentResource {
      * @return
      */
     @POST
+    @Authority
     public AppResult<JSONObject> createBannerContent(@PathParam("shopId") Long shopId,
                                         @NotBlank @FormParam("type") String type,
                                         @NotBlank @FormParam("title") String title,
@@ -75,6 +77,7 @@ public class BannerContentResource {
      */
     @PUT
     @Path("{id}")
+    @Authority
     public AppResult modifyBannerContent(@PathParam("shopId") Long shopId,
                                         @PathParam("id") Long id,
                                         @NotBlank @FormParam("title") String title,
@@ -100,6 +103,7 @@ public class BannerContentResource {
      */
     @DELETE
     @Path("{id}")
+    @Authority
     public AppResult deleteBannerContent(@PathParam("shopId") Long shopId,
                                          @PathParam("id") Long id,
                                          @Context ContainerRequestContext requestContext) {
@@ -120,7 +124,10 @@ public class BannerContentResource {
      * @return
      */
     @GET
-    public Pagenation<BannerContent> getBannerContentList(@BeanParam BannerContentForm bannerContentForm,@BeanParam Pagenation<BannerContent> page) {
+    @Authority
+    public Pagenation<BannerContent> getBannerContentList(@PathParam("shopId") Long shopId,@BeanParam BannerContentForm bannerContentForm,
+                                                          @BeanParam Pagenation<BannerContent> page,
+                                                          @Context ContainerRequestContext requestContext) {
         return bannerContentBiz.bannerContentPage(bannerContentForm ,page);
     }
 
@@ -132,8 +139,9 @@ public class BannerContentResource {
      */
     @GET
     @Path("/{id}")
+    @Authority
     public AppResult<BannerContent> getBannerContentById(@PathParam("shopId") Long shopId,
-                                          @PathParam("id") Long id) {
+                                          @PathParam("id") Long id,@Context ContainerRequestContext requestContext) {
         BannerContent bannerContent = new BannerContent();
         bannerContent.setShopId(shopId);
         bannerContent.setId(id);
