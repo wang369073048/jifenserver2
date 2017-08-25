@@ -44,7 +44,6 @@ public class ScoreService extends BaseService<Score,Long> implements IScoreServi
 
 	@Override
 	public List<Score> queryBuyerScore(Pagenation<Score> pageRequest) {
-		// TODO Auto-generated method stub
 		return scoreMapper.queryBuyerScore(pageRequest);
 	}
 }
