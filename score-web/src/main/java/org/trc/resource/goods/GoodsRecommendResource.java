@@ -16,6 +16,7 @@ import org.trc.domain.goods.GoodsRecommendDO;
 import org.trc.domain.dto.GoodsRecommendDTO;
 import org.trc.enums.ExceptionEnum;
 import org.trc.exception.GoodsRecommendException;
+import org.trc.interceptor.Authority;
 import org.trc.util.AppResult;
 import org.trc.util.Pagenation;
 
@@ -55,7 +56,10 @@ public class GoodsRecommendResource {
      * @return 查询到的推荐商品列表
      */
     @GET
-    public Pagenation<GoodsRecommendDTO> getGoodsRecommands(@PathParam("shopId") Long shopId,@BeanParam Pagenation<GoodsRecommendDTO> page) {
+    @Authority
+    public Pagenation<GoodsRecommendDTO> getGoodsRecommands(@PathParam("shopId") Long shopId,
+                                                            @BeanParam Pagenation<GoodsRecommendDTO> page,
+                                                            @Context ContainerRequestContext requestContext) {
 
         JSONArray jsonArray = new JSONArray();
         GoodsRecommendDTO query = new GoodsRecommendDTO();
@@ -72,7 +76,8 @@ public class GoodsRecommendResource {
      * @return
      */
     @POST
-    public AppResult addGoodsRecommends(@NotNull @PathParam("shopId") Long shopId,
+    @Authority
+    public AppResult addGoodsRecommends(@PathParam("shopId") Long shopId,
                                         @NotEmpty @FormParam(value = "goodsIds") String goodsIds,
                                         @Context ContainerRequestContext requestContext) {
         String userId= (String) requestContext.getProperty("userId");
@@ -109,10 +114,11 @@ public class GoodsRecommendResource {
      * @return
      */
     @GET
+    @Authority
     @Path(ScoreAdminConstants.Route.Recommand.GOODS)
     public Pagenation<GoodsDO> getGoodsListExceptRecommend(@PathParam("shopId") Long shopId,
                                                 @QueryParam("goodsName") String goodsName,
-                                                @BeanParam Pagenation<GoodsDO> page) {
+                                                @BeanParam Pagenation<GoodsDO> page, @Context ContainerRequestContext requestContext) {
             long time1 = System.currentTimeMillis();
             GoodsDO query = new GoodsDO();
             query.setShopId(shopId);
@@ -131,6 +137,7 @@ public class GoodsRecommendResource {
      * @return 交换结果
      */
     @PUT
+    @Authority
     public AppResult moveRecommend(@PathParam("shopId") Long shopId,
                                   @FormParam("recommendAId") Long recommendAId,
                                   @FormParam("recommendBId") Long recommendBId,
@@ -160,8 +167,10 @@ public class GoodsRecommendResource {
      */
     @DELETE
     @Path("/{id}")
+    @Authority
     public AppResult deleteRecommend(@PathParam("shopId") Long shopId,
-                                    @PathParam("id") Long id) {
+                                    @PathParam("id") Long id,
+                                     @Context ContainerRequestContext requestContext) {
         GoodsRecommendDO goodsRecommendDD = goodsRecommendBiz.getGoodsRecommendDOById(id);
         if (null == goodsRecommendDD || goodsRecommendDD.getShopId().longValue() != shopId.longValue()) {
             throw new GoodsRecommendException(ExceptionEnum.ERROR_ILLEGAL_OPERATION, "操作不合法");

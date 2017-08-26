@@ -20,6 +20,7 @@ import org.trc.domain.score.ScoreChange;
 import org.trc.domain.shop.ManagerDO;
 import org.trc.enums.ExceptionEnum;
 import org.trc.exception.FlowException;
+import org.trc.interceptor.CustomerService;
 import org.trc.util.FatherToChildUtils;
 import org.trc.util.Pagenation;
 
@@ -48,7 +49,7 @@ public class FlowResource {
     @Autowired
     private IScoreChangeRecordBiz scoreChangeRecordBiz;
     @GET
-    //@CustomerService
+    @CustomerService
     public Pagenation<ScoreChange> queryChangeRecord(@PathParam("shopId") Long shopId,
                                       @QueryParam("flowType") String flowType,
                                       @QueryParam("businessCode") String businessCodes,
