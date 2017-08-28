@@ -161,8 +161,8 @@ public class CardResource {
     @Consumes(MediaType.MULTIPART_FORM_DATA)
     public AppResult uploadExcel(@Context ContainerRequestContext requestContext,
                                 @QueryParam("batchNumber") String batchNumber,
-                                @FormDataParam("Filedata") InputStream fileInputStream,
-                                @FormDataParam("Filedata") FormDataContentDisposition disposition) throws Exception{
+                                @FormDataParam("file") InputStream fileInputStream,
+                                @FormDataParam("file") FormDataContentDisposition disposition) throws Exception{
         if (null == disposition) {
             return createFailAppResult("未找到导入文件!");
         }
