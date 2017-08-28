@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 import org.trc.annotation.cache.CacheEvit;
+import org.trc.annotation.cache.Cacheable;
 import org.trc.biz.goods.ICategoryBiz;
 import org.trc.biz.goods.ICouponsBiz;
 import org.trc.biz.goods.IGoodsBiz;
@@ -154,8 +155,13 @@ public class GoodsBiz implements IGoodsBiz{
             throw new GoodsException(ExceptionEnum.GOODS_UPDATE_EXCEPTION, "修改信息异常!");
         }
     }
-
+    /**
+     * 根据ID删除信息
+     * @param goodsDO GoodsDO
+     * @return int
+     */
     @Override
+    @CacheEvit(key="#goodsDO.id")
     public int deleteGoodsDO(GoodsDO goodsDO) {
         Assert.isTrue(null != goodsDO,"goodsDO不能为空!");
         Assert.isTrue(null != goodsDO.getId(),"待删除商品id不能为空!");
@@ -353,11 +359,13 @@ public class GoodsBiz implements IGoodsBiz{
     }
 
     @Override
+    @Cacheable(isList=true,key="#shopId+#limit")
     public List<GoodsDO> getHotExchangeList(Long shopId, Long limit) {
         return null;
     }
 
     @Override
+    @Cacheable(isList=true,key="#queryModel.toString()+#page.pageIndex+#page.pageSize")
     public Pagenation<GoodsDO> queryGoodsDOListExceptRecommendForPage(GoodsDO queryModel, Pagenation<GoodsDO> page) {
         try {
             Assert.notNull(page, "分页参数不能为空");

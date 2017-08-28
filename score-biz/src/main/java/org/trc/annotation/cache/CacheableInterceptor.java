@@ -3,6 +3,8 @@ package org.trc.annotation.cache;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 import org.springframework.util.Assert;
 import org.trc.util.RedisUtil;
@@ -17,11 +19,13 @@ import java.lang.reflect.Method;
 @Component
 @Aspect
 public class CacheableInterceptor extends BaseInterceptor{
+
+    private Logger logger = LoggerFactory.getLogger(CacheableInterceptor.class);
     /**
      * 定义缓存逻辑
      * @throws Throwable
      */
-    //@Around("@annotation(org.trc.annotation.cache.Cacheable)")//TODO 缓存
+    @Around("@annotation(org.trc.annotation.cache.Cacheable)")
     public Object cache(ProceedingJoinPoint pjp ) throws Throwable {
         Object result=null;
         String key = "";
@@ -50,8 +54,8 @@ public class CacheableInterceptor extends BaseInterceptor{
             //到达这一步证明参数正确，没有exception，应该放入缓存
             shouldSet = true;
         }catch(Exception e){
-            e.printStackTrace();
             //出exception了,继续即可,不需要处理
+            logger.error(e.getMessage());
         }finally{
             //没有缓存执行结果
             if(result==null){
