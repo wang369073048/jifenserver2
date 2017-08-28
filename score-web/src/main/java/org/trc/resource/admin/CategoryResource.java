@@ -1,6 +1,10 @@
 package org.trc.resource.admin;
 
+import com.alibaba.druid.support.json.JSONUtils;
+import com.alibaba.dubbo.common.json.JSON;
 import com.alibaba.fastjson.JSONObject;
+
+import org.apache.xmlbeans.impl.jam.visitor.TraversingJVisitor;
 import org.hibernate.validator.constraints.NotBlank;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -14,13 +18,14 @@ import org.trc.exception.BannerException;
 import org.trc.interceptor.Admin;
 import org.trc.util.AppResult;
 import org.trc.util.Pagenation;
+import org.trc.util.TxJerseyTools;
 
 import javax.validation.constraints.NotNull;
 import javax.ws.rs.*;
 import javax.ws.rs.container.ContainerRequestContext;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
-
+import javax.ws.rs.core.Response;
 
 import static org.trc.util.ResultUtil.createSucssAppResult;
 
@@ -52,7 +57,7 @@ public class CategoryResource {
      */
     @POST
     @Admin
-    public AppResult<JSONObject> createCategory(@NotBlank @FormParam("categoryName") String categoryName,
+    public Response createCategory(@NotBlank @FormParam("categoryName") String categoryName,
                                                 @FormParam("isVirtual") Integer isVirtual,
                                                 @FormParam("logoUrl") String logoUrl,
                                                 @NotNull @FormParam("sort") Integer sort,
@@ -81,7 +86,7 @@ public class CategoryResource {
         categoryBiz.addCategoryDO(categoryDO);
         JSONObject jsonObject = new JSONObject();
         jsonObject.put("categoryId", categoryDO.getId());
-        return createSucssAppResult("保存类目成功", jsonObject);
+        return TxJerseyTools.returnSuccess(jsonObject.toJSONString());
     }
 
     /**
@@ -97,7 +102,7 @@ public class CategoryResource {
     @PUT
     @Path("/{id}")
     @Admin
-    public AppResult modifyCategory(@PathParam("id") Long id,
+    public Response modifyCategory(@PathParam("id") Long id,
                                    @NotBlank @FormParam("categoryName") String categoryName,
                                    @FormParam("logoUrl") String logoUrl,
                                    @NotNull @FormParam("sort") Integer sort,
@@ -121,8 +126,7 @@ public class CategoryResource {
         categoryDO.setPid(pid);
         categoryDO.setOperatorUserId(userId);
         categoryBiz.modifyCategoryDO(categoryDO);
-        return createSucssAppResult("更新类目成功", "");
-
+        return TxJerseyTools.returnSuccess("更新类目成功!");
     }
 
     /**
@@ -134,7 +138,7 @@ public class CategoryResource {
     @DELETE
     @Path("/{id}")
     @Admin
-    public AppResult deleteCategory(@PathParam("id") Long id,
+    public Response deleteCategory(@PathParam("id") Long id,
                                    @Context ContainerRequestContext requestContext) {
         //获取登录者userId
         String userId = (String) requestContext.getProperty("userId");
@@ -142,7 +146,7 @@ public class CategoryResource {
         categoryDO.setId(id);
         categoryDO.setOperatorUserId(userId);
         categoryBiz.deleteCategoryDO(categoryDO);
-        return createSucssAppResult("删除类目成功", "");
+        return TxJerseyTools.returnSuccess();
     }
 
     /**
@@ -153,7 +157,7 @@ public class CategoryResource {
     @GET
     @Path("/{id}")
     @Admin
-    public AppResult<JSONObject> getCategoryById(@PathParam("id") Long id,
+    public Response getCategoryById(@PathParam("id") Long id,
                                                  @Context ContainerRequestContext requestContext) {
         CategoryDO categoryDO = categoryBiz.getCategoryDOById(id);
         JSONObject json = new JSONObject();
@@ -163,7 +167,7 @@ public class CategoryResource {
         json.put("logoUrl", categoryDO.getLogoUrl());
         json.put("sort", categoryDO.getSort());
         json.put("description", categoryDO.getDescription());
-        return createSucssAppResult("删除类目成功", json);
+        return TxJerseyTools.returnSuccess(json.toJSONString());
     }
 
     /**
@@ -174,12 +178,15 @@ public class CategoryResource {
      */
     @GET
     @Admin
-    public Pagenation<CategoryDO> getCategoryList(@QueryParam("name") String name,
+    public Response getCategoryList(@QueryParam("name") String name,
                                     @BeanParam Pagenation<CategoryDO> page,@Context ContainerRequestContext requestContext) {
         CategoryDO query = new CategoryDO();
         query.setCategoryName(name);
         page = categoryBiz.queryCategoryDOListForPage(query, page);
-        return page;
-
+        if(page!=null){
+        	return TxJerseyTools.returnSuccess(JSONUtils.toJSONString(page));
+        }else{
+        	return TxJerseyTools.returnSuccess();
+        }
     }
 }

@@ -1,26 +1,36 @@
 package org.trc.resource.pagehome;
 
-import com.alibaba.fastjson.JSONObject;
-import org.hibernate.validator.constraints.NotBlank;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-import org.trc.annotation.cache.Cacheable;
-import org.trc.biz.pagehome.IBannerBiz;
-import org.trc.constants.ScoreAdminConstants;
-import org.trc.domain.pagehome.Banner;
-import org.trc.form.pagehome.BannerForm;
-import org.trc.interceptor.Admin;
-import org.trc.interceptor.Authority;
-import org.trc.util.AppResult;
-import org.trc.util.Pagenation;
+import static org.trc.util.ResultUtil.createSucssAppResult;
 
 import javax.validation.constraints.NotNull;
-import javax.ws.rs.*;
+import javax.ws.rs.BeanParam;
+import javax.ws.rs.FormParam;
+import javax.ws.rs.GET;
+import javax.ws.rs.POST;
+import javax.ws.rs.PUT;
+import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
+import javax.ws.rs.Produces;
 import javax.ws.rs.container.ContainerRequestContext;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 
-import static org.trc.util.ResultUtil.*;
+import org.hibernate.validator.constraints.NotBlank;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+import org.trc.biz.pagehome.IBannerBiz;
+import org.trc.constants.ScoreAdminConstants;
+import org.trc.domain.pagehome.Banner;
+import org.trc.domain.pagehome.BannerContent;
+import org.trc.form.pagehome.BannerForm;
+import org.trc.interceptor.Authority;
+import org.trc.util.AppResult;
+import org.trc.util.Pagenation;
+import org.trc.util.TxJerseyTools;
+
+import com.alibaba.druid.support.json.JSONUtils;
+import com.alibaba.fastjson.JSONObject;
 
 /**
  * Created by hzwzhen on 2017/6/9.
@@ -40,7 +50,7 @@ public class BannerResource{
      */
     @POST
     @Authority
-    public AppResult<JSONObject> createBanner(@PathParam("shopId") Long shopId,@BeanParam BannerForm form,
+    public Response createBanner(@PathParam("shopId") Long shopId,@BeanParam BannerForm form,
                                   @Context ContainerRequestContext requestContext){
 
         Banner banner = new Banner();
@@ -52,7 +62,8 @@ public class BannerResource{
         bannerBiz.saveBanner(banner);
         JSONObject jsonObject = new JSONObject();
         jsonObject.put("bannerId", banner.getId());
-        return createSucssAppResult("保存banner成功", jsonObject);
+//        return createSucssAppResult("保存banner成功", jsonObject);
+        return TxJerseyTools.returnSuccess(jsonObject.toJSONString());
     }
 
     /**
@@ -64,7 +75,7 @@ public class BannerResource{
     @PUT
     @Path("{id}")
     @Authority
-    public AppResult<JSONObject> modifyBanner(@PathParam("shopId") Long shopId,@BeanParam BannerForm form,
+    public Response modifyBanner(@PathParam("shopId") Long shopId,@BeanParam BannerForm form,
                                  @NotBlank @FormParam("name") String name,
                                  @Context ContainerRequestContext requestContext){
 
@@ -75,7 +86,8 @@ public class BannerResource{
             bannerBiz.updateBanner(banner);
             JSONObject jsonObject = new JSONObject();
             jsonObject.put("bannerId", banner.getId());
-            return createSucssAppResult("更新banner成功", jsonObject);
+//            return createSucssAppResult("更新banner成功", jsonObject);
+            return TxJerseyTools.returnSuccess(jsonObject.toJSONString());
     }
 
     /**
@@ -87,9 +99,11 @@ public class BannerResource{
      */
     @GET
     @Authority
-    public Pagenation<Banner> bannerPage(@PathParam("shopId") Long shopId,@BeanParam BannerForm form,@BeanParam Pagenation<Banner> page,
+    public Response bannerPage(@PathParam("shopId") Long shopId,@BeanParam BannerForm form,@BeanParam Pagenation<Banner> page,
                                          @Context ContainerRequestContext requestContext){
-        return bannerBiz.bannerPage(form,page);
+//        return bannerBiz.bannerPage(form,page);
+        Pagenation<Banner> pageBanners = bannerBiz.bannerPage(form,page);
+        return TxJerseyTools.returnSuccess(JSONUtils.toJSONString(pageBanners));
     }
 
     /**
@@ -101,8 +115,13 @@ public class BannerResource{
     @GET
     @Path("{id}")
     @Authority
-    public AppResult<Banner> getBannerById(@PathParam("shopId") Long shopId,@BeanParam BannerForm form,@Context ContainerRequestContext requestContext){
-        return createSucssAppResult("查询banner成功", bannerBiz.selectByIdAndShopId(form));
+    public Response getBannerById(@PathParam("shopId") Long shopId,@BeanParam BannerForm form,@Context ContainerRequestContext requestContext){
+//        return createSucssAppResult("查询banner成功", bannerBiz.selectByIdAndShopId(form));
+        Banner banner = bannerBiz.selectByIdAndShopId(form);
+        if(banner!=null){
+        	return TxJerseyTools.returnSuccess(JSONUtils.toJSONString(banner));
+        }
+        return TxJerseyTools.returnSuccess();
     }
 
     /**
@@ -114,13 +133,14 @@ public class BannerResource{
     @PUT
     @Path(ScoreAdminConstants.Route.Banner.SETCONTENT + "/{id}")
     @Authority
-    public AppResult setBannerContent(@PathParam("shopId") Long shopId,@BeanParam BannerForm form, @NotNull@FormParam("contentId")Long contentId,@Context ContainerRequestContext requestContext){
+    public Response setBannerContent(@PathParam("shopId") Long shopId,@BeanParam BannerForm form, @NotNull@FormParam("contentId")Long contentId,@Context ContainerRequestContext requestContext){
         Banner banner = bannerBiz.selectByIdAndShopId(form);
         banner.setContentId(contentId);
         String userId= (String) requestContext.getProperty("userId");
         banner.setOperatorUserId(userId);
         bannerBiz.updateBanner(banner);
-        return createSucssAppResult("设置成功", "");
+//        return createSucssAppResult("设置成功", "");
+        return TxJerseyTools.returnSuccess();
     }
 
     /**
@@ -134,13 +154,14 @@ public class BannerResource{
     @PUT
     @Path(ScoreAdminConstants.Route.Banner.SETUP + "/{id}")
     @Authority
-    public AppResult setBannerIsUp(@PathParam("shopId") Long shopId,@BeanParam BannerForm form, @NotNull@FormParam("isUp")Boolean isUp,@Context ContainerRequestContext requestContext){
+    public Response setBannerIsUp(@PathParam("shopId") Long shopId,@BeanParam BannerForm form, @NotNull@FormParam("isUp")Boolean isUp,@Context ContainerRequestContext requestContext){
         Banner banner = bannerBiz.selectByIdAndShopId(form);
         banner.setIsUp(isUp);
         String userId= (String) requestContext.getProperty("userId");
         banner.setOperatorUserId(userId);
         bannerBiz.updateBanner(banner);
-        return createSucssAppResult("设置成功", "");
+//        return createSucssAppResult("设置成功", "");
+        return TxJerseyTools.returnSuccess();
     }
 
     /**
@@ -154,7 +175,7 @@ public class BannerResource{
     @PUT
     @Path(ScoreAdminConstants.Route.Banner.SORT)
     @Authority
-    public AppResult exchangeSort(@PathParam("shopId") Long shopId,
+    public Response exchangeSort(@PathParam("shopId") Long shopId,
                                   @NotNull@FormParam("idA") Long idA,
                                   @NotNull@FormParam("idB") Long idB,
                                   @Context ContainerRequestContext requestContext){
@@ -167,7 +188,8 @@ public class BannerResource{
         bannerFormB.setId(idB);
         Banner bannerB = bannerBiz.selectByIdAndShopId(bannerFormB);
         bannerBiz.exchangeSort(bannerA,bannerB);
-        return createSucssAppResult("设置成功","");
+//        return createSucssAppResult("设置成功","");
+        return TxJerseyTools.returnSuccess();
     }
 
 

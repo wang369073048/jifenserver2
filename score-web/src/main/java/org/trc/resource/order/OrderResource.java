@@ -43,6 +43,7 @@ import org.trc.domain.auth.Auth;
 import org.trc.domain.dto.ExportOrderDTO;
 import org.trc.domain.dto.OrderDTO;
 import org.trc.domain.dto.OrderQuery;
+import org.trc.domain.dto.WinningRecordDTO;
 import org.trc.domain.order.LogisticsDO;
 import org.trc.domain.order.OrdersDO;
 import org.trc.domain.query.SettlementQuery;
@@ -58,7 +59,9 @@ import org.trc.util.CellDefinition;
 import org.trc.util.ExportExcel;
 import org.trc.util.FatherToChildUtils;
 import org.trc.util.Pagenation;
+import org.trc.util.TxJerseyTools;
 
+import com.alibaba.druid.support.json.JSONUtils;
 import com.alibaba.fastjson.JSONObject;
 import com.tairanchina.md.account.user.model.UserDO;
 import com.tairanchina.md.account.user.service.UserService;
@@ -66,6 +69,7 @@ import com.tairanchina.md.api.QueryType;
 import com.trc.mall.externalservice.HttpBaseAck;
 import com.trc.mall.externalservice.LogisticAck;
 import com.trc.mall.externalservice.dto.TrcExpressDto;
+import com.trc.mall.util.CustomAck;
 import com.txframework.util.DateUtils;
 import com.txframework.util.ListUtils;
 
@@ -95,7 +99,7 @@ public class OrderResource {
     @POST
     @Path("/updateState")
     @Manager
-    public AppResult updateState(@FormParam("orderId") Long orderId,
+    public Response updateState(@FormParam("orderId") Long orderId,
                                  @FormParam("orderState") Integer orderState,
                                  @Context ContainerRequestContext requestContext) {
 
@@ -112,7 +116,8 @@ public class OrderResource {
         ordersDO.setId(orderId);
         ordersDO.setOrderState(orderState);
         newOrderBiz.modifyOrderState(ordersDO);
-        return createSucssAppResult("更新订单状态成功", "");
+//        return createSucssAppResult("更新订单状态成功", "");
+        return TxJerseyTools.returnSuccess();
     }
 
     /**
@@ -129,7 +134,7 @@ public class OrderResource {
     @POST
     @Path("/modify")
     @Manager
-    public AppResult modifyOrderLogistics(@FormParam("orderId") Long orderId,
+    public Response modifyOrderLogistics(@FormParam("orderId") Long orderId,
                                           @FormParam("companyName") String companyName,
                                           @FormParam("shipperCode") String shipperCode,
                                           @FormParam("logisticsNum") String logisticsNum,
@@ -153,7 +158,8 @@ public class OrderResource {
         logistics.setOperatorUserId(userId);
         logistics.setUpdateTime(Calendar.getInstance().getTime());
         newOrderBiz.modifyOrderLogistic(logistics);
-        return createSucssAppResult("修改订单物流信息成功", "");
+//        return createSucssAppResult("修改订单物流信息成功", "");
+        return TxJerseyTools.returnSuccess();
     }
 
     /**
@@ -169,7 +175,7 @@ public class OrderResource {
     @POST
     @Path("/ship")
     @Manager
-    public AppResult shipOrder(@FormParam("orderId") Long orderId,
+    public Response shipOrder(@FormParam("orderId") Long orderId,
                                @FormParam("companyName") String companyName,
                                @FormParam("shipperCode") String shipperCode,
                                @FormParam("logisticsNum") String logisticsNum,
@@ -189,7 +195,8 @@ public class OrderResource {
         LogisticsDO logisticsDO = newOrderBiz.shipOrder(logistics);
         JSONObject jsonObject = new JSONObject();
         jsonObject.put("logisticsId", logisticsDO.getId());
-        return createSucssAppResult("订单发货成功", "");
+//        return createSucssAppResult("订单发货成功", "");
+        return TxJerseyTools.returnSuccess();
     }
 
     /**
@@ -208,7 +215,7 @@ public class OrderResource {
     @GET
     @Path(ScoreAdminConstants.Route.Order.LIST)
     @Manager
-    public Pagenation<OrdersDO> queryOrderList(@QueryParam("orderNum") String orderNum,
+    public Response queryOrderList(@QueryParam("orderNum") String orderNum,
                                                @QueryParam("phone") String phone,
                                                @QueryParam("orderType") Integer orderType,
                                                @QueryParam("orderState") Integer orderState,
@@ -238,7 +245,9 @@ public class OrderResource {
         if (null != endTime) {
             order.setOperateTimeMax(new Date(endTime));
         }
-        return newOrderBiz.queryOrdersDOListForPage(order, page);
+//      return newOrderBiz.queryOrdersDOListForPage(order, page);
+        Pagenation<OrdersDO> pageOrders = newOrderBiz.queryOrdersDOListForPage(order, page);
+        return TxJerseyTools.returnSuccess(JSONUtils.toJSONString(pageOrders));
     }
 
     @GET
@@ -324,7 +333,7 @@ public class OrderResource {
     @GET
     @Path("/get")
     @Manager
-    public AppResult selectOrder(@QueryParam("id") Long id,
+    public Response selectOrder(@QueryParam("id") Long id,
                                  @Context ContainerRequestContext requestContext) {
         OrdersDO order = new OrdersDO();
         order.setId(id);
@@ -371,12 +380,13 @@ public class OrderResource {
             jsonObject.put("freight", result.getLogisticsDO().getFreight());
         }
         handleJson(order,jsonObject);
-        return createSucssAppResult("订单发货成功", jsonObject);
+//        return createSucssAppResult("订单发货成功", jsonObject);
+        return TxJerseyTools.returnSuccess(jsonObject.toJSONString());
     }
 
     @GET
     @Path("/settlement")
-    public Pagenation<SettlementDO> querySettlementList(@QueryParam("billNum") String billNum,
+    public Response querySettlementList(@QueryParam("billNum") String billNum,
                                                         @BeanParam Pagenation<SettlementDO> page,
                                                         @Context ContainerRequestContext requestContext) {
 
@@ -385,12 +395,14 @@ public class OrderResource {
         Auth auth = authBiz.getAuthByUserId(userId);
         SettlementDO settlementDO = new SettlementDO();
         settlementDO.setShopId(auth.getShopId());
-        return settlementBiz.queryListByParams(settlementDO, page);
+//        return settlementBiz.queryListByParams(settlementDO, page);
+        Pagenation<SettlementDO> pageSettlementDOs = settlementBiz.queryListByParams(settlementDO, page);
+        return TxJerseyTools.returnSuccess(JSONUtils.toJSONString(pageSettlementDOs));
     }
 
     @GET
     @Path("/settlementOrder")
-    public Pagenation<OrdersDO> querySettlementOrderList(@QueryParam("orderNum") String orderNum,
+    public Response querySettlementOrderList(@QueryParam("orderNum") String orderNum,
                                                          @QueryParam("goodsName") String goodsName,
                                                          @QueryParam("startTime") Long startTime,
                                                          @QueryParam("endTime") Long endTime,
@@ -421,7 +433,8 @@ public class OrderResource {
 
             }
         }
-        return orderPage;
+//        return orderPage;
+        return TxJerseyTools.returnSuccess(JSONUtils.toJSONString(orderPage));
     }
 
     /**
@@ -433,7 +446,7 @@ public class OrderResource {
      */
     @GET
     @Path("/logisticsTracking")
-    public AppResult logisticsTracking(@NotNull @QueryParam("id") Long id,
+    public Response logisticsTracking(@NotNull @QueryParam("id") Long id,
                                        @Context ContainerRequestContext requestContext) {
         String userId = (String) requestContext.getProperty("userId");
         //取该用户的权限
@@ -457,10 +470,12 @@ public class OrderResource {
             json.put("success", logisticAck.isSuccess());
             json.put("state", logisticAck.getState());
             json.put("traces", logisticAck.getTraces());
-            return createSucssAppResult("查询物流信息成功!", json);
+//            return createSucssAppResult("查询物流信息成功!", json);
+            return TxJerseyTools.returnSuccess(json.toJSONString());
         } else {
             logger.error(logisticAck.getReason());
-            return createFailAppResult(logisticAck.getReason());
+//            return createFailAppResult(logisticAck.getReason());
+            return CustomAck.customError(logisticAck.getReason());
         }
     }
 
@@ -474,7 +489,7 @@ public class OrderResource {
     @GET
     @Path("/pull")
     @Manager
-    public AppResult pull(@NotNull @QueryParam("id") Long id,
+    public Response pull(@NotNull @QueryParam("id") Long id,
                                          @Context ContainerRequestContext requestContext) throws IOException {
 
         String userId = (String) requestContext.getProperty("userId");
@@ -495,10 +510,12 @@ public class OrderResource {
         }
         HttpBaseAck<TrcExpressDto> resultAck =  newOrderBiz.pull(logisticsDO.getShipperCode(), logisticsDO.getLogisticsNum());
         if(resultAck.isSuccess() && null != resultAck.getData() && TrcExpressDto.SUCCESS_CODE.equals(resultAck.getData().getCode())){
-            return createSucssAppResult("查询物流信息成功!", resultAck.getData());
+//          return createSucssAppResult("查询物流信息成功!", resultAck.getData());
+            return TxJerseyTools.returnSuccess(JSONUtils.toJSONString(resultAck.getData()));
         }
         logger.error("物流查询服务不可用!");
-        return createFailAppResult("物流查询服务不可用!");
+//        return createFailAppResult("物流查询服务不可用!");
+        return CustomAck.customError("物流查询服务不可用!");
     }
 
     /**
@@ -511,7 +528,7 @@ public class OrderResource {
     @GET
     @Path("/checkOrder")
     @CustomerService
-    public AppResult<JSONObject> checkOrder(@NotNull @QueryParam("orderNum") String orderNum,
+    public Response checkOrder(@NotNull @QueryParam("orderNum") String orderNum,
                                             @NotNull @QueryParam("phone") String phone,
                                             @Context ContainerRequestContext requestContext) {
         OrdersDO param = new OrdersDO();
@@ -542,7 +559,8 @@ public class OrderResource {
         jsonObject.put("confirmTime", order.getConfirmTime());
         jsonObject.put("updateTime", order.getUpdateTime());
         handleJson(order,jsonObject);
-        return createSucssAppResult("查询待退款订单成功!", jsonObject);
+//        return createSucssAppResult("查询待退款订单成功!", jsonObject);
+        return TxJerseyTools.returnSuccess(jsonObject.toJSONString());
     }
 
 
@@ -576,7 +594,7 @@ public class OrderResource {
     @POST
     @Path("/returnGoods")
     @CustomerService
-    public AppResult returnGoods(@NotNull @FormParam("orderNum") String orderNum,
+    public Response returnGoods(@NotNull @FormParam("orderNum") String orderNum,
                                 @NotNull @FormParam("phone") String phone,
                                 @NotNull @FormParam("remark") String remark,
                                  @Context ContainerRequestContext requestContext) {
@@ -589,9 +607,10 @@ public class OrderResource {
             newOrderBiz.returnGoods(orderNum, userDO.getUserId(), remark);
     	}catch(OrderException e){
     		logger.error(e.getMessage(), e);
-            return createFailAppResult(e.getMessage());
+//            return createFailAppResult(e.getMessage());
+            return CustomAck.customError(e.getMessage());
     	}
-        
-        return createSucssAppResult("退款成功!", "");
+//        return createSucssAppResult("退款成功!", "");
+    	return TxJerseyTools.returnSuccess();
     }
 }

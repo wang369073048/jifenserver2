@@ -1,9 +1,11 @@
 package org.trc.resource.goods;
 
+import com.alibaba.druid.support.json.JSONUtils;
 import com.alibaba.dubbo.common.utils.CollectionUtils;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.trc.mall.externalservice.dto.CouponDto;
+import com.trc.mall.util.CustomAck;
 import com.txframework.util.ListUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.hibernate.validator.constraints.NotEmpty;
@@ -26,6 +28,7 @@ import org.trc.interceptor.Authority;
 import org.trc.util.AppResult;
 import org.trc.util.GuidUtil;
 import org.trc.util.Pagenation;
+import org.trc.util.TxJerseyTools;
 
 import javax.validation.constraints.NotNull;
 import javax.ws.rs.*;
@@ -63,7 +66,7 @@ public class GoodsResource {
     @POST
     @Authority
     @Path(ScoreAdminConstants.Route.Goods.ENTITY)
-    public AppResult publish(@NotNull(message = "shopId不能为空") @PathParam("shopId") Long shopId, @NotNull(message = "category不能为空")@FormParam("category") Long category,
+    public Response publish(@NotNull(message = "shopId不能为空") @PathParam("shopId") Long shopId, @NotNull(message = "category不能为空")@FormParam("category") Long category,
                              @FormParam("brandName") String brandName, @NotEmpty(message = "goodsName不能为空") @FormParam("goodsName") String goodsName, @FormParam("barcode") String barcode,
                              @FormParam("goodsNo") String goodsNo, @FormParam("batchNumber") String batchNumber, @FormParam("mainImg") String mainImg,
                              @NotEmpty(message = "mediumImg不能为空") @FormParam("mediumImg") String mediumImg, @FormParam("priceMarket") Integer priceMarket,
@@ -113,7 +116,7 @@ public class GoodsResource {
             goodsDO.setGoodsClassificationRelationshipList(list);
         }
         goodsBiz.saveGoodsDO(goodsDO);
-        return createSucssAppResult("保存商品成功", "");
+        return TxJerseyTools.returnSuccess();
     }
     private boolean _checkString(String shopClassificationIds){
         if(StringUtils.isNotBlank(shopClassificationIds)){
@@ -129,7 +132,7 @@ public class GoodsResource {
     @POST
     @Path(ScoreAdminConstants.Route.Goods.ENTITY + "/{id}")
     @Authority
-    public AppResult modify(@NotNull@PathParam("shopId") Long shopId, @NotNull(message = "id不能为空") @FormParam("id") Long id,
+    public Response modify(@NotNull@PathParam("shopId") Long shopId, @NotNull(message = "id不能为空") @FormParam("id") Long id,
                             @NotNull(message = "category不能为空") @FormParam("category") Long category,
                             @FormParam("brandName") String brandName, @NotEmpty(message = "goodsName不能为空") @FormParam("goodsName") String goodsName,
                             @NotEmpty(message = "barcode不能为空") @FormParam("barcode") String barcode,
@@ -198,7 +201,7 @@ public class GoodsResource {
             goodsDO.setGoodsClassificationRelationshipList(list);
         }
         goodsBiz.updateGoodsDO(goodsDO);
-        return createSucssAppResult("修改商品成功", "");
+        return TxJerseyTools.returnSuccess();
 
     }
     /**
@@ -209,7 +212,7 @@ public class GoodsResource {
     @GET
     @Authority
     @Path(ScoreAdminConstants.Route.Goods.ENTITY + "/{id}")
-    public AppResult<JSONObject> getGoodsById(@PathParam("shopId") Long shopId,
+    public Response getGoodsById(@PathParam("shopId") Long shopId,
                                  @PathParam("id") Long id,@Context ContainerRequestContext requestContext) {
         GoodsDO goods = goodsBiz.getGoodsDOById(id, null);
         //校验商品是否属于该店铺
@@ -258,8 +261,7 @@ public class GoodsResource {
             jsonObject.put("autoUpTime", goods.getAutoUpTime());
             jsonObject.put("autoDownTime", goods.getAutoDownTime());
         }
-        return createSucssAppResult("查询商品成功", jsonObject);
-
+        return TxJerseyTools.returnSuccess(jsonObject.toJSONString());
     }
 
     /**
@@ -268,14 +270,13 @@ public class GoodsResource {
     @DELETE
     @Authority
     @Path(ScoreAdminConstants.Route.Goods.ENTITY + "/{id}")
-    public AppResult deleteGoodsDO(@PathParam("shopId") Long shopId, @PathParam("id") Long id,@Context ContainerRequestContext requestContext){
+    public Response deleteGoodsDO(@PathParam("shopId") Long shopId, @PathParam("id") Long id,@Context ContainerRequestContext requestContext){
 
         GoodsDO goodsDO = new GoodsDO();
         goodsDO.setId(id);
         goodsDO.setShopId(shopId);
         goodsBiz.deleteGoodsDO(goodsDO);
-        return createSucssAppResult("删除商品成功", "");
-
+        return TxJerseyTools.returnSuccess();
     }
 
 
@@ -287,7 +288,7 @@ public class GoodsResource {
     @GET
     @Authority
     @Path(ScoreAdminConstants.Route.Goods.ENTITY)
-    public Pagenation<GoodsDO>  getGoodsList(@PathParam("shopId") Long shopId,
+    public Response getGoodsList(@PathParam("shopId") Long shopId,
                                  @QueryParam("goodsName") String goodsName,
                                  @QueryParam("isUp") Integer isUp,
                                  @QueryParam("whetherPrizes") Integer whetherPrizes,
@@ -313,7 +314,7 @@ public class GoodsResource {
                 }
             }
         }
-        return page;
+        return TxJerseyTools.returnSuccess(JSONUtils.toJSONString(page));
     }
 
     //构建GoodsDO
@@ -341,7 +342,7 @@ public class GoodsResource {
     @POST
     @Path(ScoreAdminConstants.Route.Goods.SET_CLASSIFICATION)
     @Authority
-    public AppResult setClassification(@PathParam("shopId") Long shopId, @NotEmpty @FormParam("goodsIds") String goodsIds,
+    public Response setClassification(@PathParam("shopId") Long shopId, @NotEmpty @FormParam("goodsIds") String goodsIds,
                                       @NotEmpty @FormParam("classificationIds") String classificationIds,@Context ContainerRequestContext requestContext) {
         _checkString(goodsIds);
         _checkString(classificationIds);
@@ -361,7 +362,7 @@ public class GoodsResource {
             }
         }
         goodsBiz.setClassification(goodsList, gcrList);
-        return createSucssAppResult("操作成功", "");
+        return TxJerseyTools.returnSuccess();
 
     }
 
@@ -374,7 +375,7 @@ public class GoodsResource {
     @PUT
     @Authority
     @Path(ScoreAdminConstants.Route.Goods.ENTITY_UP + "/{id}")
-    public AppResult upById(@PathParam("shopId") Long shopId, @PathParam("id") Long id,@Context ContainerRequestContext requestContext) {
+    public Response upById(@PathParam("shopId") Long shopId, @PathParam("id") Long id,@Context ContainerRequestContext requestContext) {
         GoodsDO goods = goodsBiz.getGoodsDOById(id, null);
         if (null == goods || goods.getShopId().longValue() != shopId.longValue()) {
             throw new GoodsException(ExceptionEnum.ERROR_ILLEGAL_OPERATION,"操作不合法");
@@ -391,7 +392,7 @@ public class GoodsResource {
     @PUT
     @Authority
     @Path(ScoreAdminConstants.Route.Goods.ENTITY_DOWN + "/{id}")
-    public AppResult downById(@PathParam("shopId") Long shopId, @PathParam("id") Long id,@Context ContainerRequestContext requestContext) {
+    public Response downById(@PathParam("shopId") Long shopId, @PathParam("id") Long id,@Context ContainerRequestContext requestContext) {
         GoodsDO goods = goodsBiz.getGoodsDOById(id, null);
         if (null == goods || goods.getShopId().longValue() != shopId.longValue()) {
             throw new GoodsException(ExceptionEnum.ERROR_ILLEGAL_OPERATION,"操作不合法");
@@ -399,14 +400,14 @@ public class GoodsResource {
         return down(id);
     }
 
-    private AppResult up(Long goodsId) {
+    private Response up(Long goodsId) {
         goodsBiz.upById(goodsId);
-        return createSucssAppResult("商品上架成功", "");
+        return TxJerseyTools.returnSuccess();
     }
 
-    private AppResult down(Long goodsId) {
+    private Response down(Long goodsId) {
         goodsBiz.downById(goodsId);
-        return createSucssAppResult("商品下架成功", "");
+        return TxJerseyTools.returnSuccess();
     }
 
     /**
@@ -417,7 +418,7 @@ public class GoodsResource {
     @GET
     @Authority
     @Path(ScoreAdminConstants.Route.Goods.ENTITY + ScoreAdminConstants.Route.Goods.CATEGORY)
-    public AppResult<JSONArray> getCategoryList(@PathParam("shopId") Long shopId, @QueryParam("name") String name,@Context ContainerRequestContext requestContext) {
+    public Response getCategoryList(@PathParam("shopId") Long shopId, @QueryParam("name") String name,@Context ContainerRequestContext requestContext) {
 
         CategoryDO query = new CategoryDO();
         query.setCategoryName(name);
@@ -439,7 +440,7 @@ public class GoodsResource {
                 jsonArray.add(json);
             }
         }
-        return createSucssAppResult("商品下架成功", jsonArray);
+        return TxJerseyTools.returnSuccess(JSONUtils.toJSONString(jsonArray));
     }
 
     /**
@@ -451,20 +452,20 @@ public class GoodsResource {
     @GET
     @Authority
     @Path(ScoreAdminConstants.Route.Goods.CHECKEID)
-    public AppResult checkEid(@PathParam("shopId") Long shopId, @NotNull @QueryParam("eid")String eid,@Context ContainerRequestContext requestContext){
+    public Response checkEid(@PathParam("shopId") Long shopId, @NotNull @QueryParam("eid")String eid,@Context ContainerRequestContext requestContext){
         try {
             CouponDto couponDto = goodsBiz.checkEid(eid);
             if(CouponDto.SUCCESS_CODE.equals(couponDto.getCode())) {
                 JSONObject result = new JSONObject();
                 result.put("packageFrom", couponDto.getData().getPackageFrom());
                 result.put("packageTo", couponDto.getData().getPackageTo());
-                return createSucssAppResult("查询成功", result);
+                return TxJerseyTools.returnSuccess(JSONUtils.toJSONString(result));
             } else{
-                return createFailAppResult("金融卡券批次号不存在!");
+            	return CustomAck.customError("金融卡券批次号不存在!");
             }
         }catch (Exception e){
             logger.error("金融卡券查询服务不可用!");
-            return createFailAppResult("金融卡券查询服务不可用!");
+            return CustomAck.customError("金融卡券查询服务不可用!");
         }
 
     }

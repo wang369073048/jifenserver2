@@ -1,8 +1,23 @@
 package org.trc.resource.goods;
 
-import com.alibaba.dubbo.common.logger.Logger;
-import com.alibaba.dubbo.common.logger.LoggerFactory;
-import com.alibaba.fastjson.JSONArray;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.List;
+
+import javax.ws.rs.BeanParam;
+import javax.ws.rs.DELETE;
+import javax.ws.rs.FormParam;
+import javax.ws.rs.GET;
+import javax.ws.rs.POST;
+import javax.ws.rs.PUT;
+import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
+import javax.ws.rs.QueryParam;
+import javax.ws.rs.container.ContainerRequestContext;
+import javax.ws.rs.core.Context;
+import javax.ws.rs.core.Response;
+
 import org.hibernate.validator.constraints.NotEmpty;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -11,25 +26,19 @@ import org.trc.biz.goods.IGoodsBiz;
 import org.trc.biz.goods.IGoodsRecommendBiz;
 import org.trc.constants.ScoreAdminConstants;
 import org.trc.domain.auth.Auth;
+import org.trc.domain.dto.GoodsRecommendDTO;
 import org.trc.domain.goods.GoodsDO;
 import org.trc.domain.goods.GoodsRecommendDO;
-import org.trc.domain.dto.GoodsRecommendDTO;
 import org.trc.enums.ExceptionEnum;
 import org.trc.exception.GoodsRecommendException;
 import org.trc.interceptor.Authority;
-import org.trc.util.AppResult;
 import org.trc.util.Pagenation;
+import org.trc.util.TxJerseyTools;
 
-import javax.validation.constraints.NotNull;
-import javax.ws.rs.*;
-import javax.ws.rs.container.ContainerRequestContext;
-import javax.ws.rs.core.Context;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
-
-import static org.trc.util.ResultUtil.createSucssAppResult;
+import com.alibaba.druid.support.json.JSONUtils;
+import com.alibaba.dubbo.common.logger.Logger;
+import com.alibaba.dubbo.common.logger.LoggerFactory;
+import com.alibaba.fastjson.JSONArray;
 
 /**
  * author: hzwzhen
@@ -57,16 +66,15 @@ public class GoodsRecommendResource {
      */
     @GET
     @Authority
-    public Pagenation<GoodsRecommendDTO> getGoodsRecommands(@PathParam("shopId") Long shopId,
+    public Response getGoodsRecommands(@PathParam("shopId") Long shopId,
                                                             @BeanParam Pagenation<GoodsRecommendDTO> page,
                                                             @Context ContainerRequestContext requestContext) {
 
-        JSONArray jsonArray = new JSONArray();
         GoodsRecommendDTO query = new GoodsRecommendDTO();
         query.setShopId(shopId);
         //执行查询
-        return goodsRecommendBiz.queryGoodsRecommondsForPage(query, page);
-
+        Pagenation<GoodsRecommendDTO> pageGoodRecommends = goodsRecommendBiz.queryGoodsRecommondsForPage(query, page);
+        return TxJerseyTools.returnSuccess(JSONUtils.toJSONString(pageGoodRecommends));
     }
 
     /**
@@ -77,7 +85,7 @@ public class GoodsRecommendResource {
      */
     @POST
     @Authority
-    public AppResult addGoodsRecommends(@PathParam("shopId") Long shopId,
+    public Response addGoodsRecommends(@PathParam("shopId") Long shopId,
                                         @NotEmpty @FormParam(value = "goodsIds") String goodsIds,
                                         @Context ContainerRequestContext requestContext) {
         String userId= (String) requestContext.getProperty("userId");
@@ -103,7 +111,7 @@ public class GoodsRecommendResource {
             goodsRecommendDOList.add(goodsRecommendDO);
         }
         goodsRecommendBiz.batchAddRecommends(goodsRecommendDOList);
-        return createSucssAppResult("添加推荐商品成功", "");
+        return TxJerseyTools.returnSuccess();
     }
 
     /**
@@ -116,7 +124,7 @@ public class GoodsRecommendResource {
     @GET
     @Authority
     @Path(ScoreAdminConstants.Route.Recommand.GOODS)
-    public Pagenation<GoodsDO> getGoodsListExceptRecommend(@PathParam("shopId") Long shopId,
+    public Response getGoodsListExceptRecommend(@PathParam("shopId") Long shopId,
                                                 @QueryParam("goodsName") String goodsName,
                                                 @BeanParam Pagenation<GoodsDO> page, @Context ContainerRequestContext requestContext) {
             long time1 = System.currentTimeMillis();
@@ -125,7 +133,8 @@ public class GoodsRecommendResource {
             query.setGoodsName(goodsName);
             long time2 = System.currentTimeMillis();
             System.out.println(time2 - time1);
-            return goodsBiz.queryGoodsDOListExceptRecommendForPage(query, page);
+            Pagenation<GoodsDO> pageGoods = goodsBiz.queryGoodsDOListExceptRecommendForPage(query, page);
+            return TxJerseyTools.returnSuccess(JSONUtils.toJSONString(pageGoods));
 
     }
 
@@ -138,7 +147,7 @@ public class GoodsRecommendResource {
      */
     @PUT
     @Authority
-    public AppResult moveRecommend(@PathParam("shopId") Long shopId,
+    public Response moveRecommend(@PathParam("shopId") Long shopId,
                                   @FormParam("recommendAId") Long recommendAId,
                                   @FormParam("recommendBId") Long recommendBId,
                                   @Context ContainerRequestContext requestContext) {
@@ -154,8 +163,7 @@ public class GoodsRecommendResource {
             }
 
             goodsRecommendBiz.upOrDown(recommendAId, recommendBId, shopId, userId);
-            return createSucssAppResult("操作成功", "");
-
+            return TxJerseyTools.returnSuccess();
     }
 
     /**
@@ -168,7 +176,7 @@ public class GoodsRecommendResource {
     @DELETE
     @Path("/{id}")
     @Authority
-    public AppResult deleteRecommend(@PathParam("shopId") Long shopId,
+    public Response deleteRecommend(@PathParam("shopId") Long shopId,
                                     @PathParam("id") Long id,
                                      @Context ContainerRequestContext requestContext) {
         GoodsRecommendDO goodsRecommendDD = goodsRecommendBiz.getGoodsRecommendDOById(id);
@@ -177,7 +185,7 @@ public class GoodsRecommendResource {
         }
         //执行删除操作操作
         goodsRecommendBiz.deleteById(id);
-        return createSucssAppResult("删除推荐商品成功", "");
+        return TxJerseyTools.returnSuccess();
     }
 
 }

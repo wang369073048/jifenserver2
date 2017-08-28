@@ -1,12 +1,23 @@
 package org.trc.resource.admin;
 
-import com.alibaba.fastjson.JSONObject;
-import com.tairanchina.md.account.user.model.UserDO;
-import com.tairanchina.md.account.user.service.UserService;
-import com.tairanchina.md.api.QueryType;
-import com.trc.mall.externalservice.HttpBaseAck;
-import com.trc.mall.externalservice.LogisticAck;
-import com.trc.mall.externalservice.dto.TrcExpressDto;
+import static org.trc.util.ResultUtil.createFailAppResult;
+import static org.trc.util.ResultUtil.createSucssAppResult;
+
+import java.io.IOException;
+
+import javax.annotation.Resource;
+import javax.validation.constraints.NotNull;
+import javax.ws.rs.BeanParam;
+import javax.ws.rs.GET;
+import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
+import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
+import javax.ws.rs.container.ContainerRequestContext;
+import javax.ws.rs.core.Context;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,18 +32,16 @@ import org.trc.enums.ExceptionEnum;
 import org.trc.exception.OrderException;
 import org.trc.interceptor.Admin;
 import org.trc.util.AppResult;
+import org.trc.util.CustomAck;
 import org.trc.util.Pagenation;
+import org.trc.util.TxJerseyTools;
 
-import javax.annotation.Resource;
-import javax.validation.constraints.NotNull;
-import javax.ws.rs.*;
-import javax.ws.rs.container.ContainerRequestContext;
-import javax.ws.rs.core.Context;
-import javax.ws.rs.core.MediaType;
-
-import java.io.IOException;
-
-import static org.trc.util.ResultUtil.*;
+import com.alibaba.druid.support.json.JSONUtils;
+import com.tairanchina.md.account.user.model.UserDO;
+import com.tairanchina.md.account.user.service.UserService;
+import com.tairanchina.md.api.QueryType;
+import com.trc.mall.externalservice.HttpBaseAck;
+import com.trc.mall.externalservice.dto.TrcExpressDto;
 
 /**
  * author: hzwzhen
@@ -61,7 +70,7 @@ public class OrderAdminResource {
      */
     @GET
     @Admin
-    public Pagenation<OrdersDO> queryOrderList(@QueryParam("orderNum") String orderNum,
+    public Response queryOrderList(@QueryParam("orderNum") String orderNum,
                                     @QueryParam("phone") String phone,
                                     @QueryParam("orderState") Integer orderState,
                                     @Context ContainerRequestContext requestContext,
@@ -77,7 +86,8 @@ public class OrderAdminResource {
             order.setUserId(userDO.getUserId());
         }
         order.setOrderState(orderState);
-        return  newOrderBiz.queryOrdersDOListForPage(order, page);
+        Pagenation<OrdersDO> pageOrders = newOrderBiz.queryOrdersDOListForPage(order, page);
+        return TxJerseyTools.returnSuccess(JSONUtils.toJSONString(pageOrders));
     }
 
 //    /**
@@ -116,7 +126,7 @@ public class OrderAdminResource {
     @GET
     @Path(ScoreAdminConstants.Route.Order.PULL+"/{id}")
     @Admin
-    public AppResult pull(@NotNull @PathParam("id") Long id,
+    public Response pull(@NotNull @PathParam("id") Long id,
                           @Context ContainerRequestContext requestContext){
         LogisticsDO logistic = new LogisticsDO();
         logistic.setOrderId(id);
@@ -130,12 +140,13 @@ public class OrderAdminResource {
         }catch (IOException e) {
             e.printStackTrace();
             logger.error("物流查询服务不可用!");
-            return createFailAppResult("物流查询服务不可用!");
+            return CustomAck.customError("物流查询服务不可用!");
+
         }
         if(resultAck.isSuccess() && null != resultAck.getData() && TrcExpressDto.SUCCESS_CODE.equals(resultAck.getData().getCode())){
-            return createSucssAppResult("查询物流信息成功!" ,resultAck.getData());
+        	return TxJerseyTools.returnSuccess(JSONUtils.toJSONString(resultAck.getData()));
         }
         logger.error("物流查询服务不可用!");
-        return createFailAppResult("物流查询服务不可用!");
+        return CustomAck.customError("物流查询服务不可用!");
     }
 }

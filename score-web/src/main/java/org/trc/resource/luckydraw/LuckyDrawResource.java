@@ -1,5 +1,6 @@
 package org.trc.resource.luckydraw;
 
+import com.alibaba.druid.support.json.JSONUtils;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.txframework.util.DateUtils;
@@ -18,6 +19,7 @@ import org.trc.biz.shop.IShopBiz;
 import org.trc.constants.ScoreAdminConstants;
 import org.trc.domain.auth.Auth;
 import org.trc.domain.dto.WinningRecordDTO;
+import org.trc.domain.impower.AclUserAddPageDate;
 import org.trc.domain.luckydraw.ActivityDetailDO;
 import org.trc.domain.luckydraw.ActivityPrizesDO;
 import org.trc.domain.luckydraw.LuckyDrawDO;
@@ -33,6 +35,7 @@ import org.trc.util.AppResult;
 import org.trc.util.CellDefinition;
 import org.trc.util.ExportExcel;
 import org.trc.util.Pagenation;
+import org.trc.util.TxJerseyTools;
 
 import javax.validation.constraints.NotNull;
 import javax.ws.rs.*;
@@ -87,7 +90,7 @@ public class LuckyDrawResource {
     @POST
     @Path(ScoreAdminConstants.Route.LuckyDraw.SHIP)
     @Temp
-    public AppResult shipOrder(@FormParam("orderNum") String orderNum,
+    public Response shipOrder(@FormParam("orderNum") String orderNum,
                                @FormParam("companyName") String companyName,
                                @FormParam("shipperCode") String shipperCode,
                                @FormParam("logisticsNum") String logisticsNum,
@@ -107,11 +110,12 @@ public class LuckyDrawResource {
         LogisticsDO logisticsDO = newOrderBiz.shipPrizes(orderNum, remark, logistics);
         JSONObject jsonObject = new JSONObject();
         jsonObject.put("logisticsId", logisticsDO.getId());
-        return createSucssAppResult("操作成功", jsonObject);
+//        return createSucssAppResult("操作成功", jsonObject);
+        return TxJerseyTools.returnSuccess(jsonObject.toJSONString());
     }
 
     @POST
-    public AppResult add(@NotBlank(message = "platform不能为空") @FormParam("platform") String platform, @NotEmpty @FormParam("activityName") String activityName,
+    public Response add(@NotBlank(message = "platform不能为空") @FormParam("platform") String platform, @NotEmpty @FormParam("activityName") String activityName,
                          @NotNull @FormParam("startTime") Long startTime, @NotNull @FormParam("endTime") Long endTime,
                          @FormParam("freeLotteryTimes") Integer freeLotteryTimes, @FormParam("freeDrawType") String freeDrawType,
                          @FormParam("expenditure") Integer expenditure, @FormParam("dailyDrawLimit") Integer dailyDrawLimit,
@@ -145,11 +149,12 @@ public class LuckyDrawResource {
         Auth auth = authBiz.getAuthByUserId(userId);
         luckyDraw.setShopId(auth.getShopId());
         luckyDrawBiz.insertLuckyDraw(luckyDraw);
-        return createSucssAppResult("操作成功", "");
+//        return createSucssAppResult("操作成功", "");
+        return TxJerseyTools.returnSuccess();
     }
 
     @PUT
-    public AppResult edit(@NotNull @FormParam("id") Long id, @NotEmpty @FormParam("platform") String platform, @NotEmpty @FormParam("activityName") String activityName,
+    public Response edit(@NotNull @FormParam("id") Long id, @NotEmpty @FormParam("platform") String platform, @NotEmpty @FormParam("activityName") String activityName,
                          @NotNull @FormParam("startTime") Long startTime, @NotNull @FormParam("endTime") Long endTime,
                          @FormParam("freeLotteryTimes") Integer freeLotteryTimes, @FormParam("freeDrawType") String freeDrawType,
                          @FormParam("expenditure") Integer expenditure, @FormParam("dailyDrawLimit") Integer dailyDrawLimit,
@@ -182,12 +187,13 @@ public class LuckyDrawResource {
         List<ActivityPrizesDO> activityPrizeList = (List) JSON.parseArray(activityPrizes, ActivityPrizesDO.class);
         luckyDraw.setActivityPrizesList(activityPrizeList);
         luckyDrawBiz.updateLuckyDraw(luckyDraw);
-        return createSucssAppResult("操作成功", "");
+//        return createSucssAppResult("操作成功", "");
+        return TxJerseyTools.returnSuccess();
     }
 
     @DELETE
     @Path("/{id}")
-    public AppResult delete(@PathParam("id")Long id, @Context ContainerRequestContext requestContext){
+    public Response delete(@PathParam("id")Long id, @Context ContainerRequestContext requestContext){
         //获取userId
         String userId = (String) requestContext.getProperty("userId");
         Auth auth = authBiz.getAuthByUserId(userId);
@@ -195,7 +201,8 @@ public class LuckyDrawResource {
         luckyDraw.setId(id);
         luckyDraw.setShopId(auth.getShopId());
         luckyDrawBiz.deleteEntity(luckyDraw);
-        return createSucssAppResult("删除成功", "");
+//        return createSucssAppResult("删除成功", "");
+        return TxJerseyTools.returnSuccess();
     }
 
     /**
@@ -205,7 +212,7 @@ public class LuckyDrawResource {
      */
     @GET
     @Path("/{id}")
-    public AppResult getEntityById(@PathParam("id") Long id,@Context ContainerRequestContext requestContext) {
+    public Response getEntityById(@PathParam("id") Long id,@Context ContainerRequestContext requestContext) {
         LuckyDrawDO luckyDraw = new LuckyDrawDO();
         //获取userId
         String userId = (String) requestContext.getProperty("userId");
@@ -213,12 +220,16 @@ public class LuckyDrawResource {
         luckyDraw.setId(id);
         luckyDraw.setShopId(auth.getShopId());
         LuckyDrawDO result = luckyDrawBiz.getLuckyDraw(luckyDraw);
-        return createSucssAppResult("查询成功", result);
+//        return createSucssAppResult("查询成功", result);
+        if(result!=null){
+        	return TxJerseyTools.returnSuccess(JSONUtils.toJSONString(result));
+        }
+        return TxJerseyTools.returnSuccess();
     }
 
     @GET
     @Path(ScoreAdminConstants.Route.LuckyDraw.LIST)
-        public Pagenation list(@QueryParam("activityName") String activityName, @QueryParam("operateTimeMin") Long operateTimeMin,
+        public Response list(@QueryParam("activityName") String activityName, @QueryParam("operateTimeMin") Long operateTimeMin,
                          @QueryParam("operateTimeMax") Long operateTimeMax, @QueryParam("state") Integer state,
                          @BeanParam Pagenation<LuckyDrawDO> page,@Context ContainerRequestContext requestContext){
             LuckyDrawDO luckyDraw = new LuckyDrawDO();
@@ -235,8 +246,8 @@ public class LuckyDrawResource {
             }
             luckyDraw.setState(state);
             luckyDraw.setIsDeleted(0);
-            return luckyDrawBiz.queryLuckyDraw(luckyDraw, page);
-
+//          return luckyDrawBiz.queryLuckyDraw(luckyDraw, page);
+            return TxJerseyTools.returnSuccess(JSONUtils.toJSONString(luckyDraw));
     }
 
 
@@ -248,7 +259,7 @@ public class LuckyDrawResource {
     @GET
     @Temp
     @Path(ScoreAdminConstants.Route.LuckyDraw.WINNING_RECORD+"/{id}")
-    public AppResult getWinningRecordById(@PathParam("id") Long id,@Context ContainerRequestContext requestContext) {
+    public Response getWinningRecordById(@PathParam("id") Long id,@Context ContainerRequestContext requestContext) {
             WinningRecordDO param = new WinningRecordDO();
             //获取userId
             String userId = (String) requestContext.getProperty("userId");
@@ -256,15 +267,18 @@ public class LuckyDrawResource {
             param.setId(id);
             param.setShopId(manager.getShopId());
             WinningRecordDTO result = winningRecordBiz.getWinningRecord(param);
-            return createSucssAppResult("查询成功", result);
-
+//            return createSucssAppResult("查询成功", result);
+            if(result!=null){
+            	return TxJerseyTools.returnSuccess(JSONUtils.toJSONString(result));
+            }
+            return TxJerseyTools.returnSuccess();
     }
 
 
     @GET
     @Temp
     @Path(ScoreAdminConstants.Route.LuckyDraw.WINNING_RECORD_LIST)
-    public Pagenation listWinningRecord(@QueryParam("luckyDrawId") Long luckyDrawId, @QueryParam("platform") String platform, @QueryParam("operateTimeMin") Long operateTimeMin,
+    public Response listWinningRecord(@QueryParam("luckyDrawId") Long luckyDrawId, @QueryParam("platform") String platform, @QueryParam("operateTimeMin") Long operateTimeMin,
     									@QueryParam("operateTimeMax") Long operateTimeMax, @QueryParam("lotteryPhone") String lotteryPhone,
     									@QueryParam("activityName") String activityName, @QueryParam("state") Integer state,
     									@BeanParam Pagenation<WinningRecordDTO> page,@Context ContainerRequestContext requestContext){
@@ -281,7 +295,9 @@ public class LuckyDrawResource {
                 param.setOperateTimeMax(new Date(operateTimeMax));
             }
             Pagenation<WinningRecordDTO> result = winningRecordBiz.queryWinningRecord(param, page);
-           return result;
+//          return result;
+            return TxJerseyTools.returnSuccess(JSONUtils.toJSONString(result));
+           
     }
 
     @GET
@@ -353,7 +369,7 @@ public class LuckyDrawResource {
 
     @GET
     @Path(ScoreAdminConstants.Route.LuckyDraw.ACTIVITY_DETAIL_LIST)
-    public Pagenation<ActivityDetailDO> listAcitivityDetail(@QueryParam("shopId") Long shopId, @QueryParam("lotteryPhone") String lotteryPhone,
+    public Response listAcitivityDetail(@QueryParam("shopId") Long shopId, @QueryParam("lotteryPhone") String lotteryPhone,
                                                             @QueryParam("operateTimeMin") Long operateTimeMin, @QueryParam("operateTimeMax") Long operateTimeMax,
                                                             @QueryParam("whetherWinning") Integer whetherWinning,
                                                             @BeanParam Pagenation<ActivityDetailDO> page) {
@@ -367,7 +383,9 @@ public class LuckyDrawResource {
         if (null != operateTimeMax) {
             param.setOperateTimeMax(new Date(operateTimeMax));
         }
-        return winningRecordBiz.queryActivityDetail(param, page);
+//        return winningRecordBiz.queryActivityDetail(param, page);
+        Pagenation<ActivityDetailDO> pageActivityDetails = winningRecordBiz.queryActivityDetail(param, page);
+        return TxJerseyTools.returnSuccess(JSONUtils.toJSONString(pageActivityDetails));
     }
 
     @GET

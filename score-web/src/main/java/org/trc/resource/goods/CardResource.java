@@ -1,7 +1,29 @@
 package org.trc.resource.goods;
 
 
-import com.alibaba.fastjson.JSONObject;
+import static org.trc.util.ResultUtil.createFailAppResult;
+import static org.trc.util.ResultUtil.createSucssAppResult;
+
+import java.io.InputStream;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.List;
+
+import javax.validation.constraints.NotNull;
+import javax.ws.rs.BeanParam;
+import javax.ws.rs.Consumes;
+import javax.ws.rs.DELETE;
+import javax.ws.rs.FormParam;
+import javax.ws.rs.GET;
+import javax.ws.rs.POST;
+import javax.ws.rs.Path;
+import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
+import javax.ws.rs.container.ContainerRequestContext;
+import javax.ws.rs.core.Context;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
+
 import org.apache.commons.lang.RandomStringUtils;
 import org.apache.commons.lang3.time.DateFormatUtils;
 import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
@@ -18,21 +40,13 @@ import org.trc.domain.goods.CardCouponsDO;
 import org.trc.domain.goods.CardItemDO;
 import org.trc.form.goods.CardCouponsForm;
 import org.trc.util.AppResult;
+import org.trc.util.CustomAck;
 import org.trc.util.Pagenation;
+import org.trc.util.TxJerseyTools;
 import org.trc.util.XlsProcessing;
 
-import javax.validation.constraints.NotNull;
-import javax.ws.rs.*;
-import javax.ws.rs.container.ContainerRequestContext;
-import javax.ws.rs.core.Context;
-import javax.ws.rs.core.MediaType;
-import java.io.InputStream;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
-
-import static org.trc.util.ResultUtil.createFailAppResult;
-import static org.trc.util.ResultUtil.createSucssAppResult;
+import com.alibaba.druid.support.json.JSONUtils;
+import com.alibaba.fastjson.JSONObject;
 
 /**
  * author: hzwzhen
@@ -59,13 +73,14 @@ public class CardResource {
      * @return Pagenation
      */
     @GET
-    public Pagenation<CardCouponsDO> list(@BeanParam CardCouponsForm cardCouponsForm,
+    public Response list(@BeanParam CardCouponsForm cardCouponsForm,
                                           @BeanParam Pagenation<CardCouponsDO> page,
                                           @Context ContainerRequestContext requestContext) {
         String userId = (String) requestContext.getProperty("userId");
         Auth auth = authBiz.getAuthByUserId(userId);
         cardCouponsForm.setShopId(auth.getShopId());
-        return couponsBiz.queryCouponsForPage(cardCouponsForm, page);
+        Pagenation<CardCouponsDO> pageCardCoupons = couponsBiz.queryCouponsForPage(cardCouponsForm, page);
+        return TxJerseyTools.returnSuccess(JSONUtils.toJSONString(pageCardCoupons));
     }
 
     /**
@@ -79,7 +94,7 @@ public class CardResource {
      * @return AppResult
      */
     @POST
-    public AppResult create(@FormParam("couponName") String couponName,
+    public Response create(@FormParam("couponName") String couponName,
                             @FormParam("validStartTime") Long validStartTime,
                             @FormParam("validEndTime") Long validEndTime,
                             @FormParam("remark") String remark,
@@ -102,7 +117,7 @@ public class CardResource {
         cardCoupon.setUpdateTime(createTime);
         cardCoupon.setBatchNumber(RandomStringUtils.randomAlphanumeric(16));
         couponsBiz.insert(cardCoupon);
-        return createSucssAppResult("保存卡券成功", "");
+        return TxJerseyTools.returnSuccess();
     }
 
     /**
@@ -113,7 +128,7 @@ public class CardResource {
      * @return AppResult
      */
     @DELETE
-    public AppResult delete(@QueryParam("batchNumber") String batchNumber,
+    public Response delete(@QueryParam("batchNumber") String batchNumber,
                             @Context ContainerRequestContext requestContext) {
         //获取userId
         String userId = (String) requestContext.getProperty("userId");
@@ -127,7 +142,7 @@ public class CardResource {
         JSONObject jsonObject = new JSONObject();
         jsonObject.put("batchNumber", cardCoupon.getBatchNumber());
         jsonObject.put("count", result >= 1 ? result : 0);
-        return createSucssAppResult("删除卡券成功", jsonObject);
+        return TxJerseyTools.returnSuccess(jsonObject.toJSONString());
     }
 
     /**
@@ -139,7 +154,7 @@ public class CardResource {
      */
     @Path("/checkEid")
     @POST
-    public AppResult checkEid(@FormParam("batchNumber") String batchNumber,
+    public Response checkEid(@FormParam("batchNumber") String batchNumber,
                               @Context ContainerRequestContext requestContext) {
 
         //获取userId
@@ -148,35 +163,35 @@ public class CardResource {
         CardCouponsDO cardCouponsDO = couponsBiz.selectByBatchNumer(auth.getShopId(), batchNumber);
         JSONObject result = new JSONObject();
         if (null == cardCouponsDO) {
-            return createFailAppResult(String.format("批次号:%s对应的卡券不存在!", batchNumber));
+        	return CustomAck.customError(String.format("批次号:%s对应的卡券不存在!", batchNumber));
         } else {
             result.put("validStartTime", cardCouponsDO.getValidStartTime());
             result.put("validEndTime", cardCouponsDO.getValidEndTime());
-            return createSucssAppResult("查询卡券成功", result);
+            return TxJerseyTools.returnSuccess(JSONUtils.toJSONString(result));
         }
     }
 
     @POST
     @Path("/uploadExcel")
     @Consumes(MediaType.MULTIPART_FORM_DATA)
-    public AppResult uploadExcel(@Context ContainerRequestContext requestContext,
+    public Response uploadExcel(@Context ContainerRequestContext requestContext,
                                 @QueryParam("batchNumber") String batchNumber,
                                 @FormDataParam("file") InputStream fileInputStream,
                                 @FormDataParam("file") FormDataContentDisposition disposition) throws Exception{
         if (null == disposition) {
-            return createFailAppResult("未找到导入文件!");
+        	return CustomAck.customError("未找到导入文件!");
         }
         String dirName = DateFormatUtils.format(Calendar.getInstance(), DateFormatUtils.ISO_DATE_FORMAT.getPattern());
         String fileName = Calendar.getInstance().getTimeInMillis() + "-" + new String(disposition.getFileName().getBytes("ISO8859-1"), "UTF-8").toLowerCase();
         if (!fileName.endsWith(".xls") && !fileName.endsWith(".xlsx")) {
-            return createFailAppResult("只支持文件类型为.xls的文件上传!");
+        	return CustomAck.customError("只支持文件类型为.xls的文件上传!");
         }
         //获取userId
         String userId = (String) requestContext.getProperty("userId");
         Auth auth = authBiz.getAuthByUserId(userId);
         List<CardItemDO> cardItemList = XlsProcessing.getInstance().dealFile(batchNumber, auth.getShopId(), dirName, fileName, fileInputStream);
         couponsBiz.importCardItem(batchNumber, auth.getShopId(), cardItemList);
-        return createSucssAppResult("导入成功!", "");
+        return TxJerseyTools.returnSuccess();
     }
 
     /**
@@ -189,14 +204,17 @@ public class CardResource {
      */
     @GET
     @Path(ScoreAdminConstants.Route.CardCoupuns.ITEM)
-    public AppResult<CardItemDO> itemList(@NotNull @QueryParam("batchNumber") String batchNumber,
+    public Response itemList(@NotNull @QueryParam("batchNumber") String batchNumber,
                                           @NotNull @QueryParam("code") String code,
                                           @Context ContainerRequestContext requestContext) {
         //获取userId
         String userId = (String) requestContext.getProperty("userId");
         Auth auth = authBiz.getAuthByUserId(userId);
         CardItemDO cardItem = couponsBiz.selectItemByCode(auth.getShopId(), batchNumber, code);
-        return createSucssAppResult("查询卡券明细成功", cardItem);
+        if(cardItem!=null){
+        	return TxJerseyTools.returnSuccess(JSONUtils.toJSONString(cardItem));
+        }
+        return TxJerseyTools.returnSuccess();
     }
 
     /**
@@ -208,7 +226,7 @@ public class CardResource {
      */
     @DELETE
     @Path(ScoreAdminConstants.Route.CardCoupuns.ITEM)
-    public AppResult itemDelete(@QueryParam("id") Long id,
+    public Response itemDelete(@QueryParam("id") Long id,
                                 @Context ContainerRequestContext requestContext) {
         //获取userId
         String userId = (String) requestContext.getProperty("userId");
@@ -220,6 +238,6 @@ public class CardResource {
         JSONObject jsonObject = new JSONObject();
         jsonObject.put("id", cardItem.getId());
         jsonObject.put("count", 1 == result?1:0);
-        return createSucssAppResult("删除卡券明细成功", jsonObject);
+        return TxJerseyTools.returnSuccess(jsonObject.toJSONString());
     }
 }

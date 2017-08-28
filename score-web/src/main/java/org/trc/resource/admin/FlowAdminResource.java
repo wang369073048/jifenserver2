@@ -1,5 +1,6 @@
 package org.trc.resource.admin;
 
+import com.alibaba.druid.support.json.JSONUtils;
 import com.tairanchina.md.account.user.model.UserDO;
 import com.tairanchina.md.account.user.service.UserService;
 import com.tairanchina.md.api.QueryType;
@@ -26,6 +27,7 @@ import org.trc.util.CellDefinition;
 import org.trc.util.ExportExcel;
 import org.trc.util.FatherToChildUtils;
 import org.trc.util.Pagenation;
+import org.trc.util.TxJerseyTools;
 
 import javax.ws.rs.*;
 import javax.ws.rs.container.ContainerRequestContext;
@@ -58,7 +60,7 @@ public class FlowAdminResource {
     @GET
     @Path(ScoreAdminConstants.Route.Flow.RECORD)
     @Admin
-    public Pagenation<ScoreChange> queryChangeRecord(@QueryParam("shopId") Long shopId,
+    public Response queryChangeRecord(@QueryParam("shopId") Long shopId,
                                       @QueryParam("userPhone") String userPhone,
                                       @QueryParam("businessCode") String businessCodes,
                                       @QueryParam("startTime") Long startTime,
@@ -93,7 +95,7 @@ public class FlowAdminResource {
                     scoreChanges.set(i,scoreChangeDTO);
                 }
             }
-            return scoreChangePage;
+            return TxJerseyTools.returnSuccess(JSONUtils.toJSONString(scoreChangePage));
     }
 
     /**

@@ -1,5 +1,6 @@
 package org.trc.resource.goods;
 
+import com.alibaba.druid.support.json.JSONUtils;
 import com.alibaba.fastjson.JSONObject;
 import org.hibernate.validator.constraints.NotEmpty;
 import org.slf4j.Logger;
@@ -10,9 +11,11 @@ import org.trc.biz.auth.IAuthBiz;
 import org.trc.biz.goods.IShopClassificationBiz;
 import org.trc.constants.ScoreAdminConstants;
 import org.trc.domain.auth.Auth;
+import org.trc.domain.goods.CardCouponsDO;
 import org.trc.domain.goods.ShopClassificationDO;
 import org.trc.util.AppResult;
 import org.trc.util.Pagenation;
+import org.trc.util.TxJerseyTools;
 
 import javax.validation.constraints.NotNull;
 import javax.ws.rs.*;
@@ -20,6 +23,8 @@ import javax.ws.rs.container.ContainerRequestContext;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+
+import java.util.List;
 import java.util.UUID;
 
 import static org.trc.util.ResultUtil.createSucssAppResult;
@@ -45,28 +50,36 @@ public class ShopClassificationResource {
 
     @GET
     @Path(ScoreAdminConstants.Route.ShopClassification.PAGE)
-    public Pagenation<ShopClassificationDO> page(@BeanParam Pagenation<ShopClassificationDO> page,
+    public Response page(@BeanParam Pagenation<ShopClassificationDO> page,
                                                  @Context ContainerRequestContext requestContext) {
         //获取userId
         String userId = (String) requestContext.getProperty("userId");
         Auth auth = authBiz.getAuthByUserId(userId);
         ShopClassificationDO param = new ShopClassificationDO();
         param.setShopId(auth.getShopId());
-        return shopClassificationBiz.queryEntity(param, page);
+//        return shopClassificationBiz.queryEntity(param, page);
+        Pagenation<ShopClassificationDO> pageShopClassifications = shopClassificationBiz.queryEntity(param, page);
+        return TxJerseyTools.returnSuccess(JSONUtils.toJSONString(pageShopClassifications));
     }
 
     @GET
-    public AppResult list(@Context ContainerRequestContext requestContext) {
+    public Response list(@Context ContainerRequestContext requestContext) {
         //获取userId
         String userId = (String) requestContext.getProperty("userId");
         Auth auth = authBiz.getAuthByUserId(userId);
         ShopClassificationDO param = new ShopClassificationDO();
         param.setShopId(auth.getShopId());
-        return createSucssAppResult("查询列表成功", shopClassificationBiz.listEntity(param));
+        
+//        return createSucssAppResult("查询列表成功", shopClassificationBiz.listEntity(param));
+        List<ShopClassificationDO> shopClassifications = shopClassificationBiz.listEntity(param);
+        if(shopClassifications!=null){
+        	return TxJerseyTools.returnSuccess(JSONUtils.toJSONString(shopClassifications));
+        }
+        return TxJerseyTools.returnSuccess();
     }
 
     @POST
-    public AppResult insert(@NotEmpty @FormParam("classificationName") String classificationName, @NotEmpty @FormParam("pictureUrl") String pictureUrl,
+    public Response insert(@NotEmpty @FormParam("classificationName") String classificationName, @NotEmpty @FormParam("pictureUrl") String pictureUrl,
                             @FormParam("selectPicUrl") String selectPicUrl,
                            @NotNull @FormParam("sort") Integer sort, @FormParam("description") String description,
                            @Context ContainerRequestContext requestContext) {
@@ -81,11 +94,13 @@ public class ShopClassificationResource {
         param.setDescription(description);
         param.setShopId(auth.getShopId());
         param.setUuid(UUID.randomUUID().toString().toLowerCase().replaceAll("-", ""));
-        return createSucssAppResult("新增成功", shopClassificationBiz.insert(param));
+//        return createSucssAppResult("新增成功", shopClassificationBiz.insert(param));
+        Integer id = shopClassificationBiz.insert(param);
+        return TxJerseyTools.returnSuccess(JSONUtils.toJSONString(id==null?0:id));
     }
 
     @PUT
-    public AppResult update(@NotNull @FormParam("id") Long id, @NotEmpty @FormParam("classificationName") String classificationName,
+    public Response update(@NotNull @FormParam("id") Long id, @NotEmpty @FormParam("classificationName") String classificationName,
                            @NotEmpty @FormParam("pictureUrl")String pictureUrl, @NotNull @FormParam("sort")Integer sort,
                            @FormParam("description")String description){
             ShopClassificationDO param = new ShopClassificationDO();
@@ -94,11 +109,13 @@ public class ShopClassificationResource {
             param.setPictureUrl(pictureUrl);
             param.setSort(sort);
             param.setDescription(description);
-            return createSucssAppResult("更新成功", shopClassificationBiz.update(param));
+//            return createSucssAppResult("更新成功", shopClassificationBiz.update(param));
+            Integer nid = shopClassificationBiz.update(param);
+            return TxJerseyTools.returnSuccess(JSONUtils.toJSONString(nid));
     }
     @GET
     @Path("/{id}")
-    public AppResult getEntity(@NotNull @PathParam("id") Long id,@Context ContainerRequestContext requestContext){
+    public Response getEntity(@NotNull @PathParam("id") Long id,@Context ContainerRequestContext requestContext){
             //获取userId
             String userId = (String) requestContext.getProperty("userId");
             Auth auth = authBiz.getAuthByUserId(userId);
@@ -106,18 +123,23 @@ public class ShopClassificationResource {
             param.setId(id);
             param.setShopId(auth.getShopId());
             ShopClassificationDO result = shopClassificationBiz.getEntityByParam(param);
-            return createSucssAppResult("查询成功", result);
+//            return createSucssAppResult("查询成功", result);
+            if(result!=null){
+            	return TxJerseyTools.returnSuccess(JSONUtils.toJSONString(result));
+            }
+            return TxJerseyTools.returnSuccess();
     }
 
     @DELETE
     @Path("/{id}")
-    public AppResult delete(@NotNull @PathParam("id") Long id,@Context ContainerRequestContext requestContext){
+    public Response delete(@NotNull @PathParam("id") Long id,@Context ContainerRequestContext requestContext){
             //获取userId
             String userId = (String) requestContext.getProperty("userId");
             Auth auth = authBiz.getAuthByUserId(userId);
             ShopClassificationDO param = new ShopClassificationDO();
             param.setId(id);
             param.setShopId(auth.getShopId());
-            return createSucssAppResult("删除成功", shopClassificationBiz.delete(param));
+            Integer nid = shopClassificationBiz.delete(param);
+            return TxJerseyTools.returnSuccess(JSONUtils.toJSONString(nid));
     }
 }

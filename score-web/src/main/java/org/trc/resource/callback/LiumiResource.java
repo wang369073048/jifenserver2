@@ -8,6 +8,9 @@ import org.trc.biz.auth.IAuthBiz;
 import org.trc.constants.ScoreAdminConstants;
 import org.trc.domain.auth.Auth;
 import org.trc.util.AppResult;
+import org.trc.util.TxJerseyTools;
+
+import com.alibaba.druid.support.json.JSONUtils;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.POST;
@@ -47,7 +50,7 @@ public class LiumiResource {
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Path(ScoreAdminConstants.Route.Liumi.ORDER_NOTICE)
-    public AppResult orderNotice(@Context ContainerRequestContext containerRequestContext) throws IOException {
+    public Response orderNotice(@Context ContainerRequestContext containerRequestContext) throws IOException {
         logger.info("begin read");
         InputStream inStream = containerRequestContext.getEntityStream(); // 取HTTP请求流
         int size = containerRequestContext.getLength(); // 取HTTP请求流长度
@@ -64,6 +67,6 @@ public class LiumiResource {
             count += rbyte;
         }
         logger.info("result:" + new String(in_b, 0, in_b.length));
-        return createSucssAppResult("订单通知成功!", "");
+        return TxJerseyTools.returnSuccess();
     }
 }

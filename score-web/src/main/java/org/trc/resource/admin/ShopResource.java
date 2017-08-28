@@ -1,20 +1,33 @@
 package org.trc.resource.admin;
 
-import com.alibaba.fastjson.JSONObject;
+import static org.trc.util.ResultUtil.createSucssAppResult;
+
+import javax.ws.rs.BeanParam;
+import javax.ws.rs.FormParam;
+import javax.ws.rs.GET;
+import javax.ws.rs.POST;
+import javax.ws.rs.PUT;
+import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
+import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
+
 import org.hibernate.validator.constraints.NotBlank;
 import org.hibernate.validator.constraints.NotEmpty;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.trc.biz.shop.IShopBiz;
 import org.trc.constants.ScoreAdminConstants;
+import org.trc.domain.auth.Auth;
 import org.trc.domain.shop.ShopDO;
 import org.trc.util.AppResult;
 import org.trc.util.Pagenation;
+import org.trc.util.TxJerseyTools;
 
-import javax.ws.rs.*;
-import javax.ws.rs.core.MediaType;
-
-import static org.trc.util.ResultUtil.createSucssAppResult;
+import com.alibaba.druid.support.json.JSONUtils;
+import com.alibaba.fastjson.JSONObject;
 
 /**
  * author: hzwzhen
@@ -41,7 +54,7 @@ public class ShopResource {
      * @return
      */
     @POST
-    public AppResult<JSONObject> createShop(@NotBlank @FormParam("shopName") String shopName,
+    public Response createShop(@NotBlank @FormParam("shopName") String shopName,
                                             @NotBlank @FormParam("channelCode") String channelCode,
                                             @FormParam("logo") String logo,
                                             @FormParam("servicePhone") String servicePhone,
@@ -55,8 +68,7 @@ public class ShopResource {
         shopBiz.addShopDO(shopDO);
         JSONObject jsonObject = new JSONObject();
         jsonObject.put("shopId", shopDO.getId());
-        return createSucssAppResult("创建店铺成功!", jsonObject);
-
+        return TxJerseyTools.returnSuccess(jsonObject.toJSONString());
     }
 
     /**
@@ -67,7 +79,7 @@ public class ShopResource {
     @PUT
     @Path("/{id}")
     //@Admin
-    public AppResult modifyShop(@PathParam("id") Long id,
+    public Response modifyShop(@PathParam("id") Long id,
                                 @NotEmpty @FormParam("shopName") String shopName,
                                 @NotEmpty @FormParam("channelCode") String channelCode,
                                 @FormParam("logo") String logo,
@@ -81,8 +93,7 @@ public class ShopResource {
         shopDO.setServicePhone(servicePhone);
         shopDO.setDescription(description);
         shopBiz.modifyShopDO(shopDO);
-        return createSucssAppResult("修改店铺成功!", "");
-
+        return TxJerseyTools.returnSuccess();
     }
 
     /**
@@ -92,11 +103,12 @@ public class ShopResource {
      */
     @GET
     //@Admin
-    public Pagenation<ShopDO> getShopList(@QueryParam("shopName") String shopName,
+    public Response getShopList(@QueryParam("shopName") String shopName,
                                           @BeanParam Pagenation<ShopDO> page) {
         ShopDO query = new ShopDO();
         query.setShopName(shopName);
-        return shopBiz.queryShopDOListForPage(query, page);
+        Pagenation<ShopDO> pageShops = shopBiz.queryShopDOListForPage(query, page);
+        return TxJerseyTools.returnSuccess(JSONUtils.toJSONString(pageShops));
     }
 
     /**
@@ -106,8 +118,11 @@ public class ShopResource {
     @GET
     @Path("/{id}")
     //@Admin
-    public AppResult<ShopDO> getShopById(@PathParam("id") Long id) {
+    public Response getShopById(@PathParam("id") Long id) {
         ShopDO shopDO = shopBiz.getShopDOById(id);
-        return createSucssAppResult("查询店铺成功!", shopDO);
+        if(shopDO!=null){
+        	return TxJerseyTools.returnSuccess(JSONUtils.toJSONString(shopDO));
+        }
+        return TxJerseyTools.returnSuccess();
     }
 }

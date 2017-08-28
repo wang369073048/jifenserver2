@@ -1,9 +1,26 @@
 package org.trc.resource.impower;
 
-import com.tairanchina.md.account.user.service.UserService;
+import java.util.List;
+
+import javax.annotation.Resource;
+import javax.ws.rs.BeanParam;
+import javax.ws.rs.GET;
+import javax.ws.rs.POST;
+import javax.ws.rs.PUT;
+import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
+import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
+import javax.ws.rs.container.ContainerRequestContext;
+import javax.ws.rs.core.Context;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
+
 import org.springframework.stereotype.Component;
 import org.trc.biz.impower.IAclUserAccreditInfoBiz;
 import org.trc.constants.ScoreAdminConstants;
+import org.trc.domain.goods.CardCouponsDO;
+import org.trc.domain.impower.AclRole;
 import org.trc.domain.impower.AclUserAccreditInfo;
 import org.trc.domain.impower.AclUserAddPageDate;
 import org.trc.form.impower.UserAccreditInfoForm;
@@ -11,13 +28,10 @@ import org.trc.util.AppResult;
 import org.trc.util.AssertUtil;
 import org.trc.util.Pagenation;
 import org.trc.util.ResultUtil;
+import org.trc.util.TxJerseyTools;
 
-import javax.annotation.Resource;
-import javax.ws.rs.*;
-import javax.ws.rs.container.ContainerRequestContext;
-import javax.ws.rs.core.Context;
-import javax.ws.rs.core.MediaType;
-import java.util.List;
+import com.alibaba.druid.support.json.JSONUtils;
+import com.tairanchina.md.account.user.service.UserService;
 
 /**
  * author: hzwzhen
@@ -37,23 +51,31 @@ public class AclUserAccreditInfoResource {
     @GET
     @Path(ScoreAdminConstants.Route.UserAccreditInfo.ACCREDIT_PAGE)
     @Produces(MediaType.APPLICATION_JSON)
-    public Pagenation<AclUserAddPageDate> UserAccreditInfoPage(@BeanParam UserAccreditInfoForm form, @BeanParam Pagenation<AclUserAddPageDate> page){
-        return userAccreditInfoBiz.userAccreditInfoPage(form, page);
+    public Response UserAccreditInfoPage(@BeanParam UserAccreditInfoForm form, @BeanParam Pagenation<AclUserAddPageDate> page){
+//        return userAccreditInfoBiz.userAccreditInfoPage(form, page);
+        Pagenation<AclUserAddPageDate> pageAclUserAddPageDates =userAccreditInfoBiz.userAccreditInfoPage(form, page);
+        return TxJerseyTools.returnSuccess(JSONUtils.toJSONString(pageAclUserAddPageDates));
     }
 
     //授权里面的采购员列表
     @GET
     @Path(ScoreAdminConstants.Route.UserAccreditInfo.PURCHASE)
     @Produces(MediaType.APPLICATION_JSON)
-    public AppResult<List<AclUserAccreditInfo>> findPurchase(){
-        return ResultUtil.createSucssAppResult("查询采购员成功", userAccreditInfoBiz.findPurchase());
+    public Response findPurchase(){
+//        return ResultUtil.createSucssAppResult("查询采购员成功", userAccreditInfoBiz.findPurchase());
+        List<AclUserAccreditInfo> aclUserAccreditInfos = userAccreditInfoBiz.findPurchase();
+        if(aclUserAccreditInfos!=null){
+        	return TxJerseyTools.returnSuccess(JSONUtils.toJSONString(aclUserAccreditInfos));
+        }
+        return TxJerseyTools.returnSuccess();
     }
 
     @POST
     @Path(ScoreAdminConstants.Route.UserAccreditInfo.UPDATE_STATE + "/{id}")
-    public AppResult updateUserAccreditInfoStatus(@BeanParam AclUserAccreditInfo aclUserAccreditInfo){
+    public Response updateUserAccreditInfoStatus(@BeanParam AclUserAccreditInfo aclUserAccreditInfo){
         userAccreditInfoBiz.updateUserAccreditInfoStatus(aclUserAccreditInfo);
-        return ResultUtil.createSucssAppResult("修改状态成功", "");
+//        return ResultUtil.createSucssAppResult("修改状态成功", "");
+        return TxJerseyTools.returnSuccess();
     }
 
    /* *//**
@@ -103,9 +125,13 @@ public class AclUserAccreditInfoResource {
     @GET
     @Path(ScoreAdminConstants.Route.UserAccreditInfo.ROLE)
     @Produces(MediaType.APPLICATION_JSON)
-    public AppResult findChaAndWhole(@QueryParam("roleType") String roleType){
-
-        return ResultUtil.createSucssAppResult("查询对应角色成功", userAccreditInfoBiz.findChannelOrWholeJur(roleType));
+    public Response findChaAndWhole(@QueryParam("roleType") String roleType){
+//        return ResultUtil.createSucssAppResult("查询对应角色成功", userAccreditInfoBiz.findChannelOrWholeJur(roleType));
+        List<AclRole> aclRoles =userAccreditInfoBiz.findChannelOrWholeJur(roleType);
+        if(aclRoles!=null){
+        	return TxJerseyTools.returnSuccess(JSONUtils.toJSONString(aclRoles));
+        }
+        return TxJerseyTools.returnSuccess();
 
     }
 
@@ -115,10 +141,11 @@ public class AclUserAccreditInfoResource {
     @POST
     @Path(ScoreAdminConstants.Route.UserAccreditInfo.SAVE_ACCREDIT)
     @Produces(MediaType.APPLICATION_JSON)
-    public AppResult saveUserAccredit(@BeanParam AclUserAddPageDate userAddPageDate, @Context ContainerRequestContext requestContext){
+    public Response saveUserAccredit(@BeanParam AclUserAddPageDate userAddPageDate, @Context ContainerRequestContext requestContext){
 
         userAccreditInfoBiz.saveUserAccreditInfo(userAddPageDate, requestContext);
-        return ResultUtil.createSucssAppResult("新增授权成功", "");
+//        return ResultUtil.createSucssAppResult("新增授权成功", "");
+        return TxJerseyTools.returnSuccess();
     }
 
     /**
@@ -127,8 +154,13 @@ public class AclUserAccreditInfoResource {
     @GET
     @Path(ScoreAdminConstants.Route.UserAccreditInfo.ACCREDIT + "/{id}")
     @Produces(MediaType.APPLICATION_JSON)
-    public AppResult findUserAccreditInfoById(@QueryParam("id") Long id){
-        return ResultUtil.createSucssAppResult("查询用户成功", userAccreditInfoBiz.findUserAccreditInfoById(id));
+    public Response findUserAccreditInfoById(@QueryParam("id") Long id){
+//        return ResultUtil.createSucssAppResult("查询用户成功", userAccreditInfoBiz.findUserAccreditInfoById(id));
+        AclUserAccreditInfo aclUserAccreditInfo =userAccreditInfoBiz.findUserAccreditInfoById(id);
+        if(aclUserAccreditInfo!=null){
+        	return TxJerseyTools.returnSuccess(JSONUtils.toJSONString(aclUserAccreditInfo));
+        }
+        return TxJerseyTools.returnSuccess();
     }
 
     /**
@@ -141,17 +173,23 @@ public class AclUserAccreditInfoResource {
     @PUT
     @Path(ScoreAdminConstants.Route.UserAccreditInfo.UPDATE_ACCREDIT + "/{id}")
     @Produces(MediaType.APPLICATION_JSON)
-    public AppResult updateUserAccreditInfo(@BeanParam AclUserAddPageDate userAddPageDate, @Context ContainerRequestContext requestContext){
+    public Response updateUserAccreditInfo(@BeanParam AclUserAddPageDate userAddPageDate, @Context ContainerRequestContext requestContext){
         userAccreditInfoBiz.updateUserAccredit(userAddPageDate,requestContext);
-        return ResultUtil.createSucssAppResult("修改用户成功", "");
+//        return ResultUtil.createSucssAppResult("修改用户成功", "");
+        return TxJerseyTools.returnSuccess();
     }
 
     @GET
     @Path(ScoreAdminConstants.Route.UserAccreditInfo.CHECK_PHONE)
     @Produces(MediaType.APPLICATION_JSON)
-    public AppResult checkPhone(@QueryParam("phone") String phone){
+    public Response checkPhone(@QueryParam("phone") String phone){
         AssertUtil.notBlank(phone, "校验手机号时输入参数phone为空");
-        return ResultUtil.createSucssAppResult("查询成功", userAccreditInfoBiz.checkPhone(phone));
+//        return ResultUtil.createSucssAppResult("查询成功", userAccreditInfoBiz.checkPhone(phone));
+        String result =userAccreditInfoBiz.checkPhone(phone);
+        if(result!=null){
+        	return TxJerseyTools.returnSuccess(JSONUtils.toJSONString(result));
+        }
+        return TxJerseyTools.returnSuccess();
     }
 
 //    @GET
@@ -167,7 +205,12 @@ public class AclUserAccreditInfoResource {
     @GET
     @Path(ScoreAdminConstants.Route.UserAccreditInfo.ROLE_VALID + "/{id}")
     @Produces(MediaType.APPLICATION_JSON)
-    public AppResult checkRoleValid(@PathParam("id") Long id){
-        return ResultUtil.createSucssAppResult("查询成功", userAccreditInfoBiz.checkRoleValid(id));
+    public Response checkRoleValid(@PathParam("id") Long id){
+//        return ResultUtil.createSucssAppResult("查询成功", userAccreditInfoBiz.checkRoleValid(id));
+        String[] result =userAccreditInfoBiz.checkRoleValid(id);
+        if(result!=null){
+        	return TxJerseyTools.returnSuccess(JSONUtils.toJSONString(result));
+        }
+        return TxJerseyTools.returnSuccess();
     }
 }

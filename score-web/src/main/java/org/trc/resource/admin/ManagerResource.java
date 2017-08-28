@@ -1,5 +1,6 @@
 package org.trc.resource.admin;
 
+import com.alibaba.druid.support.json.JSONUtils;
 import com.alibaba.fastjson.JSONObject;
 import com.tairanchina.md.account.user.model.UserDO;
 import com.tairanchina.md.account.user.service.UserService;
@@ -13,12 +14,14 @@ import org.trc.biz.shop.IShopBiz;
 import org.trc.constants.ScoreAdminConstants;
 import org.trc.domain.auth.Auth;
 import org.trc.domain.dto.AuthQueryDTO;
+import org.trc.domain.score.ScoreChange;
 import org.trc.domain.shop.ShopDO;
 import org.trc.enums.ExceptionEnum;
 import org.trc.exception.ManagerException;
 import org.trc.interceptor.Admin;
 import org.trc.util.AppResult;
 import org.trc.util.Pagenation;
+import org.trc.util.TxJerseyTools;
 
 import javax.annotation.Resource;
 import javax.validation.constraints.NotNull;
@@ -58,7 +61,7 @@ public class ManagerResource {
      */
     @POST
     @Admin
-    public AppResult<JSONObject> createManager(@NotNull @FormParam("shopId") Long shopId,
+    public Response createManager(@NotNull @FormParam("shopId") Long shopId,
                                                @NotEmpty @FormParam("phone") String phone,
                                                @NotEmpty @FormParam("contactsUser") String contactsUser,
                                                @Context ContainerRequestContext requestContext) {
@@ -79,7 +82,7 @@ public class ManagerResource {
         authBiz.saveAuth(auth);
         JSONObject jsonObject = new JSONObject();
         jsonObject.put("managerId", auth.getId());
-        return createSucssAppResult("添加店铺管理员成功!" ,jsonObject);
+        return TxJerseyTools.returnSuccess(jsonObject.toJSONString());
     }
     private String getChannelByShopId(Long shopId) {
         ShopDO shopDO = shopBiz.getShopDOById(shopId);
@@ -101,7 +104,7 @@ public class ManagerResource {
     @PUT
     @Path("/{id}")
     @Admin
-    public AppResult modifyManager(@PathParam("id") Long id,
+    public Response modifyManager(@PathParam("id") Long id,
                                   @NotNull @FormParam("shopId") Long shopId,
                                   @NotEmpty @FormParam("phone") String phone,
                                    @Context ContainerRequestContext requestContext,
@@ -122,7 +125,7 @@ public class ManagerResource {
             auth.setChannelCode(channelCode);
             auth.setShopId(shopId);
             authBiz.updateAuth(auth);
-            return createSucssAppResult("更新店铺管理员成功!" ,"");
+            return TxJerseyTools.returnSuccess();
     }
 
     /**
@@ -132,14 +135,15 @@ public class ManagerResource {
      */
     @GET
     @Admin
-    public Pagenation<Auth> getManagerList(@QueryParam("shopId") Long shopId,
+    public Response getManagerList(@QueryParam("shopId") Long shopId,
                                    @QueryParam("userKeyWord") String userKeyWord,
                                    @Context ContainerRequestContext requestContext,
                                    @BeanParam Pagenation<Auth> page) {
             AuthQueryDTO query = new AuthQueryDTO();
             query.setUserKeyword(userKeyWord);
             query.setShopId(shopId);
-            return authBiz.queryAuthListForPage(query, page);
+            Pagenation<Auth> authlist = authBiz.queryAuthListForPage(query, page);
+            return TxJerseyTools.returnSuccess(JSONUtils.toJSONString(authlist));
     }
 
     /**
@@ -150,9 +154,13 @@ public class ManagerResource {
     @GET
     @Path("/{id}")
     @Admin
-    public AppResult getManagerById(@PathParam("id") Long id,
+    public Response getManagerById(@PathParam("id") Long id,
                                     @Context ContainerRequestContext requestContext) {
         Auth auth = authBiz.getAuthById(id);
-        return createSucssAppResult("查询店铺管理员成功!" ,auth);
+        if(auth!=null){
+        	return TxJerseyTools.returnSuccess(JSONUtils.toJSONString(auth));
+        }else{
+        	return TxJerseyTools.returnSuccess();
+        }
     }
 }
