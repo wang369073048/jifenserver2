@@ -25,10 +25,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.trc.biz.auth.IAuthBiz;
 import org.trc.biz.score.IScoreChangeRecordBiz;
+import org.trc.biz.settlement.IFinancialSettlementBiz;
 import org.trc.biz.shop.IShopBiz;
 import org.trc.constants.ScoreAdminConstants;
+import org.trc.domain.dto.ConsumptionSummaryStatisticalDataDTO;
 import org.trc.domain.dto.ScoreChangeRecordQueryDTO;
 import org.trc.domain.dto.ScoreChangeRecordsDTO;
+import org.trc.domain.dto.SettlementIntervalDTO;
+import org.trc.domain.query.SettlementQuery;
+import org.trc.domain.shop.ShopDO;
 import org.trc.enums.ExceptionEnum;
 import org.trc.exception.FlowException;
 import org.trc.util.CellDefinition;
@@ -58,6 +63,9 @@ public class ScoreChangeDetailsResoure {
     private IScoreChangeRecordBiz scoreChangeRecordBiz;
     @Autowired
     private UserService userService;
+    
+    @Autowired
+    private IFinancialSettlementBiz financialSettlementBiz;
     @Autowired
     private IShopBiz shopBiz;
     @Autowired
@@ -80,6 +88,13 @@ public class ScoreChangeDetailsResoure {
              }
              queryDto.setUserId(userDO.getUserId());
          }
+         if (shopId!=null) {
+             ShopDO shopDO = shopBiz.getShopDOById(shopId);
+             if (null == shopDO) {
+                 throw new FlowException(ExceptionEnum.ORDER_QUERY_EXCEPTION,"该店铺不存在!");
+             }
+             queryDto.setTheOtherUserId(shopDO.getUserId());
+         }
          queryDto.setShopId(shopId);
          queryDto.calBusinessCodes(businessCode);
 
@@ -99,6 +114,26 @@ public class ScoreChangeDetailsResoure {
                     	 scoreChangeRecordsDTO.setUserPhone(userDO.getPhone());
                      }
                  }
+         }
+         SettlementQuery settlementQuery = new SettlementQuery();
+         //获取统计结转时间区间
+         SettlementIntervalDTO settlementIntervalDTO = financialSettlementBiz.getSettlementInterval(settlementQuery);
+         if (null != settlementIntervalDTO) {
+             if (null == settlementIntervalDTO.getEndTime()) {
+                 Date tmpTime = new Date();
+                 settlementQuery.setStartTime(tmpTime);
+                 settlementQuery.setEndTime(tmpTime);
+             } else {
+                 settlementQuery.setEndTime(settlementIntervalDTO.getEndTime());
+             }
+         }
+         //添加汇总信息
+         ConsumptionSummaryStatisticalDataDTO resultSD = financialSettlementBiz.statisticsConsumptionSummary(settlementQuery);
+         if (null != resultSD) {
+        	 scoreChangePge.setTotalExchangeCount(resultSD.getTotalExchangeCount());
+        	 scoreChangePge.setExchangeNum(null != resultSD.getExchangeNum() ? resultSD.getExchangeNum() : 0);
+        	 scoreChangePge.setTotalConsumptionCount(resultSD.getTotalConsumptionCount());
+        	 scoreChangePge.setConsumptionNum(null != resultSD.getConsumptionNum() ? resultSD.getConsumptionNum() : 0);
          }
          return scoreChangePge;
     }
@@ -144,7 +179,7 @@ public class ScoreChangeDetailsResoure {
         CellDefinition userName = new CellDefinition("userName", "会员名称", CellDefinition.TEXT, 4000);
         CellDefinition userPhonec = new CellDefinition("userPhone", "会员名称", CellDefinition.TEXT, 6000);
         CellDefinition shopName = new CellDefinition("shopName", "所属商家", CellDefinition.TEXT, 4000);
-        CellDefinition orderNum = new CellDefinition("orderNum", "订单编号", CellDefinition.TEXT, 8000);
+        CellDefinition orderCode = new CellDefinition("orderCode", "订单编号", CellDefinition.TEXT, 8000);
         CellDefinition businessName = new CellDefinition("businessCode", "积分行为", CellDefinition.TEXT, 4000);
         CellDefinition score = new CellDefinition("score", "积分数量", CellDefinition.NUM_0, 4000);
         CellDefinition remark = new CellDefinition("remark", "详细说明", CellDefinition.TEXT, 5000);
@@ -156,7 +191,7 @@ public class ScoreChangeDetailsResoure {
         cellDefinitionList.add(userName);
         cellDefinitionList.add(userPhonec);
         cellDefinitionList.add(shopName);
-        cellDefinitionList.add(orderNum);
+        cellDefinitionList.add(orderCode);
         cellDefinitionList.add(businessName);
         cellDefinitionList.add(score);
         cellDefinitionList.add(remark);

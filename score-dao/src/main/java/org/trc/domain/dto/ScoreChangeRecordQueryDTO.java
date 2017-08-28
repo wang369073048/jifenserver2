@@ -17,6 +17,8 @@ public class ScoreChangeRecordQueryDTO implements Serializable {
     private String channelCode;         //渠道号
 
     private Long shopId;                //店铺id
+    
+    private String theOtherUserId;                //对方用户ID
 
     private List<String> businessCodeList;          //业务编码
 
@@ -121,8 +123,16 @@ public class ScoreChangeRecordQueryDTO implements Serializable {
     public void setOperateTimeMax(Date operateTimeMax) {
         this.operateTimeMax = operateTimeMax;
     }
+    
+    public String getTheOtherUserId() {
+		return theOtherUserId;
+	}
 
-    public void calBusinessCodes(String businessCodes){
+	public void setTheOtherUserId(String theOtherUserId) {
+		this.theOtherUserId = theOtherUserId;
+	}
+
+	public void calBusinessCodes(String businessCodes){
         if (StringUtils.isNotEmpty(businessCodes)) {
             String[] busiArray = businessCodes.split(",");
             if (null != busiArray && busiArray.length > 0) {

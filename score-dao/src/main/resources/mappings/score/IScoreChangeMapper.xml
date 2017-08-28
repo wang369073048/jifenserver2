@@ -104,7 +104,7 @@
             <choose>
                 <when test="shopId != null">
                     and (
-                    sc.shopId = #{shopId}
+                    sc.theOtherUserId = #{theOtherUserId}
                     )
                 </when>
             </choose>
