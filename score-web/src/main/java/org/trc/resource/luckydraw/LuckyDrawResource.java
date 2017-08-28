@@ -28,6 +28,7 @@ import org.trc.domain.query.DateQuery;
 import org.trc.domain.shop.ManagerDO;
 import org.trc.enums.ExceptionEnum;
 import org.trc.exception.OrderException;
+import org.trc.interceptor.Temp;
 import org.trc.util.AppResult;
 import org.trc.util.CellDefinition;
 import org.trc.util.ExportExcel;
@@ -85,6 +86,7 @@ public class LuckyDrawResource {
      */
     @POST
     @Path(ScoreAdminConstants.Route.LuckyDraw.SHIP)
+    @Temp
     public AppResult shipOrder(@FormParam("orderNum") String orderNum,
                                @FormParam("companyName") String companyName,
                                @FormParam("shipperCode") String shipperCode,
@@ -244,6 +246,7 @@ public class LuckyDrawResource {
      * @return
      */
     @GET
+    @Temp
     @Path(ScoreAdminConstants.Route.LuckyDraw.WINNING_RECORD+"/{id}")
     public AppResult getWinningRecordById(@PathParam("id") Long id,@Context ContainerRequestContext requestContext) {
             WinningRecordDO param = new WinningRecordDO();
@@ -259,11 +262,12 @@ public class LuckyDrawResource {
 
 
     @GET
+    @Temp
     @Path(ScoreAdminConstants.Route.LuckyDraw.WINNING_RECORD_LIST)
     public Pagenation listWinningRecord(@QueryParam("luckyDrawId") Long luckyDrawId, @QueryParam("platform") String platform, @QueryParam("operateTimeMin") Long operateTimeMin,
     									@QueryParam("operateTimeMax") Long operateTimeMax, @QueryParam("lotteryPhone") String lotteryPhone,
     									@QueryParam("activityName") String activityName, @QueryParam("state") Integer state,
-    									@BeanParam Pagenation<WinningRecordDTO> page){
+    									@BeanParam Pagenation<WinningRecordDTO> page,@Context ContainerRequestContext requestContext){
             WinningRecordDTO param = new WinningRecordDTO();
             param.setLuckyDrawId(luckyDrawId);
             param.setPlatform(platform);
@@ -281,10 +285,11 @@ public class LuckyDrawResource {
     }
 
     @GET
+    @Temp
     @Path(ScoreAdminConstants.Route.LuckyDraw.WINNING_RECORD_EXPORT)
     public Response exportWinningRecord(@QueryParam("platform") String platform, @QueryParam("operateTimeMin") Long operateTimeMin,
                                         @QueryParam("operateTimeMax") Long operateTimeMax, @QueryParam("lotteryPhone") String lotteryPhone,
-                                        @QueryParam("activityName") String activityName, @QueryParam("state") Integer state) throws IOException {
+                                        @QueryParam("activityName") String activityName, @QueryParam("state") Integer state,@Context ContainerRequestContext requestContext) throws IOException {
         WinningRecordDTO param = new WinningRecordDTO();
         param.setPlatform(platform);
         param.setLotteryPhone(lotteryPhone);

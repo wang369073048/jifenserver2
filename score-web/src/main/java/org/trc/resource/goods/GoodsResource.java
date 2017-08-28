@@ -22,12 +22,15 @@ import org.trc.domain.goods.ShopClassificationDO;
 import org.trc.domain.query.GoodsQuery;
 import org.trc.enums.ExceptionEnum;
 import org.trc.exception.GoodsException;
+import org.trc.interceptor.Authority;
 import org.trc.util.AppResult;
 import org.trc.util.GuidUtil;
 import org.trc.util.Pagenation;
 
 import javax.validation.constraints.NotNull;
 import javax.ws.rs.*;
+import javax.ws.rs.container.ContainerRequestContext;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.util.ArrayList;
@@ -58,6 +61,7 @@ public class GoodsResource {
      * 增加商品
      */
     @POST
+    @Authority
     @Path(ScoreAdminConstants.Route.Goods.ENTITY)
     public AppResult publish(@NotNull(message = "shopId不能为空") @PathParam("shopId") Long shopId, @NotNull(message = "category不能为空")@FormParam("category") Long category,
                              @FormParam("brandName") String brandName, @NotEmpty(message = "goodsName不能为空") @FormParam("goodsName") String goodsName, @FormParam("barcode") String barcode,
@@ -124,6 +128,7 @@ public class GoodsResource {
      */
     @POST
     @Path(ScoreAdminConstants.Route.Goods.ENTITY + "/{id}")
+    @Authority
     public AppResult modify(@NotNull@PathParam("shopId") Long shopId, @NotNull(message = "id不能为空") @FormParam("id") Long id,
                             @NotNull(message = "category不能为空") @FormParam("category") Long category,
                             @FormParam("brandName") String brandName, @NotEmpty(message = "goodsName不能为空") @FormParam("goodsName") String goodsName,
@@ -135,7 +140,7 @@ public class GoodsResource {
                             @FormParam("validEndTime") Long validEndTime, @FormParam("autoUpTime") Long autoUpTime, @FormParam("autoDownTime") Long autoDownTime,
                             @NotEmpty(message = "content不能为空") @FormParam("content") String content, @FormParam("virtualExchangeQuantity") Integer virtualExchangeQuantity,
                             @FormParam("whetherPrizes") Integer whetherPrizes, @FormParam("sort") Integer sort, @FormParam("shopClassificationIds") String shopClassificationIds,
-                            @NotNull(message = "limitQuantity不能为空") @FormParam("limitQuantity") Integer limitQuantity) {
+                            @NotNull(message = "limitQuantity不能为空") @FormParam("limitQuantity") Integer limitQuantity,@Context ContainerRequestContext requestContext) {
 
         GoodsDO goods = goodsBiz.getGoodsDOById(id, whetherPrizes,null);
         if (null == goods || goods.getShopId().longValue() != shopId.longValue()) {
@@ -202,9 +207,10 @@ public class GoodsResource {
      * @return
      */
     @GET
+    @Authority
     @Path(ScoreAdminConstants.Route.Goods.ENTITY + "/{id}")
     public AppResult<JSONObject> getGoodsById(@PathParam("shopId") Long shopId,
-                                 @PathParam("id") Long id) {
+                                 @PathParam("id") Long id,@Context ContainerRequestContext requestContext) {
         GoodsDO goods = goodsBiz.getGoodsDOById(id, null);
         //校验商品是否属于该店铺
         if (null == goods || shopId != goods.getShopId()) {
@@ -260,8 +266,9 @@ public class GoodsResource {
      * 删除商品
      */
     @DELETE
+    @Authority
     @Path(ScoreAdminConstants.Route.Goods.ENTITY + "/{id}")
-    public AppResult deleteGoodsDO(@PathParam("shopId") Long shopId, @PathParam("id") Long id){
+    public AppResult deleteGoodsDO(@PathParam("shopId") Long shopId, @PathParam("id") Long id,@Context ContainerRequestContext requestContext){
 
         GoodsDO goodsDO = new GoodsDO();
         goodsDO.setId(id);
@@ -278,13 +285,14 @@ public class GoodsResource {
      * @return
      */
     @GET
+    @Authority
     @Path(ScoreAdminConstants.Route.Goods.ENTITY)
     public Pagenation<GoodsDO>  getGoodsList(@PathParam("shopId") Long shopId,
                                  @QueryParam("goodsName") String goodsName,
                                  @QueryParam("isUp") Integer isUp,
                                  @QueryParam("whetherPrizes") Integer whetherPrizes,
                                  @QueryParam("classificationId") Long classificationId,
-                                 @BeanParam Pagenation<GoodsDO> page) {
+                                 @BeanParam Pagenation<GoodsDO> page,@Context ContainerRequestContext requestContext) {
         GoodsQuery param = new GoodsQuery();
         param.setShopId(shopId);
         param.setGoodsName(goodsName);
@@ -332,8 +340,9 @@ public class GoodsResource {
 
     @POST
     @Path(ScoreAdminConstants.Route.Goods.SET_CLASSIFICATION)
+    @Authority
     public AppResult setClassification(@PathParam("shopId") Long shopId, @NotEmpty @FormParam("goodsIds") String goodsIds,
-                                      @NotEmpty @FormParam("classificationIds") String classificationIds) {
+                                      @NotEmpty @FormParam("classificationIds") String classificationIds,@Context ContainerRequestContext requestContext) {
         _checkString(goodsIds);
         _checkString(classificationIds);
         String[] goodsIdStrs = goodsIds.split(",");
@@ -363,8 +372,9 @@ public class GoodsResource {
      * @return
      */
     @PUT
+    @Authority
     @Path(ScoreAdminConstants.Route.Goods.ENTITY_UP + "/{id}")
-    public AppResult upById(@PathParam("shopId") Long shopId, @PathParam("id") Long id) {
+    public AppResult upById(@PathParam("shopId") Long shopId, @PathParam("id") Long id,@Context ContainerRequestContext requestContext) {
         GoodsDO goods = goodsBiz.getGoodsDOById(id, null);
         if (null == goods || goods.getShopId().longValue() != shopId.longValue()) {
             throw new GoodsException(ExceptionEnum.ERROR_ILLEGAL_OPERATION,"操作不合法");
@@ -379,8 +389,9 @@ public class GoodsResource {
      * @return
      */
     @PUT
+    @Authority
     @Path(ScoreAdminConstants.Route.Goods.ENTITY_DOWN + "/{id}")
-    public AppResult downById(@PathParam("shopId") Long shopId, @PathParam("id") Long id) {
+    public AppResult downById(@PathParam("shopId") Long shopId, @PathParam("id") Long id,@Context ContainerRequestContext requestContext) {
         GoodsDO goods = goodsBiz.getGoodsDOById(id, null);
         if (null == goods || goods.getShopId().longValue() != shopId.longValue()) {
             throw new GoodsException(ExceptionEnum.ERROR_ILLEGAL_OPERATION,"操作不合法");
@@ -404,8 +415,9 @@ public class GoodsResource {
      * @return Response
      */
     @GET
+    @Authority
     @Path(ScoreAdminConstants.Route.Goods.ENTITY + ScoreAdminConstants.Route.Goods.CATEGORY)
-    public AppResult<JSONArray> getCategoryList(@PathParam("shopId") Long shopId, @QueryParam("name") String name) {
+    public AppResult<JSONArray> getCategoryList(@PathParam("shopId") Long shopId, @QueryParam("name") String name,@Context ContainerRequestContext requestContext) {
 
         CategoryDO query = new CategoryDO();
         query.setCategoryName(name);
@@ -437,8 +449,9 @@ public class GoodsResource {
      * @return
      */
     @GET
+    @Authority
     @Path(ScoreAdminConstants.Route.Goods.CHECKEID)
-    public AppResult checkEid(@PathParam("shopId") Long shopId, @NotNull @QueryParam("eid")String eid){
+    public AppResult checkEid(@PathParam("shopId") Long shopId, @NotNull @QueryParam("eid")String eid,@Context ContainerRequestContext requestContext){
         try {
             CouponDto couponDto = goodsBiz.checkEid(eid);
             if(CouponDto.SUCCESS_CODE.equals(couponDto.getCode())) {

@@ -21,6 +21,7 @@ import org.trc.domain.dto.ScoreChangeRecordQueryDTO;
 import org.trc.domain.score.ScoreChange;
 import org.trc.enums.ExceptionEnum;
 import org.trc.exception.FlowException;
+import org.trc.interceptor.Admin;
 import org.trc.util.CellDefinition;
 import org.trc.util.ExportExcel;
 import org.trc.util.FatherToChildUtils;
@@ -56,6 +57,7 @@ public class FlowAdminResource {
     private IAuthBiz authBiz;
     @GET
     @Path(ScoreAdminConstants.Route.Flow.RECORD)
+    @Admin
     public Pagenation<ScoreChange> queryChangeRecord(@QueryParam("shopId") Long shopId,
                                       @QueryParam("userPhone") String userPhone,
                                       @QueryParam("businessCode") String businessCodes,
@@ -104,11 +106,13 @@ public class FlowAdminResource {
      */
     @GET
     @Path(ScoreAdminConstants.Route.Flow.EXPORT)
+    @Admin
     public Response exportChangeRecord(@QueryParam("shopId") Long shopId,
                                        @QueryParam("userPhone") String userPhone,
                                        @QueryParam("businessCode") String businessCodes,
                                        @QueryParam("startTime") Long startTime,
-                                       @QueryParam("endTime") Long endTime) throws Exception{
+                                       @QueryParam("endTime") Long endTime,
+                                       @Context ContainerRequestContext requestContext) throws Exception{
         ScoreChangeRecordQueryDTO queryDto = new ScoreChangeRecordQueryDTO();
         handleQueryDTO(userPhone,queryDto,shopId);
         queryDto.calBusinessCodes(businessCodes);

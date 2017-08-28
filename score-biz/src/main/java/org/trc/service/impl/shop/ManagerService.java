@@ -13,8 +13,5 @@ import org.trc.service.shop.IManagerService;
  */
 @Service(value = "managerService")
 public class ManagerService extends BaseService<ManagerDO,Long> implements IManagerService{
-    @Override
-    public ManagerDO getManagerByUserId(String userId) {
-        return null;
-    }
+
 }

@@ -16,6 +16,7 @@ import org.trc.domain.score.ScoreConverter;
 import org.trc.domain.shop.ShopDO;
 import org.trc.enums.ExceptionEnum;
 import org.trc.exception.ConverterException;
+import org.trc.interceptor.Authority;
 import org.trc.util.AppResult;
 
 import javax.validation.constraints.NotNull;
@@ -53,6 +54,7 @@ public class ConverterResource {
      * @return
      */
     @POST
+    @Authority
     public AppResult setExchageRule(@PathParam("shopId") Long shopId,
                                     @NotNull @FormParam("amount") Integer amount,
                                     @NotNull @FormParam("score") Integer score,
@@ -114,7 +116,9 @@ public class ConverterResource {
      * @return
      */
     @PUT
-    public AppResult modifyExchangeRule(@NotNull @FormParam("id") Long id,
+    @Authority
+    public AppResult modifyExchangeRule(@PathParam("shopId") Long shopId,
+                                        @NotNull @FormParam("id") Long id,
                                        @NotNull @FormParam("amount") Integer amount,
                                        @NotNull @FormParam("score") Integer score,
                                        @NotEmpty @FormParam("direction") String direction,
@@ -175,7 +179,9 @@ public class ConverterResource {
      */
     @DELETE
     @Path("/{id}")
-    public AppResult deleteExchangeRule(@PathParam("id") Long id,
+    @Authority
+    public AppResult deleteExchangeRule(@PathParam("shopId") Long shopId,
+                                        @PathParam("id") Long id,
                                         @Context ContainerRequestContext requestContext) {
 
         String userId= (String) requestContext.getProperty("userId");
@@ -200,7 +206,8 @@ public class ConverterResource {
      * @return
      */
     @GET
-    public AppResult<ScoreConverter> getExchangeRuleList(@Context ContainerRequestContext requestContext) {
+    @Authority
+    public AppResult<ScoreConverter> getExchangeRuleList(@PathParam("shopId") Long shopId,@Context ContainerRequestContext requestContext) {
         String userId= (String) requestContext.getProperty("userId");
         //查询权限
         Auth auth = authBiz.getAuthByUserId(userId);
@@ -218,7 +225,9 @@ public class ConverterResource {
      */
     @GET
     @Path("{id}")
-    public AppResult<ScoreConverter> getExchageRuleById(@PathParam("id") String id,
+    @Authority
+    public AppResult<ScoreConverter> getExchageRuleById(@PathParam("shopId") Long shopId,
+                                                        @PathParam("id") String id,
                                                         @Context ContainerRequestContext requestContext){
         Long converterId = Long.valueOf(id);
         ScoreConverter scoreConverter = scoreConverterBiz.selectScoreConverterById(converterId);

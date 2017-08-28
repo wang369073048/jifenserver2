@@ -27,6 +27,7 @@ import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
+import com.sun.xml.bind.v2.TODO;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.slf4j.Logger;
@@ -50,6 +51,8 @@ import org.trc.domain.shop.ManagerDO;
 import org.trc.enums.ExceptionEnum;
 import org.trc.exception.OrderException;
 import org.trc.exception.ShopException;
+import org.trc.interceptor.CustomerService;
+import org.trc.interceptor.Manager;
 import org.trc.util.AppResult;
 import org.trc.util.CellDefinition;
 import org.trc.util.ExportExcel;
@@ -91,7 +94,7 @@ public class OrderResource {
 
     @POST
     @Path("/updateState")
-    //@Manager TODO 缺少注解
+    @Manager
     public AppResult updateState(@FormParam("orderId") Long orderId,
                                  @FormParam("orderState") Integer orderState,
                                  @Context ContainerRequestContext requestContext) {
@@ -125,7 +128,7 @@ public class OrderResource {
      */
     @POST
     @Path("/modify")
-    //@Manager TODO 缺少注解
+    @Manager
     public AppResult modifyOrderLogistics(@FormParam("orderId") Long orderId,
                                           @FormParam("companyName") String companyName,
                                           @FormParam("shipperCode") String shipperCode,
@@ -165,7 +168,7 @@ public class OrderResource {
      */
     @POST
     @Path("/ship")
-    //@Manager TODO 缺少注解
+    @Manager
     public AppResult shipOrder(@FormParam("orderId") Long orderId,
                                @FormParam("companyName") String companyName,
                                @FormParam("shipperCode") String shipperCode,
@@ -204,6 +207,7 @@ public class OrderResource {
      */
     @GET
     @Path(ScoreAdminConstants.Route.Order.LIST)
+    @Manager
     public Pagenation<OrdersDO> queryOrderList(@QueryParam("orderNum") String orderNum,
                                                @QueryParam("phone") String phone,
                                                @QueryParam("orderType") Integer orderType,
@@ -239,6 +243,7 @@ public class OrderResource {
 
     @GET
     @Path("/list/export")
+    @Manager
     public Response exportOrder(@QueryParam("orderNum") String orderNum,
                                 @QueryParam("phone") String phone,
                                 @QueryParam("orderState") Integer orderState,
@@ -318,7 +323,7 @@ public class OrderResource {
 
     @GET
     @Path("/get")
-    //@Manager
+    @Manager
     public AppResult selectOrder(@QueryParam("id") Long id,
                                  @Context ContainerRequestContext requestContext) {
         OrdersDO order = new OrdersDO();
@@ -468,7 +473,7 @@ public class OrderResource {
      */
     @GET
     @Path("/pull")
-    //@Manager
+    @Manager
     public AppResult pull(@NotNull @QueryParam("id") Long id,
                                          @Context ContainerRequestContext requestContext) throws IOException {
 
@@ -505,9 +510,10 @@ public class OrderResource {
      */
     @GET
     @Path("/checkOrder")
-    //@CustomerService TODO 缺少注解
+    @CustomerService
     public AppResult<JSONObject> checkOrder(@NotNull @QueryParam("orderNum") String orderNum,
-                                            @NotNull @QueryParam("phone") String phone) {
+                                            @NotNull @QueryParam("phone") String phone,
+                                            @Context ContainerRequestContext requestContext) {
         OrdersDO param = new OrdersDO();
         param.setOrderNum(orderNum);
         UserDO userDO = userService.getUserDO(QueryType.Phone, phone);
@@ -569,9 +575,11 @@ public class OrderResource {
      */
     @POST
     @Path("/returnGoods")
+    @CustomerService
     public AppResult returnGoods(@NotNull @FormParam("orderNum") String orderNum,
                                 @NotNull @FormParam("phone") String phone,
-                                @NotNull @FormParam("remark") String remark) {
+                                @NotNull @FormParam("remark") String remark,
+                                 @Context ContainerRequestContext requestContext) {
     	try{
     		UserDO userDO = userService.getUserDO(QueryType.Phone, phone);
             if (null == userDO) {

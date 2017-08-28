@@ -9,6 +9,8 @@ import org.trc.biz.pagehome.IBannerBiz;
 import org.trc.constants.ScoreAdminConstants;
 import org.trc.domain.pagehome.Banner;
 import org.trc.form.pagehome.BannerForm;
+import org.trc.interceptor.Admin;
+import org.trc.interceptor.Authority;
 import org.trc.util.AppResult;
 import org.trc.util.Pagenation;
 
@@ -37,7 +39,8 @@ public class BannerResource{
      * @return AppResult
      */
     @POST
-    public AppResult<JSONObject> createBanner(@BeanParam BannerForm form,
+    @Authority
+    public AppResult<JSONObject> createBanner(@PathParam("shopId") Long shopId,@BeanParam BannerForm form,
                                   @Context ContainerRequestContext requestContext){
 
         Banner banner = new Banner();
@@ -60,7 +63,8 @@ public class BannerResource{
      */
     @PUT
     @Path("{id}")
-    public AppResult<JSONObject> modifyBanner(@BeanParam BannerForm form,
+    @Authority
+    public AppResult<JSONObject> modifyBanner(@PathParam("shopId") Long shopId,@BeanParam BannerForm form,
                                  @NotBlank @FormParam("name") String name,
                                  @Context ContainerRequestContext requestContext){
 
@@ -83,7 +87,9 @@ public class BannerResource{
      */
     @GET
     @Cacheable(isList = true,key = "#form.shopId+#page.pageNo+#page.pageSize")
-    public Pagenation<Banner> bannerPage(@BeanParam BannerForm form,@BeanParam Pagenation<Banner> page){
+    @Authority
+    public Pagenation<Banner> bannerPage(@PathParam("shopId") Long shopId,@BeanParam BannerForm form,@BeanParam Pagenation<Banner> page,
+                                         @Context ContainerRequestContext requestContext){
         return bannerBiz.bannerPage(form,page);
     }
 
@@ -95,7 +101,8 @@ public class BannerResource{
      */
     @GET
     @Path("{id}")
-    public AppResult<Banner> getBannerById(@BeanParam BannerForm form){
+    @Authority
+    public AppResult<Banner> getBannerById(@PathParam("shopId") Long shopId,@BeanParam BannerForm form,@Context ContainerRequestContext requestContext){
         return createSucssAppResult("查询banner成功", bannerBiz.selectByIdAndShopId(form));
     }
 
@@ -107,7 +114,8 @@ public class BannerResource{
      */
     @PUT
     @Path(ScoreAdminConstants.Route.Banner.SETCONTENT + "/{id}")
-    public AppResult setBannerContent(@BeanParam BannerForm form, @NotNull@FormParam("contentId")Long contentId,@Context ContainerRequestContext requestContext){
+    @Authority
+    public AppResult setBannerContent(@PathParam("shopId") Long shopId,@BeanParam BannerForm form, @NotNull@FormParam("contentId")Long contentId,@Context ContainerRequestContext requestContext){
         Banner banner = bannerBiz.selectByIdAndShopId(form);
         banner.setContentId(contentId);
         String userId= (String) requestContext.getProperty("userId");
@@ -126,7 +134,8 @@ public class BannerResource{
      */
     @PUT
     @Path(ScoreAdminConstants.Route.Banner.SETUP + "/{id}")
-    public AppResult setBannerIsUp(@BeanParam BannerForm form, @NotNull@FormParam("isUp")Boolean isUp,@Context ContainerRequestContext requestContext){
+    @Authority
+    public AppResult setBannerIsUp(@PathParam("shopId") Long shopId,@BeanParam BannerForm form, @NotNull@FormParam("isUp")Boolean isUp,@Context ContainerRequestContext requestContext){
         Banner banner = bannerBiz.selectByIdAndShopId(form);
         banner.setIsUp(isUp);
         String userId= (String) requestContext.getProperty("userId");
@@ -145,9 +154,11 @@ public class BannerResource{
      */
     @PUT
     @Path(ScoreAdminConstants.Route.Banner.SORT)
+    @Authority
     public AppResult exchangeSort(@PathParam("shopId") Long shopId,
                                   @NotNull@FormParam("idA") Long idA,
-                                  @NotNull@FormParam("idB") Long idB){
+                                  @NotNull@FormParam("idB") Long idB,
+                                  @Context ContainerRequestContext requestContext){
         BannerForm bannerFormA = new BannerForm();
         bannerFormA.setShopId(shopId);
         bannerFormA.setId(idA);

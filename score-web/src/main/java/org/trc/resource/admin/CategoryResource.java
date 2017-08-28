@@ -11,6 +11,7 @@ import org.trc.constants.ScoreAdminConstants;
 import org.trc.domain.goods.CategoryDO;
 import org.trc.enums.ExceptionEnum;
 import org.trc.exception.BannerException;
+import org.trc.interceptor.Admin;
 import org.trc.util.AppResult;
 import org.trc.util.Pagenation;
 
@@ -50,6 +51,7 @@ public class CategoryResource {
      * @return Response
      */
     @POST
+    @Admin
     public AppResult<JSONObject> createCategory(@NotBlank @FormParam("categoryName") String categoryName,
                                                 @FormParam("isVirtual") Integer isVirtual,
                                                 @FormParam("logoUrl") String logoUrl,
@@ -94,6 +96,7 @@ public class CategoryResource {
      */
     @PUT
     @Path("/{id}")
+    @Admin
     public AppResult modifyCategory(@PathParam("id") Long id,
                                    @NotBlank @FormParam("categoryName") String categoryName,
                                    @FormParam("logoUrl") String logoUrl,
@@ -130,6 +133,7 @@ public class CategoryResource {
      */
     @DELETE
     @Path("/{id}")
+    @Admin
     public AppResult deleteCategory(@PathParam("id") Long id,
                                    @Context ContainerRequestContext requestContext) {
         //获取登录者userId
@@ -148,7 +152,9 @@ public class CategoryResource {
      */
     @GET
     @Path("/{id}")
-    public AppResult<JSONObject> getCategoryById(@PathParam("id") Long id) {
+    @Admin
+    public AppResult<JSONObject> getCategoryById(@PathParam("id") Long id,
+                                                 @Context ContainerRequestContext requestContext) {
         CategoryDO categoryDO = categoryBiz.getCategoryDOById(id);
         JSONObject json = new JSONObject();
         json.put("id", categoryDO.getId());
@@ -167,8 +173,9 @@ public class CategoryResource {
      * @return Response
      */
     @GET
+    @Admin
     public Pagenation<CategoryDO> getCategoryList(@QueryParam("name") String name,
-                                    @BeanParam Pagenation<CategoryDO> page) {
+                                    @BeanParam Pagenation<CategoryDO> page,@Context ContainerRequestContext requestContext) {
         CategoryDO query = new CategoryDO();
         query.setCategoryName(name);
         page = categoryBiz.queryCategoryDOListForPage(query, page);
