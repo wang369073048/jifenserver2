@@ -177,7 +177,7 @@ public class ScoreChangeDetailsResoure {
         CellDefinition userId = new CellDefinition("userId", "用户Id", CellDefinition.TEXT, 4000);
         CellDefinition operationTime = new CellDefinition("operationTime", "发生日期", CellDefinition.DATE, 4000);
         CellDefinition userName = new CellDefinition("userName", "会员名称", CellDefinition.TEXT, 4000);
-        CellDefinition userPhonec = new CellDefinition("userPhone", "会员名称", CellDefinition.TEXT, 6000);
+        CellDefinition userPhonec = new CellDefinition("userPhone", "会员手机", CellDefinition.TEXT, 6000);
         CellDefinition shopName = new CellDefinition("shopName", "所属商家", CellDefinition.TEXT, 4000);
         CellDefinition orderCode = new CellDefinition("orderCode", "订单编号", CellDefinition.TEXT, 8000);
         CellDefinition businessName = new CellDefinition("businessCode", "积分行为", CellDefinition.TEXT, 4000);
