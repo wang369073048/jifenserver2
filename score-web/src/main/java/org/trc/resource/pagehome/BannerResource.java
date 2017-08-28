@@ -86,7 +86,6 @@ public class BannerResource{
      * @throws Exception
      */
     @GET
-    @Cacheable(isList = true,key = "#form.shopId+#page.pageNo+#page.pageSize")
     @Authority
     public Pagenation<Banner> bannerPage(@PathParam("shopId") Long shopId,@BeanParam BannerForm form,@BeanParam Pagenation<Banner> page,
                                          @Context ContainerRequestContext requestContext){

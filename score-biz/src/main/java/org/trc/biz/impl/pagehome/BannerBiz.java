@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
+import org.trc.annotation.cache.Cacheable;
 import org.trc.biz.pagehome.IBannerBiz;
 import org.trc.constants.ScoreAdminConstants;
 import org.trc.domain.pagehome.Banner;
@@ -85,6 +86,7 @@ public class BannerBiz implements IBannerBiz {
 
 
     @Override
+    @Cacheable(isList = true,key = "#queryModel.shopId+#page.pageIndex+#page.pageSize")
     public Pagenation<Banner> bannerPage(BannerForm queryModel, Pagenation<Banner> page) {
         Example example = new Example(Banner.class);
         Example.Criteria criteria = example.createCriteria();

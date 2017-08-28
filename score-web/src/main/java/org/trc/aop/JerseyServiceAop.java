@@ -73,9 +73,7 @@ public class JerseyServiceAop {
                 appResult.put("result", "");
                 resultObj = appResult;
             }else if (StringUtils.equals("Response", returnType.getSimpleName())) {
-                JSONObject jsonObject = new JSONObject();
-                jsonObject.put("error",errorMsg);
-                resultObj = TxJerseyTools.returnAbort(jsonObject.toJSONString());
+                resultObj = CustomAck.customError(errorMsg);
             }
         }
         Date end = new Date();
