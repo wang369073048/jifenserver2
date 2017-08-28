@@ -7,6 +7,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
+import org.trc.annotation.cache.CacheExpire;
+import org.trc.annotation.cache.Cacheable;
 import org.trc.biz.auth.IAuthBiz;
 import org.trc.biz.shop.IShopBiz;
 import org.trc.domain.auth.Auth;
@@ -53,6 +55,7 @@ public class ShopBiz implements IShopBiz{
     }
 
     @Override
+    @Cacheable(key="#id", expireTime= CacheExpire.MEDIUM)
     public ShopDO getShopDOById(Long id) {
         try {
             Assert.isTrue(id != null, "查询Id不能为空!");

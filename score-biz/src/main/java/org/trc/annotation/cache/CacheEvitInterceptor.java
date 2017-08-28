@@ -3,10 +3,9 @@ package org.trc.annotation.cache;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
-import org.springframework.core.LocalVariableTableParameterNameDiscoverer;
-import org.springframework.expression.ExpressionParser;
-import org.springframework.expression.spel.standard.SpelExpressionParser;
-import org.springframework.expression.spel.support.StandardEvaluationContext;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import org.springframework.stereotype.Component;
 import org.trc.util.RedisUtil;
 
@@ -15,11 +14,13 @@ import java.lang.reflect.Method;
 @Component
 @Aspect
 public class CacheEvitInterceptor extends BaseInterceptor{
+
+	private Logger logger = LoggerFactory.getLogger(CacheableInterceptor.class);
 	/**
 	 * 定义缓存逻辑
 	 * @throws Throwable 
 	 */
-	//@Around("@annotation(org.trc.annotation.cache.CacheEvit)")
+	@Around("@annotation(org.trc.annotation.cache.CacheEvit)")
 	public Object cache(ProceedingJoinPoint pjp) throws Throwable {
 		Object result = null;
 		try {
@@ -37,6 +38,7 @@ public class CacheEvitInterceptor extends BaseInterceptor{
 
 		} catch (Throwable e) {
 			//出exception了,继续即可,不需要处理
+			logger.error(e.getMessage());
 		}finally{
 			result = pjp.proceed();
 		}

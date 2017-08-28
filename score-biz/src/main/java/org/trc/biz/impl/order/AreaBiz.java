@@ -2,6 +2,7 @@ package org.trc.biz.impl.order;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.trc.annotation.cache.Cacheable;
 import org.trc.biz.order.IAreaBiz;
 import org.trc.domain.order.AreaDO;
 import org.trc.service.order.IAreaService;
@@ -18,6 +19,7 @@ public class AreaBiz implements IAreaBiz {
     @Autowired
     private IAreaService areaService;
     @Override
+    @Cacheable(key="#code")
     public AreaDO getAreaByCode(String code) {
         AreaDO areaDO = new AreaDO();
         areaDO.setCode(code);
