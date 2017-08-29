@@ -38,6 +38,7 @@ import org.trc.util.TxJerseyTools;
 import com.alibaba.druid.support.json.JSONUtils;
 import com.alibaba.dubbo.common.logger.Logger;
 import com.alibaba.dubbo.common.logger.LoggerFactory;
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 
 /**
@@ -74,7 +75,7 @@ public class GoodsRecommendResource {
         query.setShopId(shopId);
         //执行查询
         Pagenation<GoodsRecommendDTO> pageGoodRecommends = goodsRecommendBiz.queryGoodsRecommondsForPage(query, page);
-        return TxJerseyTools.returnSuccess(JSONUtils.toJSONString(pageGoodRecommends));
+        return TxJerseyTools.returnSuccess(JSON.toJSONString(pageGoodRecommends));
     }
 
     /**
@@ -134,7 +135,7 @@ public class GoodsRecommendResource {
             long time2 = System.currentTimeMillis();
             System.out.println(time2 - time1);
             Pagenation<GoodsDO> pageGoods = goodsBiz.queryGoodsDOListExceptRecommendForPage(query, page);
-            return TxJerseyTools.returnSuccess(JSONUtils.toJSONString(pageGoods));
+            return TxJerseyTools.returnSuccess(JSON.toJSONString(pageGoods));
 
     }
 

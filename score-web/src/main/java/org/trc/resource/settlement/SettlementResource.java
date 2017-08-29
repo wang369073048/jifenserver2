@@ -44,6 +44,7 @@ import org.trc.util.Pagenation;
 import org.trc.util.TxJerseyTools;
 
 import com.alibaba.druid.support.json.JSONUtils;
+import com.alibaba.fastjson.JSON;
 import com.tairanchina.md.account.user.model.UserDO;
 import com.tairanchina.md.account.user.service.UserService;
 import com.tairanchina.md.api.QueryType;
@@ -80,7 +81,7 @@ public class SettlementResource {
         settlementDO.setShopId(shopId);
 //        return settlementBiz.queryListByParams(settlementDO, page);
         Pagenation<SettlementDO> pageSettlementDOs = settlementBiz.queryListByParams(settlementDO, page);
-        return TxJerseyTools.returnSuccess(JSONUtils.toJSONString(pageSettlementDOs));
+        return TxJerseyTools.returnSuccess(JSON.toJSONString(pageSettlementDOs));
     }
 
     @GET
@@ -131,7 +132,7 @@ public class SettlementResource {
                 }
             }
 //            return orderPage;
-            return TxJerseyTools.returnSuccess(JSONUtils.toJSONString(orderPage));
+            return TxJerseyTools.returnSuccess(JSON.toJSONString(orderPage));
     }
 
     @GET

@@ -20,6 +20,7 @@ import org.trc.util.Pagenation;
 import org.trc.util.TxJerseyTools;
 
 import com.alibaba.druid.support.json.JSONUtils;
+import com.alibaba.fastjson.JSON;
 
 /**
  * author: hzwzhen
@@ -44,6 +45,6 @@ public class ActivityPrizesResource {
             param.setCategory(category);
 //            return activityPrizesBiz.queryActivityPrizes(param, page);
             Pagenation<ActivityPrizesDO> pageActivityPrizes = activityPrizesBiz.queryActivityPrizes(param, page);
-            return TxJerseyTools.returnSuccess(JSONUtils.toJSONString(pageActivityPrizes));
+            return TxJerseyTools.returnSuccess(JSON.toJSONString(pageActivityPrizes));
     }
 }

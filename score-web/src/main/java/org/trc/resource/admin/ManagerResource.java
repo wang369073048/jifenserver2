@@ -1,6 +1,7 @@
 package org.trc.resource.admin;
 
 import com.alibaba.druid.support.json.JSONUtils;
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.tairanchina.md.account.user.model.UserDO;
 import com.tairanchina.md.account.user.service.UserService;
@@ -143,7 +144,7 @@ public class ManagerResource {
             query.setUserKeyword(userKeyWord);
             query.setShopId(shopId);
             Pagenation<Auth> authlist = authBiz.queryAuthListForPage(query, page);
-            return TxJerseyTools.returnSuccess(JSONUtils.toJSONString(authlist));
+            return TxJerseyTools.returnSuccess(JSON.toJSONString(authlist));
     }
 
     /**
@@ -158,7 +159,7 @@ public class ManagerResource {
                                     @Context ContainerRequestContext requestContext) {
         Auth auth = authBiz.getAuthById(id);
         if(auth!=null){
-        	return TxJerseyTools.returnSuccess(JSONUtils.toJSONString(auth));
+        	return TxJerseyTools.returnSuccess(JSON.toJSONString(auth));
         }else{
         	return TxJerseyTools.returnSuccess();
         }

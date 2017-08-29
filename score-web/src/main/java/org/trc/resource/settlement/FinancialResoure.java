@@ -1,6 +1,7 @@
 package org.trc.resource.settlement;
 
 import com.alibaba.druid.support.json.JSONUtils;
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.tairanchina.md.account.user.model.UserDO;
@@ -99,7 +100,7 @@ public class FinancialResoure {
             result.setConsumptionNum(null != resultSD.getConsumptionNum() ? resultSD.getConsumptionNum() : 0);
         }
 //        return result;
-        return TxJerseyTools.returnSuccess(JSONUtils.toJSONString(result));
+        return TxJerseyTools.returnSuccess(JSON.toJSONString(result));
     }
 
     @GET
@@ -178,7 +179,7 @@ public class FinancialResoure {
             result.setConsumptionNum(null != resultSD.getConsumptionNum() ? resultSD.getConsumptionNum() : 0);
         }
 //        return result;
-        return TxJerseyTools.returnSuccess(JSONUtils.toJSONString(result));
+        return TxJerseyTools.returnSuccess(JSON.toJSONString(result));
     }
 
     @GET
@@ -273,7 +274,7 @@ public class FinancialResoure {
             result.setConsumptionNum(null != resultSD.getConsumptionNum() ? resultSD.getConsumptionNum() : 0);
         }
 //        return result;
-        return TxJerseyTools.returnSuccess(JSONUtils.toJSONString(result));
+        return TxJerseyTools.returnSuccess(JSON.toJSONString(result));
     }
 
     @GET

@@ -2,6 +2,7 @@ package org.trc.resource.goods;
 
 import com.alibaba.druid.support.json.JSONUtils;
 import com.alibaba.dubbo.common.utils.CollectionUtils;
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.trc.mall.externalservice.dto.CouponDto;
@@ -314,7 +315,7 @@ public class GoodsResource {
                 }
             }
         }
-        return TxJerseyTools.returnSuccess(JSONUtils.toJSONString(page));
+        return TxJerseyTools.returnSuccess(JSON.toJSONString(page));
     }
 
     //构建GoodsDO
@@ -440,7 +441,7 @@ public class GoodsResource {
                 jsonArray.add(json);
             }
         }
-        return TxJerseyTools.returnSuccess(JSONUtils.toJSONString(jsonArray));
+        return TxJerseyTools.returnSuccess(JSON.toJSONString(jsonArray));
     }
 
     /**
@@ -459,7 +460,7 @@ public class GoodsResource {
                 JSONObject result = new JSONObject();
                 result.put("packageFrom", couponDto.getData().getPackageFrom());
                 result.put("packageTo", couponDto.getData().getPackageTo());
-                return TxJerseyTools.returnSuccess(JSONUtils.toJSONString(result));
+                return TxJerseyTools.returnSuccess(JSON.toJSONString(result));
             } else{
             	return CustomAck.customError("金融卡券批次号不存在!");
             }

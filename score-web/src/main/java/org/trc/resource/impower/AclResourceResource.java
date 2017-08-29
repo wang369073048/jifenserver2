@@ -27,6 +27,7 @@ import org.trc.util.ResultUtil;
 import org.trc.util.TxJerseyTools;
 
 import com.alibaba.druid.support.json.JSONUtils;
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 
 /**
@@ -50,7 +51,7 @@ public class AclResourceResource {
 //        return ResultUtil.createSucssAppResult("查询全局角色成功", jurisdictionBiz.findWholeJurisdiction());
     	List<AclResource> aclResources = jurisdictionBiz.findWholeJurisdiction();
     	if(aclResources!=null){
-        	return TxJerseyTools.returnSuccess(JSONUtils.toJSONString(aclResources));
+        	return TxJerseyTools.returnSuccess(JSON.toJSONString(aclResources));
         }
         return TxJerseyTools.returnSuccess();
     }
@@ -75,7 +76,7 @@ public class AclResourceResource {
 //        return ResultUtil.createSucssAppResult("查询全局角色成功", jurisdictionBiz.findWholeJurisdictionAndCheckedByRoleId(roleId));
         List<AclResource> aclResources = jurisdictionBiz.findWholeJurisdictionAndCheckedByRoleId(roleId);
     	if(aclResources!=null){
-        	return TxJerseyTools.returnSuccess(JSONUtils.toJSONString(aclResources));
+        	return TxJerseyTools.returnSuccess(JSON.toJSONString(aclResources));
         }
         return TxJerseyTools.returnSuccess();
 
@@ -97,7 +98,7 @@ public class AclResourceResource {
 //        return ResultUtil.createSucssAppResult("查询权限资源成功", jurisdictionBiz.getNodes(parentId, isRecursive));
     	List<JurisdictionTreeNode> jurisdictionTreeNodes = jurisdictionBiz.getNodes(parentId, isRecursive);
     	if(jurisdictionTreeNodes!=null){
-        	return TxJerseyTools.returnSuccess(JSONUtils.toJSONString(jurisdictionTreeNodes));
+        	return TxJerseyTools.returnSuccess(JSON.toJSONString(jurisdictionTreeNodes));
         }
         return TxJerseyTools.returnSuccess();
     }
@@ -133,7 +134,7 @@ public class AclResourceResource {
 //        return ResultUtil.createSucssAppResult("查询用户html页面权限成功", jurisdictionBiz.getHtmlJurisdiction(userId));
         List<Map<String,Object>>  htmlJurisdictions= jurisdictionBiz.getHtmlJurisdiction(userId);
     	if(htmlJurisdictions!=null){
-        	return TxJerseyTools.returnSuccess(JSONUtils.toJSONString(htmlJurisdictions));
+        	return TxJerseyTools.returnSuccess(JSON.toJSONString(htmlJurisdictions));
         }
         return TxJerseyTools.returnSuccess();
     }

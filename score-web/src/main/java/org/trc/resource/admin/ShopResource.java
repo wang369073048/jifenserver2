@@ -27,6 +27,7 @@ import org.trc.util.Pagenation;
 import org.trc.util.TxJerseyTools;
 
 import com.alibaba.druid.support.json.JSONUtils;
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 
 /**
@@ -108,7 +109,7 @@ public class ShopResource {
         ShopDO query = new ShopDO();
         query.setShopName(shopName);
         Pagenation<ShopDO> pageShops = shopBiz.queryShopDOListForPage(query, page);
-        return TxJerseyTools.returnSuccess(JSONUtils.toJSONString(pageShops));
+        return TxJerseyTools.returnSuccess(JSON.toJSONString(pageShops));
     }
 
     /**
@@ -121,7 +122,7 @@ public class ShopResource {
     public Response getShopById(@PathParam("id") Long id) {
         ShopDO shopDO = shopBiz.getShopDOById(id);
         if(shopDO!=null){
-        	return TxJerseyTools.returnSuccess(JSONUtils.toJSONString(shopDO));
+        	return TxJerseyTools.returnSuccess(JSON.toJSONString(shopDO));
         }
         return TxJerseyTools.returnSuccess();
     }

@@ -222,7 +222,7 @@ public class LuckyDrawResource {
         LuckyDrawDO result = luckyDrawBiz.getLuckyDraw(luckyDraw);
 //        return createSucssAppResult("查询成功", result);
         if(result!=null){
-        	return TxJerseyTools.returnSuccess(JSONUtils.toJSONString(result));
+        	return TxJerseyTools.returnSuccess(JSON.toJSONString(result));
         }
         return TxJerseyTools.returnSuccess();
     }
@@ -247,7 +247,7 @@ public class LuckyDrawResource {
             luckyDraw.setState(state);
             luckyDraw.setIsDeleted(0);
 //          return luckyDrawBiz.queryLuckyDraw(luckyDraw, page);
-            return TxJerseyTools.returnSuccess(JSONUtils.toJSONString(luckyDraw));
+            return TxJerseyTools.returnSuccess(JSON.toJSONString(luckyDraw));
     }
 
 
@@ -269,7 +269,7 @@ public class LuckyDrawResource {
             WinningRecordDTO result = winningRecordBiz.getWinningRecord(param);
 //            return createSucssAppResult("查询成功", result);
             if(result!=null){
-            	return TxJerseyTools.returnSuccess(JSONUtils.toJSONString(result));
+            	return TxJerseyTools.returnSuccess(JSON.toJSONString(result));
             }
             return TxJerseyTools.returnSuccess();
     }
@@ -296,7 +296,7 @@ public class LuckyDrawResource {
             }
             Pagenation<WinningRecordDTO> result = winningRecordBiz.queryWinningRecord(param, page);
 //          return result;
-            return TxJerseyTools.returnSuccess(JSONUtils.toJSONString(result));
+            return TxJerseyTools.returnSuccess(JSON.toJSONString(result));
            
     }
 
@@ -385,7 +385,7 @@ public class LuckyDrawResource {
         }
 //        return winningRecordBiz.queryActivityDetail(param, page);
         Pagenation<ActivityDetailDO> pageActivityDetails = winningRecordBiz.queryActivityDetail(param, page);
-        return TxJerseyTools.returnSuccess(JSONUtils.toJSONString(pageActivityDetails));
+        return TxJerseyTools.returnSuccess(JSON.toJSONString(pageActivityDetails));
     }
 
     @GET

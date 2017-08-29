@@ -1,7 +1,5 @@
 package org.trc.resource.pagehome;
 
-import static org.trc.util.ResultUtil.createSucssAppResult;
-
 import javax.validation.constraints.NotNull;
 import javax.ws.rs.BeanParam;
 import javax.ws.rs.FormParam;
@@ -22,14 +20,13 @@ import org.springframework.stereotype.Component;
 import org.trc.biz.pagehome.IBannerBiz;
 import org.trc.constants.ScoreAdminConstants;
 import org.trc.domain.pagehome.Banner;
-import org.trc.domain.pagehome.BannerContent;
 import org.trc.form.pagehome.BannerForm;
 import org.trc.interceptor.Authority;
-import org.trc.util.AppResult;
 import org.trc.util.Pagenation;
 import org.trc.util.TxJerseyTools;
 
 import com.alibaba.druid.support.json.JSONUtils;
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 
 /**
@@ -103,7 +100,7 @@ public class BannerResource{
                                          @Context ContainerRequestContext requestContext){
 //        return bannerBiz.bannerPage(form,page);
         Pagenation<Banner> pageBanners = bannerBiz.bannerPage(form,page);
-        return TxJerseyTools.returnSuccess(JSONUtils.toJSONString(pageBanners));
+        return TxJerseyTools.returnSuccess(JSON.toJSONString(pageBanners));
     }
 
     /**
@@ -119,7 +116,7 @@ public class BannerResource{
 //        return createSucssAppResult("查询banner成功", bannerBiz.selectByIdAndShopId(form));
         Banner banner = bannerBiz.selectByIdAndShopId(form);
         if(banner!=null){
-        	return TxJerseyTools.returnSuccess(JSONUtils.toJSONString(banner));
+        	return TxJerseyTools.returnSuccess(JSON.toJSONString(banner));
         }
         return TxJerseyTools.returnSuccess();
     }

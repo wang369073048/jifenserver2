@@ -26,6 +26,7 @@ import org.trc.util.Pagenation;
 import org.trc.util.TxJerseyTools;
 
 import com.alibaba.druid.support.json.JSONUtils;
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 
 /**
@@ -142,7 +143,7 @@ public class BannerContentResource {
                                                           @Context ContainerRequestContext requestContext) {
 //        return bannerContentBiz.bannerContentPage(bannerContentForm ,page);
         Pagenation<BannerContent> pageBannerContents = bannerContentBiz.bannerContentPage(bannerContentForm ,page);
-        return TxJerseyTools.returnSuccess(JSONUtils.toJSONString(pageBannerContents));
+        return TxJerseyTools.returnSuccess(JSON.toJSONString(pageBannerContents));
     }
 
     /**
@@ -161,7 +162,7 @@ public class BannerContentResource {
         bannerContent.setId(id);
         bannerContent = bannerContentBiz.selectByIdAndShopId(bannerContent);
 //        return createSucssAppResult("查询banner成功",bannerContent);
-        return TxJerseyTools.returnSuccess(JSONUtils.toJSONString(bannerContent));
+        return TxJerseyTools.returnSuccess(JSON.toJSONString(bannerContent));
 
     }
 }

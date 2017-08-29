@@ -37,6 +37,7 @@ import org.trc.util.Pagenation;
 import org.trc.util.TxJerseyTools;
 
 import com.alibaba.druid.support.json.JSONUtils;
+import com.alibaba.fastjson.JSON;
 import com.tairanchina.md.account.user.model.UserDO;
 import com.tairanchina.md.account.user.service.UserService;
 import com.tairanchina.md.api.QueryType;
@@ -87,7 +88,7 @@ public class OrderAdminResource {
         }
         order.setOrderState(orderState);
         Pagenation<OrdersDO> pageOrders = newOrderBiz.queryOrdersDOListForPage(order, page);
-        return TxJerseyTools.returnSuccess(JSONUtils.toJSONString(pageOrders));
+        return TxJerseyTools.returnSuccess(JSON.toJSONString(pageOrders));
     }
 
 //    /**
@@ -144,7 +145,7 @@ public class OrderAdminResource {
 
         }
         if(resultAck.isSuccess() && null != resultAck.getData() && TrcExpressDto.SUCCESS_CODE.equals(resultAck.getData().getCode())){
-        	return TxJerseyTools.returnSuccess(JSONUtils.toJSONString(resultAck.getData()));
+        	return TxJerseyTools.returnSuccess(JSON.toJSONString(resultAck.getData()));
         }
         logger.error("物流查询服务不可用!");
         return CustomAck.customError("物流查询服务不可用!");

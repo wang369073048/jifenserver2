@@ -42,6 +42,7 @@ import org.trc.util.Pagenation;
 import org.trc.util.TxJerseyTools;
 
 import com.alibaba.druid.support.json.JSONUtils;
+import com.alibaba.fastjson.JSON;
 import com.tairanchina.md.account.user.model.UserDO;
 import com.tairanchina.md.account.user.service.UserService;
 import com.tairanchina.md.api.QueryType;
@@ -138,7 +139,7 @@ public class ScoreChangeDetailsResoure {
         	 scoreChangePge.setConsumptionNum(null != resultSD.getConsumptionNum() ? resultSD.getConsumptionNum() : 0);
          }
 //         return scoreChangePge;
-         return TxJerseyTools.returnSuccess(JSONUtils.toJSONString(scoreChangePge));
+         return TxJerseyTools.returnSuccess(JSON.toJSONString(scoreChangePge));
     }
 
     @GET

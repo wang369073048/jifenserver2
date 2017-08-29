@@ -41,6 +41,7 @@ import org.trc.util.JSONUtil;
 import org.trc.util.TxJerseyTools;
 
 import com.alibaba.druid.support.json.JSONUtils;
+import com.alibaba.fastjson.JSON;
 
 /**
  * Created by hzwzhen on 2017/6/14.
@@ -229,7 +230,7 @@ public class ConverterResource {
         List<ScoreConverter> list = new ArrayList<ScoreConverter>();
         list.add(scoreConverter);
 //        return createSucssAppResult("获取兑换规则成功", list);
-        return TxJerseyTools.returnSuccess(JSONUtils.toJSONString(list));
+        return TxJerseyTools.returnSuccess(JSON.toJSONString(list));
     }
 
     /**
@@ -254,7 +255,7 @@ public class ConverterResource {
         	if(!auth.getExchangeCurrency().equals(scoreConverter.getExchangeCurrency())){
                 throw new ConverterException(ExceptionEnum.ERROR_ILLEGAL_OPERATION,"操作不合法");
             }
-        	return TxJerseyTools.returnSuccess(JSONUtils.toJSONString(scoreConverter));
+        	return TxJerseyTools.returnSuccess(JSON.toJSONString(scoreConverter));
         }
         return TxJerseyTools.returnSuccess();
     }

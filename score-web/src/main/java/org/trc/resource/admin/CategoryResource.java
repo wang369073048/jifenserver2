@@ -1,10 +1,21 @@
 package org.trc.resource.admin;
 
-import com.alibaba.druid.support.json.JSONUtils;
-import com.alibaba.dubbo.common.json.JSON;
-import com.alibaba.fastjson.JSONObject;
+import javax.validation.constraints.NotNull;
+import javax.ws.rs.BeanParam;
+import javax.ws.rs.DELETE;
+import javax.ws.rs.FormParam;
+import javax.ws.rs.GET;
+import javax.ws.rs.POST;
+import javax.ws.rs.PUT;
+import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
+import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
+import javax.ws.rs.container.ContainerRequestContext;
+import javax.ws.rs.core.Context;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 
-import org.apache.xmlbeans.impl.jam.visitor.TraversingJVisitor;
 import org.hibernate.validator.constraints.NotBlank;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -16,18 +27,11 @@ import org.trc.domain.goods.CategoryDO;
 import org.trc.enums.ExceptionEnum;
 import org.trc.exception.BannerException;
 import org.trc.interceptor.Admin;
-import org.trc.util.AppResult;
 import org.trc.util.Pagenation;
 import org.trc.util.TxJerseyTools;
 
-import javax.validation.constraints.NotNull;
-import javax.ws.rs.*;
-import javax.ws.rs.container.ContainerRequestContext;
-import javax.ws.rs.core.Context;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
-
-import static org.trc.util.ResultUtil.createSucssAppResult;
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 
 /**
  * author: hzwzhen
@@ -184,7 +188,7 @@ public class CategoryResource {
         query.setCategoryName(name);
         page = categoryBiz.queryCategoryDOListForPage(query, page);
         if(page!=null){
-        	return TxJerseyTools.returnSuccess(JSONUtils.toJSONString(page));
+        	return TxJerseyTools.returnSuccess(JSON.toJSONString(page));
         }else{
         	return TxJerseyTools.returnSuccess();
         }

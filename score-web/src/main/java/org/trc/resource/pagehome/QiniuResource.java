@@ -31,6 +31,7 @@ import org.trc.util.ResultUtil;
 import org.trc.util.TxJerseyTools;
 
 import com.alibaba.druid.support.json.JSONUtils;
+import com.alibaba.fastjson.JSON;
 
 /**
  * Created by hzwdx on 2017/5/3.
@@ -83,7 +84,7 @@ public class QiniuResource {
             uploadResponse.setErrorMsg(msg);
         }
 //        return uploadResponse;
-        return TxJerseyTools.returnSuccess(JSONUtils.toJSONString(uploadResponse));
+        return TxJerseyTools.returnSuccess(JSON.toJSONString(uploadResponse));
     }
 
     @GET
@@ -94,7 +95,7 @@ public class QiniuResource {
 //       return ResultUtil.createSucssAppResult("下载成功", qinniuBiz.download(fileName));
        String result = qinniuBiz.download(fileName);
        if(result!=null){
-    	   return TxJerseyTools.returnSuccess(JSONUtils.toJSONString(result));
+    	   return TxJerseyTools.returnSuccess(JSON.toJSONString(result));
        }
        return TxJerseyTools.returnSuccess();
     }
@@ -112,7 +113,7 @@ public class QiniuResource {
 //        return ResultUtil.createSucssAppResult("获取缩略图成功", qinniuBiz.getThumbnail(fileName, width, height));
         String result = qinniuBiz.getThumbnail(fileName, width, height);
         if(result!=null){
-     	   return TxJerseyTools.returnSuccess(JSONUtils.toJSONString(result));
+     	   return TxJerseyTools.returnSuccess(JSON.toJSONString(result));
         }
         return TxJerseyTools.returnSuccess();
     }
@@ -130,7 +131,7 @@ public class QiniuResource {
 //        return ResultUtil.createSucssAppResult("批量获取url成功",qinniuBiz.batchGetFileUrl(fileNames2, thumbnail));
         List<FileUrl> fileUrls = qinniuBiz.batchGetFileUrl(fileNames2, thumbnail);
         if(fileUrls!=null){
-     	   return TxJerseyTools.returnSuccess(JSONUtils.toJSONString(fileUrls));
+     	   return TxJerseyTools.returnSuccess(JSON.toJSONString(fileUrls));
         }
         return TxJerseyTools.returnSuccess();
     }
@@ -148,7 +149,7 @@ public class QiniuResource {
 //        return ResultUtil.createSucssAppResult("删除成功",qinniuBiz.batchDelete(fileNames2, module));
         Map<String, Object> result = qinniuBiz.batchDelete(fileNames2, module);
         if(result!=null){
-     	   return TxJerseyTools.returnSuccess(JSONUtils.toJSONString(result));
+     	   return TxJerseyTools.returnSuccess(JSON.toJSONString(result));
         }
         return TxJerseyTools.returnSuccess();
         

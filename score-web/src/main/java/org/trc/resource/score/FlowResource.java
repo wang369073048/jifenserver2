@@ -1,6 +1,7 @@
 package org.trc.resource.score;
 
 import com.alibaba.druid.support.json.JSONUtils;
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.tairanchina.md.account.user.model.UserDO;
 import com.tairanchina.md.account.user.service.UserService;
@@ -106,6 +107,6 @@ public class FlowResource {
                 }
         }
 //        return scoreChangePge;
-        return TxJerseyTools.returnSuccess(JSONUtils.toJSONString(scoreChangePge));
+        return TxJerseyTools.returnSuccess(JSON.toJSONString(scoreChangePge));
     }
 }

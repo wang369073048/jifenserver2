@@ -46,6 +46,7 @@ import org.trc.util.TxJerseyTools;
 import org.trc.util.XlsProcessing;
 
 import com.alibaba.druid.support.json.JSONUtils;
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 
 /**
@@ -80,7 +81,7 @@ public class CardResource {
         Auth auth = authBiz.getAuthByUserId(userId);
         cardCouponsForm.setShopId(auth.getShopId());
         Pagenation<CardCouponsDO> pageCardCoupons = couponsBiz.queryCouponsForPage(cardCouponsForm, page);
-        return TxJerseyTools.returnSuccess(JSONUtils.toJSONString(pageCardCoupons));
+        return TxJerseyTools.returnSuccess(JSON.toJSONString(pageCardCoupons));
     }
 
     /**
@@ -167,7 +168,7 @@ public class CardResource {
         } else {
             result.put("validStartTime", cardCouponsDO.getValidStartTime());
             result.put("validEndTime", cardCouponsDO.getValidEndTime());
-            return TxJerseyTools.returnSuccess(JSONUtils.toJSONString(result));
+            return TxJerseyTools.returnSuccess(JSON.toJSONString(result));
         }
     }
 
@@ -212,7 +213,7 @@ public class CardResource {
         Auth auth = authBiz.getAuthByUserId(userId);
         CardItemDO cardItem = couponsBiz.selectItemByCode(auth.getShopId(), batchNumber, code);
         if(cardItem!=null){
-        	return TxJerseyTools.returnSuccess(JSONUtils.toJSONString(cardItem));
+        	return TxJerseyTools.returnSuccess(JSON.toJSONString(cardItem));
         }
         return TxJerseyTools.returnSuccess();
     }

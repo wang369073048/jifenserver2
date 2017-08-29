@@ -27,6 +27,7 @@ import org.trc.util.ResultUtil;
 import org.trc.util.TxJerseyTools;
 
 import com.alibaba.druid.support.json.JSONUtils;
+import com.alibaba.fastjson.JSON;
 
 /**
  * author: hzwzhen
@@ -48,7 +49,7 @@ public class AclRoleResource {
 //        return roleBiz.rolePage(form,page);
         
         Pagenation<AclRole> pageAclRole = roleBiz.rolePage(form,page);
-        return TxJerseyTools.returnSuccess(JSONUtils.toJSONString(pageAclRole));
+        return TxJerseyTools.returnSuccess(JSON.toJSONString(pageAclRole));
     }
     //修改角色信息以及与之对应的角色权限关联表信息的修改
     @PUT
@@ -83,7 +84,7 @@ public class AclRoleResource {
 //        return  ResultUtil.createSucssAppResult("查询角色成功", roleBiz.findRoleByName(name)==null ? null :"1");
         AclRole aclRole = roleBiz.findRoleByName(name);
         if(aclRole!=null){
-        	return TxJerseyTools.returnSuccess(JSONUtils.toJSONString("1"));
+        	return TxJerseyTools.returnSuccess(JSON.toJSONString("1"));
         }
     	return TxJerseyTools.returnSuccess();
     }
@@ -94,7 +95,7 @@ public class AclRoleResource {
     public Response findNumFromRoleAndAccreditInfoByRoleId(@QueryParam("roleId") Long roleId){
 //        return  ResultUtil.createSucssAppResult("查询角色数量成功",roleBiz.findNumFromRoleAndAccreditInfoByRoleId(roleId));
         Integer num = roleBiz.findNumFromRoleAndAccreditInfoByRoleId(roleId);
-        return TxJerseyTools.returnSuccess(JSONUtils.toJSONString(num));
+        return TxJerseyTools.returnSuccess(JSON.toJSONString(num));
     }
     //修改角色的状态
     @POST
@@ -113,7 +114,7 @@ public class AclRoleResource {
 //        return ResultUtil.createSucssAppResult("查询角色成功",roleBiz.findRoleById(id));
         AclRole aclRole = roleBiz.findRoleById(id);
         if(aclRole!=null){
-        	return TxJerseyTools.returnSuccess(JSONUtils.toJSONString(aclRole));
+        	return TxJerseyTools.returnSuccess(JSON.toJSONString(aclRole));
         }
         return TxJerseyTools.returnSuccess();
     }

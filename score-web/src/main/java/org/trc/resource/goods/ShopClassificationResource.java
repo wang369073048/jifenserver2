@@ -1,6 +1,7 @@
 package org.trc.resource.goods;
 
 import com.alibaba.druid.support.json.JSONUtils;
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import org.hibernate.validator.constraints.NotEmpty;
 import org.slf4j.Logger;
@@ -59,7 +60,7 @@ public class ShopClassificationResource {
         param.setShopId(auth.getShopId());
 //        return shopClassificationBiz.queryEntity(param, page);
         Pagenation<ShopClassificationDO> pageShopClassifications = shopClassificationBiz.queryEntity(param, page);
-        return TxJerseyTools.returnSuccess(JSONUtils.toJSONString(pageShopClassifications));
+        return TxJerseyTools.returnSuccess(JSON.toJSONString(pageShopClassifications));
     }
 
     @GET
@@ -73,7 +74,7 @@ public class ShopClassificationResource {
 //        return createSucssAppResult("查询列表成功", shopClassificationBiz.listEntity(param));
         List<ShopClassificationDO> shopClassifications = shopClassificationBiz.listEntity(param);
         if(shopClassifications!=null){
-        	return TxJerseyTools.returnSuccess(JSONUtils.toJSONString(shopClassifications));
+        	return TxJerseyTools.returnSuccess(JSON.toJSONString(shopClassifications));
         }
         return TxJerseyTools.returnSuccess();
     }
@@ -96,7 +97,7 @@ public class ShopClassificationResource {
         param.setUuid(UUID.randomUUID().toString().toLowerCase().replaceAll("-", ""));
 //        return createSucssAppResult("新增成功", shopClassificationBiz.insert(param));
         Integer id = shopClassificationBiz.insert(param);
-        return TxJerseyTools.returnSuccess(JSONUtils.toJSONString(id==null?0:id));
+        return TxJerseyTools.returnSuccess(JSON.toJSONString(id==null?0:id));
     }
 
     @PUT
@@ -111,7 +112,7 @@ public class ShopClassificationResource {
             param.setDescription(description);
 //            return createSucssAppResult("更新成功", shopClassificationBiz.update(param));
             Integer nid = shopClassificationBiz.update(param);
-            return TxJerseyTools.returnSuccess(JSONUtils.toJSONString(nid));
+            return TxJerseyTools.returnSuccess(JSON.toJSONString(nid));
     }
     @GET
     @Path("/{id}")
@@ -125,7 +126,7 @@ public class ShopClassificationResource {
             ShopClassificationDO result = shopClassificationBiz.getEntityByParam(param);
 //            return createSucssAppResult("查询成功", result);
             if(result!=null){
-            	return TxJerseyTools.returnSuccess(JSONUtils.toJSONString(result));
+            	return TxJerseyTools.returnSuccess(JSON.toJSONString(result));
             }
             return TxJerseyTools.returnSuccess();
     }
@@ -140,6 +141,6 @@ public class ShopClassificationResource {
             param.setId(id);
             param.setShopId(auth.getShopId());
             Integer nid = shopClassificationBiz.delete(param);
-            return TxJerseyTools.returnSuccess(JSONUtils.toJSONString(nid));
+            return TxJerseyTools.returnSuccess(JSON.toJSONString(nid));
     }
 }

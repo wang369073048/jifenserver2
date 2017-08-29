@@ -31,6 +31,7 @@ import org.trc.util.ResultUtil;
 import org.trc.util.TxJerseyTools;
 
 import com.alibaba.druid.support.json.JSONUtils;
+import com.alibaba.fastjson.JSON;
 import com.tairanchina.md.account.user.service.UserService;
 
 /**
@@ -54,7 +55,7 @@ public class AclUserAccreditInfoResource {
     public Response UserAccreditInfoPage(@BeanParam UserAccreditInfoForm form, @BeanParam Pagenation<AclUserAddPageDate> page){
 //        return userAccreditInfoBiz.userAccreditInfoPage(form, page);
         Pagenation<AclUserAddPageDate> pageAclUserAddPageDates =userAccreditInfoBiz.userAccreditInfoPage(form, page);
-        return TxJerseyTools.returnSuccess(JSONUtils.toJSONString(pageAclUserAddPageDates));
+        return TxJerseyTools.returnSuccess(JSON.toJSONString(pageAclUserAddPageDates));
     }
 
     //授权里面的采购员列表
@@ -65,7 +66,7 @@ public class AclUserAccreditInfoResource {
 //        return ResultUtil.createSucssAppResult("查询采购员成功", userAccreditInfoBiz.findPurchase());
         List<AclUserAccreditInfo> aclUserAccreditInfos = userAccreditInfoBiz.findPurchase();
         if(aclUserAccreditInfos!=null){
-        	return TxJerseyTools.returnSuccess(JSONUtils.toJSONString(aclUserAccreditInfos));
+        	return TxJerseyTools.returnSuccess(JSON.toJSONString(aclUserAccreditInfos));
         }
         return TxJerseyTools.returnSuccess();
     }
@@ -129,7 +130,7 @@ public class AclUserAccreditInfoResource {
 //        return ResultUtil.createSucssAppResult("查询对应角色成功", userAccreditInfoBiz.findChannelOrWholeJur(roleType));
         List<AclRole> aclRoles =userAccreditInfoBiz.findChannelOrWholeJur(roleType);
         if(aclRoles!=null){
-        	return TxJerseyTools.returnSuccess(JSONUtils.toJSONString(aclRoles));
+        	return TxJerseyTools.returnSuccess(JSON.toJSONString(aclRoles));
         }
         return TxJerseyTools.returnSuccess();
 
@@ -158,7 +159,7 @@ public class AclUserAccreditInfoResource {
 //        return ResultUtil.createSucssAppResult("查询用户成功", userAccreditInfoBiz.findUserAccreditInfoById(id));
         AclUserAccreditInfo aclUserAccreditInfo =userAccreditInfoBiz.findUserAccreditInfoById(id);
         if(aclUserAccreditInfo!=null){
-        	return TxJerseyTools.returnSuccess(JSONUtils.toJSONString(aclUserAccreditInfo));
+        	return TxJerseyTools.returnSuccess(JSON.toJSONString(aclUserAccreditInfo));
         }
         return TxJerseyTools.returnSuccess();
     }
@@ -187,7 +188,7 @@ public class AclUserAccreditInfoResource {
 //        return ResultUtil.createSucssAppResult("查询成功", userAccreditInfoBiz.checkPhone(phone));
         String result =userAccreditInfoBiz.checkPhone(phone);
         if(result!=null){
-        	return TxJerseyTools.returnSuccess(JSONUtils.toJSONString(result));
+        	return TxJerseyTools.returnSuccess(JSON.toJSONString(result));
         }
         return TxJerseyTools.returnSuccess();
     }
@@ -209,7 +210,7 @@ public class AclUserAccreditInfoResource {
 //        return ResultUtil.createSucssAppResult("查询成功", userAccreditInfoBiz.checkRoleValid(id));
         String[] result =userAccreditInfoBiz.checkRoleValid(id);
         if(result!=null){
-        	return TxJerseyTools.returnSuccess(JSONUtils.toJSONString(result));
+        	return TxJerseyTools.returnSuccess(JSON.toJSONString(result));
         }
         return TxJerseyTools.returnSuccess();
     }

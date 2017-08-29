@@ -62,6 +62,7 @@ import org.trc.util.Pagenation;
 import org.trc.util.TxJerseyTools;
 
 import com.alibaba.druid.support.json.JSONUtils;
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.tairanchina.md.account.user.model.UserDO;
 import com.tairanchina.md.account.user.service.UserService;
@@ -247,7 +248,7 @@ public class OrderResource {
         }
 //      return newOrderBiz.queryOrdersDOListForPage(order, page);
         Pagenation<OrdersDO> pageOrders = newOrderBiz.queryOrdersDOListForPage(order, page);
-        return TxJerseyTools.returnSuccess(JSONUtils.toJSONString(pageOrders));
+        return TxJerseyTools.returnSuccess(JSON.toJSONString(pageOrders));
     }
 
     @GET
@@ -397,7 +398,7 @@ public class OrderResource {
         settlementDO.setShopId(auth.getShopId());
 //        return settlementBiz.queryListByParams(settlementDO, page);
         Pagenation<SettlementDO> pageSettlementDOs = settlementBiz.queryListByParams(settlementDO, page);
-        return TxJerseyTools.returnSuccess(JSONUtils.toJSONString(pageSettlementDOs));
+        return TxJerseyTools.returnSuccess(JSON.toJSONString(pageSettlementDOs));
     }
 
     @GET
@@ -434,7 +435,7 @@ public class OrderResource {
             }
         }
 //        return orderPage;
-        return TxJerseyTools.returnSuccess(JSONUtils.toJSONString(orderPage));
+        return TxJerseyTools.returnSuccess(JSON.toJSONString(orderPage));
     }
 
     /**
@@ -511,7 +512,7 @@ public class OrderResource {
         HttpBaseAck<TrcExpressDto> resultAck =  newOrderBiz.pull(logisticsDO.getShipperCode(), logisticsDO.getLogisticsNum());
         if(resultAck.isSuccess() && null != resultAck.getData() && TrcExpressDto.SUCCESS_CODE.equals(resultAck.getData().getCode())){
 //          return createSucssAppResult("查询物流信息成功!", resultAck.getData());
-            return TxJerseyTools.returnSuccess(JSONUtils.toJSONString(resultAck.getData()));
+            return TxJerseyTools.returnSuccess(JSON.toJSONString(resultAck.getData()));
         }
         logger.error("物流查询服务不可用!");
 //        return createFailAppResult("物流查询服务不可用!");

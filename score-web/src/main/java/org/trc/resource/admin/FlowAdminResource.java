@@ -1,6 +1,7 @@
 package org.trc.resource.admin;
 
 import com.alibaba.druid.support.json.JSONUtils;
+import com.alibaba.fastjson.JSON;
 import com.tairanchina.md.account.user.model.UserDO;
 import com.tairanchina.md.account.user.service.UserService;
 import com.tairanchina.md.api.QueryType;
@@ -95,7 +96,7 @@ public class FlowAdminResource {
                     scoreChanges.set(i,scoreChangeDTO);
                 }
             }
-            return TxJerseyTools.returnSuccess(JSONUtils.toJSONString(scoreChangePage));
+            return TxJerseyTools.returnSuccess(JSON.toJSONString(scoreChangePage));
     }
 
     /**
