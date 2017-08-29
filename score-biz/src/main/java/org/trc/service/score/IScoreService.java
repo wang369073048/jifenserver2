@@ -21,6 +21,9 @@ public interface IScoreService extends IBaseService<Score,Long>{
 	int insertScore(Score score);
 	
 	List<Score> queryBuyerScore(Pagenation<Score> pageRequest);
+
+	List<Score> queryScore(Pagenation<Score> pageRequest);
 	
 	Integer getScoreCountByType(String userType);
+
 }

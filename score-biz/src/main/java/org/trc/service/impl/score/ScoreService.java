@@ -20,7 +20,7 @@ import org.trc.util.Pagenation;
 public class ScoreService extends BaseService<Score,Long> implements IScoreService{
 
 	@Autowired
-	IScoreMapper scoreMapper;
+	public IScoreMapper scoreMapper;
 	
 	@Override
 	public int updateScore(Score score) {
@@ -45,5 +45,10 @@ public class ScoreService extends BaseService<Score,Long> implements IScoreServi
 	@Override
 	public List<Score> queryBuyerScore(Pagenation<Score> pageRequest) {
 		return scoreMapper.queryBuyerScore(pageRequest);
+	}
+
+	@Override
+	public List<Score> queryScore(Pagenation<Score> pageRequest) {
+		return scoreMapper.queryScore(pageRequest);
 	}
 }

@@ -4,7 +4,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.trc.domain.score.ScoreChangeDetail;
 import org.trc.mapper.score.IScoreChangeDetailMapper;
-import org.trc.mapper.score.IScoreChangeMapper;
 import org.trc.service.impl.BaseService;
 import org.trc.service.score.IScoreChangeDetailService;
 

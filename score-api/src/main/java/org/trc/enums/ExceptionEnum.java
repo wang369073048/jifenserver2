@@ -15,6 +15,7 @@ public enum ExceptionEnum {
      * 数据库:3000开头
      * 系统异常:4000开头
      */
+    LACK_OF_PLATFORM_EXCHANGE_AMOUNT ("300601","平台兑换额度不足"),
 
     SYSTEM_EXCEPTION("4000100","系统异常"),
     SYSTEM_BUSY("4000101","系统繁忙"),
@@ -133,6 +134,8 @@ public enum ExceptionEnum {
     USER_BE_FORBIDDEN("900001","用户被禁用，请联系管理员"),
     USER_NOT_LOGIN("900002","用户未登录"),
     USER_NOT_HAVE_PERMISSION("900003","用户无此权限"),
+
+    EXTERNAL_SERVICE_FAILED("999991","外部服务错误"),
 
     /**start 积分退款部分异常 add by xab ****/
     BALANCE_NOT_ENOUGH("300501","积分余额不足"),

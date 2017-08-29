@@ -16,6 +16,9 @@ import org.trc.exception.ScoreChangeRecordException;
 import org.trc.service.score.IScoreChangeRecordService;
 import org.trc.util.Pagenation;
 
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -32,12 +35,43 @@ public class ScoreChangeRecordBiz implements IScoreChangeRecordBiz{
     private IScoreChangeRecordService scoreChangeRecordService;
     @Override
     public int getTotalAmountByCurrency(String exchangeCurrency, ScoreCst.BusinessCode businessCode) {
-        return 0;
+        ScoreChangeRecordQueryDTO scoreChangeRecordQueryDto = new ScoreChangeRecordQueryDTO();
+        scoreChangeRecordQueryDto.setExchangeCurrency(exchangeCurrency);
+        Calendar now = Calendar.getInstance();
+        now.set(Calendar.HOUR_OF_DAY,0);
+        now.set(Calendar.MINUTE,0);
+        now.set(Calendar.SECOND,0);
+        now.set(Calendar.MILLISECOND,0);
+        Date startTime = now.getTime();
+        now.add(Calendar.DAY_OF_YEAR,1);
+        Date endTime = now.getTime();
+        scoreChangeRecordQueryDto.setOperateTimeMin(startTime);
+        scoreChangeRecordQueryDto.setOperateTimeMax(endTime);
+        List<String> businessCodeList = new ArrayList<>();
+        businessCodeList.add(businessCode.name());
+        scoreChangeRecordQueryDto.setBusinessCodeList(businessCodeList);
+        return scoreChangeRecordService.getTotalAmount(scoreChangeRecordQueryDto);
     }
 
     @Override
     public int getTotalAmountByCurrencyAndUserId(String exchangeCurrency, String userId, ScoreCst.BusinessCode businessCode) {
-        return 0;
+        ScoreChangeRecordQueryDTO scoreChangeRecordQueryDto = new ScoreChangeRecordQueryDTO();
+        scoreChangeRecordQueryDto.setExchangeCurrency(exchangeCurrency);
+        scoreChangeRecordQueryDto.setUserId(userId);
+        Calendar now = Calendar.getInstance();
+        now.set(Calendar.HOUR_OF_DAY,0);
+        now.set(Calendar.MINUTE,0);
+        now.set(Calendar.SECOND,0);
+        now.set(Calendar.MILLISECOND,0);
+        Date startTime = now.getTime();
+        now.add(Calendar.DAY_OF_YEAR,1);
+        Date endTime = now.getTime();
+        scoreChangeRecordQueryDto.setOperateTimeMin(startTime);
+        scoreChangeRecordQueryDto.setOperateTimeMax(endTime);
+        List<String> businessCodeList = new ArrayList<>();
+        businessCodeList.add(businessCode.name());
+        scoreChangeRecordQueryDto.setBusinessCodeList(businessCodeList);
+        return scoreChangeRecordService.getTotalAmount(scoreChangeRecordQueryDto);
     }
 
     @Override

@@ -79,4 +79,10 @@
             </if>
         </where>
     </select>
+
+    <select id="queryScore"
+            resultType="org.trc.domain.score.Score">
+        select * from score
+    </select>
+
 </mapper>

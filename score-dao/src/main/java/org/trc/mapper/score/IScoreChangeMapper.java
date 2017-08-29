@@ -1,6 +1,7 @@
 package org.trc.mapper.score;
 
 import java.util.List;
+import java.util.Map;
 
 import org.trc.domain.dto.FlowDTO;
 import org.trc.domain.dto.ScoreChangeRecordQueryDTO;
@@ -36,5 +37,7 @@ public interface IScoreChangeMapper extends BaseMapper<ScoreChange>{
      */
     List<ScoreChangeRecordsDTO> queryScoreChangeRecordsForUser(ScoreChangeRecordQueryDTO queryDto);
 
+    int getTotalAmount(ScoreChangeRecordQueryDTO scoreChangeRecordQueryDto);
 
+    ScoreChange getLastScoreChange(Map<String,Object> params);
 }

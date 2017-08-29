@@ -238,4 +238,40 @@
         set state = 1
         where orderCode = #{orderCode} and businessCode = #{businessCode}
     </update>
+
+    <select id="getTotalAmount" parameterType="org.trc.domain.dto.ScoreChangeRecordQueryDTO" resultType="int">
+        select
+        CASE
+        WHEN sum(score) is not NULL THEN
+        sum(score)
+        ELSE
+        0
+        END
+        from score_change
+        <where>
+            <if test="userId!=null">
+                and userId = #{userId}
+            </if>
+            <if test="businessCodeList != null and businessCodeList.size() > 0">
+                and businessCode in
+                <foreach item="item" index="index" collection="businessCodeList" open="(" separator="," close=")">
+                    #{businessCodeList[${index}]}
+                </foreach>
+            </if>
+            <if test="exchangeCurrency!=null">
+                and exchangeCurrency = #{exchangeCurrency}
+            </if>
+            <if test="operateTimeMin!=null">
+                and operationTime <![CDATA[>=]]> #{operateTimeMin}
+            </if>
+            <if test="operateTimeMax!=null">
+                and operationTime <![CDATA[<]]> #{operateTimeMax}
+            </if>
+            and state = 0
+        </where>
+    </select>
+
+    <select id="getLastScoreChange" parameterType="java.util.Map" resultType="org.trc.domain.score.ScoreChange">
+        select * from score_change where scoreId = #{scoreId} and createTime <![CDATA[<]]> #{dailySettlementTime} and state = 0 order by createTime desc limit 1
+    </select>
 </mapper>

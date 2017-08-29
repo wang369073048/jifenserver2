@@ -22,4 +22,6 @@ public interface IScoreMapper extends BaseMapper<Score> {
 	List<Score> queryBuyerScore(Pagenation<Score> pageRequest);
 	
 	Integer getScoreCountByType(String userType);
+
+	List<Score> queryScore(Pagenation<Score> pageRequest);
 }

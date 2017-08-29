@@ -54,12 +54,12 @@ public class ScoreChildService extends BaseService<ScoreChild,Long> implements I
 
     @Override
     public List<ScoreChild> selectScoreChildOutOfDate(Date expirationTime) {
-        return null;
+        return scoreChildMapper.selectScoreChildOutOfDate(expirationTime);
     }
 
     @Override
     public int getCountOfScoreChildOutOfDate(Date expirationTime) {
-        return 0;
+        return scoreChildMapper.getCountOfScoreChildOutOfDate(expirationTime);
     }
 
     @Override

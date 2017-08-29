@@ -29,12 +29,12 @@ public class ScoreChangeRecordService extends BaseService<ScoreChange,Long> impl
     private IScoreChangeMapper scoreChangeMapper;
     @Override
     public int getTotalAmount(ScoreChangeRecordQueryDTO scoreChangeRecordQueryDto) {
-        return 0;
+        return scoreChangeMapper.getTotalAmount(scoreChangeRecordQueryDto);
     }
 
     @Override
     public ScoreChange getLastScoreChange(Map<String, Object> params) {
-        return null;
+        return scoreChangeMapper.getLastScoreChange(params);
     }
 
     @Override

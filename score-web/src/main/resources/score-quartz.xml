@@ -5,16 +5,16 @@
        http://www.springframework.org/schema/beans/spring-beans-4.1.xsd">
 
     <!-- ======================== test-start ======================== -->
-    <bean id="dealWithExpiredScoreJob" class="org.trc.aop.TestJob">
+    <bean id="testJob" class="org.trc.aop.TestJob">
     </bean>
-    <bean id="exchangeTcoinCompensateJobDetail" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
-        <property name="targetObject" ref="dealWithExpiredScoreJob"/>
+    <bean id="testJobDetail" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+        <property name="targetObject" ref="testJob"/>
         <property name="targetMethod" value="execute"/>
     </bean>
 
     <!-- == 调度触发器 == -->
-    <bean id="exchangeTcoinCompensateJobCronTrigger" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
-        <property name="jobDetail" ref="exchangeTcoinCompensateJobDetail"/>
+    <bean id="testJobCronTrigger" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
+        <property name="jobDetail" ref="testJobDetail"/>
         <!-- <property name="cronExpression" value="0 0/1 * * * ?"/> -->
         <property name="cronExpression" value="0 0/1 * * * ?"/>
         
@@ -126,11 +126,68 @@
         <property name="jobDetail" ref="gainFinancialCompensateJobDetail"/>
         <property name="cronExpression" value="0 0/5 * * * ?"/>
     </bean>
+
+    <!-- by wangzhen -->
+
+    <bean id="dealWithExpiredScoreJob" class="org.trc.job.DealWithExpiredScoreJob">
+        <property name="taskIp" value="${task.ip}"/>
+    </bean>
+    <bean id="scoreSettlementJob" class="org.trc.job.ScoreSettlementJob">
+        <property name="taskIp" value="${task.ip}"/>
+    </bean>
+
+    <bean id="exchangeTcoinCompensateJob" class="org.trc.job.ExchangeTcoinCompensateJob">
+        <property name="taskIp" value="${task.ip}"/>
+    </bean>
+
+    <bean id="dealWithExpiredScoreJobDetail" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+        <property name="targetObject" ref="dealWithExpiredScoreJob"/>
+        <property name="targetMethod" value="execute"/>
+    </bean>
+
+    <bean id="scoreSettlementJobDetail" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+        <property name="targetObject" ref="scoreSettlementJob"/>
+        <property name="targetMethod" value="execute"/>
+    </bean>
+
+    <bean id="exchangeTcoinCompensateJobDetail" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+        <property name="targetObject" ref="exchangeTcoinCompensateJob"/>
+        <property name="targetMethod" value="exchangeTcoin"/>
+    </bean>
+
+    <bean id="gainLotteryScoreCompensateJobDetail" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+        <property name="targetObject" ref="exchangeTcoinCompensateJob"/>
+        <property name="targetMethod" value="gainLotteryScore"/>
+    </bean>
+
+    <!-- ======================== 调度触发器 ======================== -->
+    <bean id="dealWithExpiredScoreCronTrigger" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
+        <property name="jobDetail" ref="dealWithExpiredScoreJobDetail"/>
+        <property name="cronExpression" value="0 0 0 1 * ?"/>
+    </bean>
+    <bean id="scoreSettlementJobCronTrigger" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
+        <property name="jobDetail" ref="scoreSettlementJobDetail"/>
+        <property name="cronExpression" value="${scoreSettlement.cronExpression}"/>
+    </bean>
+
+    <bean id="exchangeTcoinCompensateJobCronTrigger" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
+        <property name="jobDetail" ref="exchangeTcoinCompensateJobDetail"/>
+        <property name="cronExpression" value="0 0/5 * * * ?"/>
+    </bean>
+
+    <bean id="gainLotteryScoreCompensateJobCronTrigger" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
+        <property name="jobDetail" ref="gainLotteryScoreCompensateJobDetail"/>
+        <property name="cronExpression" value="0 0/5 * * * ?"/>
+    </bean>
+
+
+
     
     <!-- ======================== 调度工厂 ======================== -->
     <bean id="schedulerFactory" class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
         <property name="triggers">
             <list>
+                <ref bean="testJobCronTrigger"/>
                 <ref bean="exchangeTcoinCompensateJobCronTrigger"/>
                 <ref bean="settlementCronTrigger"/>
                 <ref bean="consumptionSummaryCronTrigger"/>
@@ -140,6 +197,12 @@
                 <ref bean="gainScoreCompensateJobCronTrigger"/>
                 <ref bean="exchangeFinancialCardCompensateJobCronTrigger"/>
                 <ref bean="gainFinancialCompensateJobCronTrigger"/>
+
+
+                <ref bean="dealWithExpiredScoreCronTrigger"/>
+                <ref bean="scoreSettlementJobCronTrigger"/>
+                <ref bean="exchangeTcoinCompensateJobCronTrigger"/>
+                <ref bean="gainLotteryScoreCompensateJobCronTrigger"/>
             </list>
         </property>
     </bean>
