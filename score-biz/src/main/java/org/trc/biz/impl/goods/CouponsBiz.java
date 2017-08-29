@@ -1,6 +1,8 @@
 package org.trc.biz.impl.goods;
 
 import com.txframework.util.Assert;
+
+import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.lang.RandomStringUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -26,6 +28,7 @@ import org.trc.util.Pagenation;
 import tk.mybatis.mapper.entity.Example;
 import tk.mybatis.mapper.util.StringUtil;
 
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
@@ -167,11 +170,13 @@ public class CouponsBiz implements ICouponsBiz{
             throw new CardCouponException(ExceptionEnum.COUPON_CODE_IMPORT_EXCEPTION, "系统一次导入量最大为10000条，请检查数据重新导入!");
         }
     	List<CardItemDO> duplicateCardItem = cardItemService.checkCardItem(cardItemList);
-        StringBuilder duplicateCode = new StringBuilder("");
-        for(CardItemDO cardItem : duplicateCardItem){
-            duplicateCode.append(cardItem.getCode()).append("       ");
-        }
-        throw new CardCouponException(ExceptionEnum.COUPON_CODE_IMPORT_EXCEPTION, "批量导入卡券失败!券码重复:"+duplicateCode.toString());
+    	if(duplicateCardItem!=null && duplicateCardItem.size()>0){
+    		StringBuilder duplicateCode = new StringBuilder("");
+            for(CardItemDO cardItem : duplicateCardItem){
+                duplicateCode.append(cardItem.getCode()).append("       ");
+            }
+            throw new CardCouponException(ExceptionEnum.COUPON_CODE_IMPORT_EXCEPTION, "批量导入卡券失败!券码重复:"+duplicateCode.toString());
+    	}
     }
 
     @Override
