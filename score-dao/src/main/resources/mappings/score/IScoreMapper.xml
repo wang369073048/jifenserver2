@@ -70,11 +70,11 @@
         select * from score where userType = 'BUYER'
     </select>
     
-     <select id="getScoreCountByType"
+     <select id="getScoreCountByType"  parameterType="java.lang.String"
             resultType="java.lang.Integer">
         select count(*) from score
         <where>
-            <if test="userType != null">
+            <if test="_parameter != null">
                 and userType = #{userType}
             </if>
         </where>
