@@ -1,5 +1,24 @@
 package org.trc.resource.score;
 
+import static org.trc.util.ResultUtil.createSucssAppResult;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.validation.constraints.NotNull;
+import javax.ws.rs.DELETE;
+import javax.ws.rs.FormParam;
+import javax.ws.rs.GET;
+import javax.ws.rs.POST;
+import javax.ws.rs.PUT;
+import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
+import javax.ws.rs.Produces;
+import javax.ws.rs.container.ContainerRequestContext;
+import javax.ws.rs.core.Context;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
+
 import org.apache.commons.lang.StringUtils;
 import org.hibernate.validator.constraints.NotEmpty;
 import org.slf4j.Logger;
@@ -18,18 +37,10 @@ import org.trc.enums.ExceptionEnum;
 import org.trc.exception.ConverterException;
 import org.trc.interceptor.Authority;
 import org.trc.util.AppResult;
+import org.trc.util.JSONUtil;
+import org.trc.util.TxJerseyTools;
 
-import javax.validation.constraints.NotNull;
-import javax.ws.rs.*;
-import javax.ws.rs.container.ContainerRequestContext;
-import javax.ws.rs.core.Context;
-import javax.ws.rs.core.MediaType;
-
-
-import java.util.ArrayList;
-import java.util.List;
-
-import static org.trc.util.ResultUtil.createSucssAppResult;
+import com.alibaba.druid.support.json.JSONUtils;
 
 /**
  * Created by hzwzhen on 2017/6/14.
@@ -55,7 +66,7 @@ public class ConverterResource {
      */
     @POST
     @Authority
-    public AppResult setExchageRule(@PathParam("shopId") Long shopId,
+    public Response setExchageRule(@PathParam("shopId") Long shopId,
                                     @NotNull @FormParam("amount") Integer amount,
                                     @NotNull @FormParam("score") Integer score,
                                     @NotEmpty @FormParam("direction") String direction,
@@ -107,7 +118,8 @@ public class ConverterResource {
         scoreConverter.setChannelEverydayOutLimit(channelEverydayOutLimit);
         scoreConverter.setCreateBy(userId);
         scoreConverterBiz.saveScoreConverter(scoreConverter);
-        return createSucssAppResult("保存兑换规则成功", "");
+//        return createSucssAppResult("保存兑换规则成功", "");
+        return TxJerseyTools.returnSuccess();
     }
 
     /**
@@ -117,7 +129,7 @@ public class ConverterResource {
      */
     @PUT
     @Authority
-    public AppResult modifyExchangeRule(@PathParam("shopId") Long shopId,
+    public Response modifyExchangeRule(@PathParam("shopId") Long shopId,
                                         @NotNull @FormParam("id") Long id,
                                        @NotNull @FormParam("amount") Integer amount,
                                        @NotNull @FormParam("score") Integer score,
@@ -169,7 +181,8 @@ public class ConverterResource {
         newConverter.setChannelEverydayOutLimit(channelEverydayOutLimit);
         newConverter.setCreateBy(userId);
         scoreConverterBiz.updateScoreConverter(newConverter);
-        return createSucssAppResult("更新兑换规则成功", "");
+//        return createSucssAppResult("更新兑换规则成功", "");
+        return TxJerseyTools.returnSuccess();
     }
 
     /**
@@ -180,7 +193,7 @@ public class ConverterResource {
     @DELETE
     @Path("/{id}")
     @Authority
-    public AppResult deleteExchangeRule(@PathParam("shopId") Long shopId,
+    public Response deleteExchangeRule(@PathParam("shopId") Long shopId,
                                         @PathParam("id") Long id,
                                         @Context ContainerRequestContext requestContext) {
 
@@ -196,7 +209,8 @@ public class ConverterResource {
         newConverter.setId(converter.getId());
         newConverter.setCreateBy(userId);
         scoreConverterBiz.deleteScoreConverter(newConverter);
-        return createSucssAppResult("删除兑换规则成功", "");
+//        return createSucssAppResult("删除兑换规则成功", "");
+        return TxJerseyTools.returnSuccess();
     }
 
 
@@ -207,14 +221,15 @@ public class ConverterResource {
      */
     @GET
     @Authority
-    public AppResult<ScoreConverter> getExchangeRuleList(@PathParam("shopId") Long shopId,@Context ContainerRequestContext requestContext) {
+    public Response getExchangeRuleList(@PathParam("shopId") Long shopId,@Context ContainerRequestContext requestContext) {
         String userId= (String) requestContext.getProperty("userId");
         //查询权限
         Auth auth = authBiz.getAuthByUserId(userId);
         ScoreConverter scoreConverter = scoreConverterBiz.getScoreConvertByCurrency(auth.getExchangeCurrency());
-        List<ScoreConverter> list = new ArrayList<>();
+        List<ScoreConverter> list = new ArrayList<ScoreConverter>();
         list.add(scoreConverter);
-        return createSucssAppResult("获取兑换规则成功", list);
+//        return createSucssAppResult("获取兑换规则成功", list);
+        return TxJerseyTools.returnSuccess(JSONUtils.toJSONString(list));
     }
 
     /**
@@ -226,7 +241,7 @@ public class ConverterResource {
     @GET
     @Path("{id}")
     @Authority
-    public AppResult<ScoreConverter> getExchageRuleById(@PathParam("shopId") Long shopId,
+    public Response getExchageRuleById(@PathParam("shopId") Long shopId,
                                                         @PathParam("id") String id,
                                                         @Context ContainerRequestContext requestContext){
         Long converterId = Long.valueOf(id);
@@ -234,10 +249,14 @@ public class ConverterResource {
         //权限判定
         String userId= (String) requestContext.getProperty("userId");
         Auth auth = authBiz.getAuthByUserId(userId);
-        if(!auth.getExchangeCurrency().equals(scoreConverter.getExchangeCurrency())){
-            throw new ConverterException(ExceptionEnum.ERROR_ILLEGAL_OPERATION,"操作不合法");
+//        return createSucssAppResult("获取兑换规则成功", scoreConverter);
+        if(scoreConverter!=null){
+        	if(!auth.getExchangeCurrency().equals(scoreConverter.getExchangeCurrency())){
+                throw new ConverterException(ExceptionEnum.ERROR_ILLEGAL_OPERATION,"操作不合法");
+            }
+        	return TxJerseyTools.returnSuccess(JSONUtils.toJSONString(scoreConverter));
         }
-        return createSucssAppResult("获取兑换规则成功", scoreConverter);
+        return TxJerseyTools.returnSuccess();
     }
 
 

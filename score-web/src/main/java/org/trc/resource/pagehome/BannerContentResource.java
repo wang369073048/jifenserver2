@@ -1,7 +1,5 @@
 package org.trc.resource.pagehome;
 
-import static org.trc.util.ResultUtil.createSucssAppResult;
-
 import javax.ws.rs.BeanParam;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.FormParam;
@@ -21,11 +19,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.trc.biz.pagehome.IBannerContentBiz;
 import org.trc.constants.ScoreAdminConstants;
-import org.trc.domain.order.OrdersDO;
 import org.trc.domain.pagehome.BannerContent;
 import org.trc.form.pagehome.BannerContentForm;
 import org.trc.interceptor.Authority;
-import org.trc.util.AppResult;
 import org.trc.util.Pagenation;
 import org.trc.util.TxJerseyTools;
 

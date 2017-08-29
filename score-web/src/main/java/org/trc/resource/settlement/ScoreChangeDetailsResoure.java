@@ -39,7 +39,9 @@ import org.trc.exception.FlowException;
 import org.trc.util.CellDefinition;
 import org.trc.util.ExportExcel;
 import org.trc.util.Pagenation;
+import org.trc.util.TxJerseyTools;
 
+import com.alibaba.druid.support.json.JSONUtils;
 import com.tairanchina.md.account.user.model.UserDO;
 import com.tairanchina.md.account.user.service.UserService;
 import com.tairanchina.md.api.QueryType;
@@ -73,7 +75,7 @@ public class ScoreChangeDetailsResoure {
     
     @GET
     @Path(ScoreAdminConstants.Route.ScoreChange.DETAILS)
-    public Pagenation queryConsumptionSummary(@QueryParam("shopId") Long shopId,
+    public Response queryConsumptionSummary(@QueryParam("shopId") Long shopId,
                                              @QueryParam("userPhone") String userPhone,
                                              @QueryParam("businessCode") String businessCode,
                                              @NotNull @QueryParam("startTime") Long startTime,
@@ -135,7 +137,8 @@ public class ScoreChangeDetailsResoure {
         	 scoreChangePge.setTotalConsumptionCount(resultSD.getTotalConsumptionCount());
         	 scoreChangePge.setConsumptionNum(null != resultSD.getConsumptionNum() ? resultSD.getConsumptionNum() : 0);
          }
-         return scoreChangePge;
+//         return scoreChangePge;
+         return TxJerseyTools.returnSuccess(JSONUtils.toJSONString(scoreChangePge));
     }
 
     @GET

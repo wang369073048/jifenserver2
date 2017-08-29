@@ -1,5 +1,6 @@
 package org.trc.resource.settlement;
 
+import com.alibaba.druid.support.json.JSONUtils;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.tairanchina.md.account.user.model.UserDO;
@@ -64,7 +65,7 @@ public class FinancialResoure {
     @GET
     @Path(ScoreAdminConstants.Route.Financial.CONSUMPTION_SUMMARY)
     @Admin
-    public Pagenation queryConsumptionSummary(@QueryParam("shopId") Long shopId,
+    public Response queryConsumptionSummary(@QueryParam("shopId") Long shopId,
                                              @QueryParam("phone") String phone,
                                              @NotNull @QueryParam("startTime") Long startTime,
                                              @NotNull @QueryParam("endTime") Long endTime,
@@ -97,7 +98,8 @@ public class FinancialResoure {
             result.setTotalConsumptionCount(resultSD.getTotalConsumptionCount());
             result.setConsumptionNum(null != resultSD.getConsumptionNum() ? resultSD.getConsumptionNum() : 0);
         }
-        return result;
+//        return result;
+        return TxJerseyTools.returnSuccess(JSONUtils.toJSONString(result));
     }
 
     @GET
@@ -142,7 +144,7 @@ public class FinancialResoure {
     @GET
     @Path(ScoreAdminConstants.Route.Financial.MONTH_CONSUMPTION_SUMMARY)
     @Admin
-    public Pagenation queryMonthlyConsumptionSummary(@QueryParam("shopId") Long shopId,
+    public Response queryMonthlyConsumptionSummary(@QueryParam("shopId") Long shopId,
                                                     @QueryParam("phone") String phone,
                                                     @NotNull @QueryParam("startTime") Long startTime,
                                                     @NotNull @QueryParam("endTime") Long endTime,
@@ -175,7 +177,8 @@ public class FinancialResoure {
             result.setTotalConsumptionCount(resultSD.getTotalConsumptionCount());
             result.setConsumptionNum(null != resultSD.getConsumptionNum() ? resultSD.getConsumptionNum() : 0);
         }
-        return result;
+//        return result;
+        return TxJerseyTools.returnSuccess(JSONUtils.toJSONString(result));
     }
 
     @GET
@@ -225,7 +228,7 @@ public class FinancialResoure {
     @GET
     @Path(ScoreAdminConstants.Route.Financial.MEMBERSHIP_SCORE_DAILY_DETAILS)
     @Admin
-    public Pagenation queryMembershipScoreDailyDetail(@QueryParam("userId") String userId,
+    public Response queryMembershipScoreDailyDetail(@QueryParam("userId") String userId,
                                                     @VerifyDate @QueryParam("startTime") Long startTime,
                                                     @VerifyDate @QueryParam("endTime") Long endTime,
                                                     @BeanParam Pagenation<MembershipScoreDailyDetailsDO> page,
@@ -269,7 +272,8 @@ public class FinancialResoure {
             result.setTotalConsumptionCount(resultSD.getTotalConsumptionCount());
             result.setConsumptionNum(null != resultSD.getConsumptionNum() ? resultSD.getConsumptionNum() : 0);
         }
-        return result;
+//        return result;
+        return TxJerseyTools.returnSuccess(JSONUtils.toJSONString(result));
     }
 
     @GET

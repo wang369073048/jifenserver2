@@ -41,7 +41,9 @@ import org.trc.util.CellDefinition;
 import org.trc.util.ExportExcel;
 import org.trc.util.FatherToChildUtils;
 import org.trc.util.Pagenation;
+import org.trc.util.TxJerseyTools;
 
+import com.alibaba.druid.support.json.JSONUtils;
 import com.tairanchina.md.account.user.model.UserDO;
 import com.tairanchina.md.account.user.service.UserService;
 import com.tairanchina.md.api.QueryType;
@@ -71,18 +73,20 @@ public class SettlementResource {
 
     @GET
     @Admin
-    public Pagenation<SettlementDO> querySettlementList(@NotNull @QueryParam("shopId") Long shopId, @QueryParam("billNum") String billNum,
+    public Response querySettlementList(@NotNull @QueryParam("shopId") Long shopId, @QueryParam("billNum") String billNum,
                                                         @Context ContainerRequestContext requestContext,
                                                         @BeanParam Pagenation<SettlementDO> page) {
         SettlementDO settlementDO = new SettlementDO();
         settlementDO.setShopId(shopId);
-        return settlementBiz.queryListByParams(settlementDO, page);
+//        return settlementBiz.queryListByParams(settlementDO, page);
+        Pagenation<SettlementDO> pageSettlementDOs = settlementBiz.queryListByParams(settlementDO, page);
+        return TxJerseyTools.returnSuccess(JSONUtils.toJSONString(pageSettlementDOs));
     }
 
     @GET
     @Admin
     @Path(ScoreAdminConstants.Route.Settlement.ORDER)
-    public Pagenation querySettlementOrderList(@QueryParam("shopId") Long shopId,
+    public Response querySettlementOrderList(@QueryParam("shopId") Long shopId,
                                               @QueryParam("phone") String phone,
                                               @QueryParam("orderNum") String orderNum,
                                               @QueryParam("goodsName") String goodsName,
@@ -126,7 +130,8 @@ public class SettlementResource {
 
                 }
             }
-            return orderPage;
+//            return orderPage;
+            return TxJerseyTools.returnSuccess(JSONUtils.toJSONString(orderPage));
     }
 
     @GET

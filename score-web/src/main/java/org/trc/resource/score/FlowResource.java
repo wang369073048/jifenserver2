@@ -1,5 +1,6 @@
 package org.trc.resource.score;
 
+import com.alibaba.druid.support.json.JSONUtils;
 import com.alibaba.fastjson.JSONObject;
 import com.tairanchina.md.account.user.model.UserDO;
 import com.tairanchina.md.account.user.service.UserService;
@@ -16,6 +17,7 @@ import org.trc.constants.ScoreCst;
 import org.trc.domain.auth.Auth;
 import org.trc.domain.dto.ScoreChangeDTO;
 import org.trc.domain.dto.ScoreChangeRecordQueryDTO;
+import org.trc.domain.luckydraw.ActivityPrizesDO;
 import org.trc.domain.score.ScoreChange;
 import org.trc.domain.shop.ManagerDO;
 import org.trc.enums.ExceptionEnum;
@@ -23,6 +25,7 @@ import org.trc.exception.FlowException;
 import org.trc.interceptor.CustomerService;
 import org.trc.util.FatherToChildUtils;
 import org.trc.util.Pagenation;
+import org.trc.util.TxJerseyTools;
 
 import javax.ws.rs.*;
 import javax.ws.rs.container.ContainerRequestContext;
@@ -50,7 +53,7 @@ public class FlowResource {
     private IScoreChangeRecordBiz scoreChangeRecordBiz;
     @GET
     @CustomerService
-    public Pagenation<ScoreChange> queryChangeRecord(@PathParam("shopId") Long shopId,
+    public Response queryChangeRecord(@PathParam("shopId") Long shopId,
                                       @QueryParam("flowType") String flowType,
                                       @QueryParam("businessCode") String businessCodes,
                                       @QueryParam("userPhone") String userPhone,
@@ -102,6 +105,7 @@ public class FlowResource {
                     scoreChanges.set(i,scoreChangeDTO);
                 }
         }
-        return scoreChangePge;
+//        return scoreChangePge;
+        return TxJerseyTools.returnSuccess(JSONUtils.toJSONString(scoreChangePge));
     }
 }
