@@ -246,8 +246,8 @@ public class LuckyDrawResource {
             }
             luckyDraw.setState(state);
             luckyDraw.setIsDeleted(0);
-//          return luckyDrawBiz.queryLuckyDraw(luckyDraw, page);
-            return TxJerseyTools.returnSuccess(JSON.toJSONString(luckyDraw));
+            page = luckyDrawBiz.queryLuckyDraw(luckyDraw, page);
+            return TxJerseyTools.returnSuccess(JSON.toJSONString(page));
     }
 
 
