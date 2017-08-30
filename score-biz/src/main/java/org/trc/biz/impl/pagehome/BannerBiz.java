@@ -86,7 +86,7 @@ public class BannerBiz implements IBannerBiz {
 
 
     @Override
-    @Cacheable(isList = true,key = "#queryModel.shopId+#page.pageIndex+#page.pageSize")
+    //@Cacheable(isList = true,key = "#queryModel.shopId+#page.pageIndex+#page.pageSize")
     public Pagenation<Banner> bannerPage(BannerForm queryModel, Pagenation<Banner> page) {
         Example example = new Example(Banner.class);
         Example.Criteria criteria = example.createCriteria();
