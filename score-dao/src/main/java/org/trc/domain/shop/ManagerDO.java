@@ -42,6 +42,9 @@ public class ManagerDO implements Serializable{
     @Column(name = "roleType")
     private String roleType;
 
+    @Column(name = "isDeleted")
+    private Integer isDeleted;
+
     /**
      * 创建时间
      */
@@ -108,6 +111,14 @@ public class ManagerDO implements Serializable{
 
     public void setUpdateTime(Date updateTime) {
         this.updateTime = updateTime;
+    }
+
+    public Integer getIsDeleted() {
+        return isDeleted;
+    }
+
+    public void setIsDeleted(Integer isDeleted) {
+        this.isDeleted = isDeleted;
     }
 
     @Override
