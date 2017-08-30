@@ -54,10 +54,6 @@ public class ScoreAdminConstants {
                 public static final String ROOT = "auth";
                 public static final String BLANKLIST = "blanklist";
             }
-
-            public static final class Flow {
-                public static final String ROOT = "flow";
-            }
         }
 
         public static final class Sys {

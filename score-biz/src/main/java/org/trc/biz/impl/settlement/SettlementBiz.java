@@ -1,5 +1,6 @@
 package org.trc.biz.impl.settlement;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.trc.biz.settlement.ISettlementBiz;
 import org.trc.domain.settlement.SettlementDO;
@@ -14,7 +15,7 @@ import org.trc.util.Pagenation;
  */
 @Service("settlementBiz")
 public class SettlementBiz implements ISettlementBiz{
-
+    @Autowired
     private ISettlementService settlementService;
 
     @Override

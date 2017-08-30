@@ -26,7 +26,9 @@
     <!-- 本地提供服务 -->
     <import resource="classpath:resource-tx.xml"/>
     <import resource="classpath:redis-config.xml"/>
+    <!--
     <import resource="classpath:resource-interceptor.xml"/>
+     -->
     <import resource="classpath:zookeeper.xml"/>
     <import resource="classpath:consumer-beans.xml"/>
     <import resource="classpath:score-beans.xml"/>
