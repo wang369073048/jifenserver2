@@ -29,7 +29,7 @@
             exchangeInNum,
             consumeNum,
             lotteryConsumeNum,
-        	consumeCorrectNum
+        	consumeCorrectNum,
             createTime
         )VALUES(
             #{userId},
@@ -262,7 +262,7 @@
         theOtherUserId as userId,
         shopId,
         theOtherUserName as phone,
-        sum(score) as lotteryConsumeNum
+        sum(score) as consumeCorrectNum
         FROM
         score_change
         WHERE
