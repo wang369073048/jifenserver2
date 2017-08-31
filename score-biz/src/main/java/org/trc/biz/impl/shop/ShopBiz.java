@@ -55,7 +55,7 @@ public class ShopBiz implements IShopBiz{
     }
 
     @Override
-    @Cacheable(key="#id", expireTime= CacheExpire.MEDIUM)
+    //@Cacheable(key="#id", expireTime= CacheExpire.MEDIUM)
     public ShopDO getShopDOById(Long id) {
         try {
             Assert.isTrue(id != null, "查询Id不能为空!");

@@ -78,7 +78,7 @@ public class GoodsBiz implements IGoodsBiz{
     private IShopBiz shopBiz;
 
     @Override
-    @CacheEvit(key="#goodsDO.id")
+    //@CacheEvit(key="#goodsDO.id")
     public int saveGoodsDO(GoodsDO goodsDO) {
         try {
             goodsDO.setGoodsSn(GuidUtil.getNextUid("pro"));
@@ -365,7 +365,7 @@ public class GoodsBiz implements IGoodsBiz{
     }
 
     @Override
-    @Cacheable(isList=true,key="#queryModel.toString()+#page.pageIndex+#page.pageSize")
+    //@Cacheable(isList=true,key="#queryModel.toString()+#page.pageIndex+#page.pageSize")
     public Pagenation<GoodsDO> queryGoodsDOListExceptRecommendForPage(GoodsDO queryModel, Pagenation<GoodsDO> page) {
         try {
             Assert.notNull(page, "分页参数不能为空");

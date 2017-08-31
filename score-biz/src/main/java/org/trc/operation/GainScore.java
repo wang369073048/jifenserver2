@@ -30,7 +30,7 @@ import java.io.IOException;
 import java.net.SocketTimeoutException;
 
 /**
- * Created by george on 2017/7/14.
+ * Created by wangzhen
  */
 public class GainScore implements Runnable{
 

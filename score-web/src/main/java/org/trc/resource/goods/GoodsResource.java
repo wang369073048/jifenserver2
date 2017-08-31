@@ -343,8 +343,8 @@ public class GoodsResource {
     @POST
     @Path(ScoreAdminConstants.Route.Goods.SET_CLASSIFICATION)
     @Authority
-    public Response setClassification(@PathParam("shopId") Long shopId, @NotEmpty @FormParam("goodsIds") String goodsIds,
-                                      @NotEmpty @FormParam("classificationIds") String classificationIds,@Context ContainerRequestContext requestContext) {
+    public Response setClassification(@PathParam("shopId") Long shopId, @NotEmpty(message = "goodsIds不能为空") @FormParam("goodsIds") String goodsIds,
+                                      @NotEmpty(message = "classificationIds不能为空") @FormParam("classificationIds") String classificationIds,@Context ContainerRequestContext requestContext) {
         _checkString(goodsIds);
         _checkString(classificationIds);
         String[] goodsIdStrs = goodsIds.split(",");
