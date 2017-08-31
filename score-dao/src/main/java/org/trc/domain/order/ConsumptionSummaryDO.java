@@ -25,9 +25,9 @@ public class ConsumptionSummaryDO implements Serializable {
     /**
      * 非持久化字段
      */
-    @Transient
+    @Column(name = "shopId")
     private Long shopId;
-    
+    @Column(name = "phone")
     private String phone;
     @Column(name = "exchangeInNum")
     private Long exchangeInNum;

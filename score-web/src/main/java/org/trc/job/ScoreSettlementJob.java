@@ -67,8 +67,9 @@ public class ScoreSettlementJob extends BaseJob{
         now.set(Calendar.SECOND,0);
         now.set(Calendar.MILLISECOND,0);
         Date dailySettlementTime = now.getTime();
-        int totalPage = count/1000 + 2;
-        for(int i = 1 ; i < totalPage ; i++){
+        int totalPage = count/1000 + 1;
+        int end = totalPage+1;
+        for(int i = 1 ; i < end ; i++){
             Pagenation<Score> pageRequest = new Pagenation<Score>();
             pageRequest.setPageSize(1000);
             pageRequest.setPageIndex(i);

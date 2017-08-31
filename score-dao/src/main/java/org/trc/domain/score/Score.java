@@ -1,5 +1,9 @@
 package org.trc.domain.score;
 
+import javax.persistence.Column;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
 import javax.persistence.Table;
 import java.io.Serializable;
 import java.util.Date;
@@ -14,29 +18,30 @@ import java.util.Date;
 public class Score implements Serializable {
 
     private static final long serialVersionUID = -4534921822828807204L;
-
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;                    //主键id;
-
+    @Column(name = "userType")
     private String userType;               //用户类型
-
+    @Column(name = "userId")
     private String userId;              //用户id;
-
+    @Column(name = "source")
     private String source;              //来源渠道
-
+    @Column(name = "previousScore")
     private Long previousScore;         //前一日积分余额
-
+    @Column(name = "score")
     private Long score;                 //积分
-
+    @Column(name = "previousFreezingScore")
     private Long previousFreezingScore; //前一日积分冻结余额
-
+    @Column(name = "freezingScore")
     private Long freezingScore;        //冻结积分
-
+    @Column(name = "accumulativeScore")
     private Long accumulativeScore;    //累计获得积分
-
+    @Column(name = "version")
     private Long version;               //版本号，并发乐观锁，初始版本1，更新+1
-
+    @Column(name = "createTime")
     private Date createTime;             //创建时间
-
+    @Column(name = "updateTime")
     private Date updateTime;            //修改时间
 
     public Score() {

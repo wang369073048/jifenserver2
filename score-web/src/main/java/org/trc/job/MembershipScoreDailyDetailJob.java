@@ -65,7 +65,8 @@ public class MembershipScoreDailyDetailJob extends BaseJob {
         now.set(Calendar.MILLISECOND,0);
         Date dailySettlementTime = now.getTime();
         int totalPage = count/1000 + 1;
-        for(int i = 0 ; i < totalPage ; i++){
+        int end = totalPage+1;
+        for(int i = 1 ; i < end ; i++){
             Pagenation<Score> pageRequest = new Pagenation<Score>();
             pageRequest.setPageSize(1000);
             pageRequest.setPageIndex(i);
