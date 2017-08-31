@@ -48,29 +48,34 @@ public class SysResource {
     public Response getRole(@Context ContainerRequestContext requestContext) {
         try {
             String userId= (String) requestContext.getProperty("userId");
-            Auth auth = authBiz.getAuthByUserId(userId);
-            if(null != auth) {
-                JSONObject jsonObject = new JSONObject();
-                jsonObject.put("shopId", auth.getShopId());
-                jsonObject.put("roleType","OWNER");
-                jsonObject.put("exchangeCurrency", auth.getExchangeCurrency());
-                jsonObject.put("channelCode", auth.getChannelCode());
-                return TxJerseyTools.returnSuccess(jsonObject.toJSONString());
-            }else{
-                ManagerDO manager = shopBiz.getManagerByUserId(userId);
-                JSONObject jsonObject = new JSONObject();
+//            Auth auth = authBiz.getAuthByUserId(userId);
+//            if(null != auth) {
+//                JSONObject jsonObject = new JSONObject();
+//                jsonObject.put("shopId", auth.getShopId());
+//                jsonObject.put("roleType","OWNER");
+//                jsonObject.put("exchangeCurrency", auth.getExchangeCurrency());
+//                jsonObject.put("channelCode", auth.getChannelCode());
+//                return TxJerseyTools.returnSuccess(jsonObject.toJSONString());
+//            }else{
+//                ManagerDO manager = shopBiz.getManagerByUserId(userId);
+//                JSONObject jsonObject = new JSONObject();
+//                jsonObject.put("shopId", manager.getShopId());
+//                jsonObject.put("roleType",manager.getRoleType());
+//                return TxJerseyTools.returnSuccess(jsonObject.toJSONString());
+//            }
+
+            ManagerDO manager = shopBiz.getManagerByParam(userId);
+            JSONObject jsonObject = new JSONObject();
+            if(manager != null){
                 jsonObject.put("shopId", manager.getShopId());
                 jsonObject.put("roleType",manager.getRoleType());
-                return TxJerseyTools.returnSuccess(jsonObject.toJSONString());
             }
-        } catch(AuthException e){
-            logger.error("====>getRole exception", e);
-            return CustomAck.customError(e.getMessage());
+            return TxJerseyTools.returnSuccess(jsonObject.toJSONString());
         } catch(ShopException e){
-            logger.error("====>getRole exception", e);
+            logger.error("====>getManager exception", e);
             return CustomAck.customError(e.getMessage());
         } catch (Exception e) {
-            logger.error("====>getRole exception", e);
+            logger.error("====>getManager exception", e);
             return TxJerseyTools.returnAbort(CommonConstants.ErrorCode.ERROR_SERVICE_IN_REST);
         }
     }

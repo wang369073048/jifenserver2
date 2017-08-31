@@ -43,4 +43,6 @@ public interface IShopBiz {
     int modifyShopDO(ShopDO shopDO);
 
     ManagerDO getManagerByUserId(String userId);
+
+    ManagerDO getManagerByParam(String userId);
 }

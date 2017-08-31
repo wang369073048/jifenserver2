@@ -49,7 +49,6 @@ public class ScoreConverterBiz implements IScoreConverterBiz{
             }
             //插入配置规则
             int result = scoreConverterService.insertSelective(scoreConverter);
-            //TODO 插入流水
             insertScoreConverterFlow(scoreConverter);
             return result;
         }catch (IllegalArgumentException e) {
@@ -91,7 +90,6 @@ public class ScoreConverterBiz implements IScoreConverterBiz{
             if(result != 1){
                 throw new ConverterException(ExceptionEnum.CONVERTER_UPDATE_EXCEPTION, "根据ID=>[" + scoreConverter.getId() + "]修改兑换规则失败!");
             }
-            // TODO 插入流水
             insertScoreConverterFlow(scoreConverter);
             return result;
         } catch (IllegalArgumentException e) {
@@ -139,7 +137,6 @@ public class ScoreConverterBiz implements IScoreConverterBiz{
             if (result != 1) {
                 throw new ConverterException(ExceptionEnum.CONVERTER_UPDATE_EXCEPTION, "根据ID=>[" + scoreConverter.getId() + "]删除兑换规则失败!");
             }
-            //TODO 插入流水
             insertScoreConverterFlow(scoreConverter);
             return result;
         } catch (IllegalArgumentException e) {

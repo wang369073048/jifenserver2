@@ -37,13 +37,13 @@ public class Banner extends CommonDO {
     /**
      * 排序
      */
-    private int sort;
+    private Integer sort;
 
     /**
      * 0 正常 ;1 已删除
      */
     @Column(name = "isDeleted")
-    private boolean isDeleted;
+    private Boolean isDeleted;
 
     private String description;
 
@@ -95,11 +95,11 @@ public class Banner extends CommonDO {
         this.sort = sort;
     }
 
-    public boolean getIsDeleted() {
+    public Boolean getIsDeleted() {
         return isDeleted;
     }
 
-    public void setIsDeleted(boolean isDeleted) {
+    public void setIsDeleted(Boolean isDeleted) {
         this.isDeleted = isDeleted;
     }
 

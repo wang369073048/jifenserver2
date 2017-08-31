@@ -462,7 +462,7 @@ public class NewOrderBiz implements INewOrderBiz {
     }
 
     @Override
-    @Transactional(rollbackFor=Exception.class)//TODO
+    @Transactional(rollbackFor=Exception.class)
     public void returnGoods(String orderNum, String userId, String remark) {
         //查找对应的订单
         OrdersDO orders = new OrdersDO();

@@ -156,4 +156,21 @@ public class ShopBiz implements IShopBiz{
             throw new ShopException(ExceptionEnum.MANAGER_QUERY_EXCEPTION, "查询ManagerDO记录失败");
         }
     }
+
+    @Override
+    public ManagerDO getManagerByParam(String userId) {
+        try {
+            Assert.isTrue(StringUtils.isNotEmpty(userId), "查询用户id不能为空");
+            ManagerDO managerDO = new ManagerDO();
+            managerDO.setUserId(userId);
+            managerDO.setIsDeleted(0);
+            return managerService.selectOne(managerDO);
+        }catch (IllegalArgumentException e) {
+            logger.error("查询ManagerDO校验参数异常!", e);
+            throw new ShopException(ExceptionEnum.PARAM_CHECK_EXCEPTION, "查询ManagerDO校验参数异常!");
+        }catch (Exception e) {
+            logger.error("查询ManagerDO记录失败", e);
+            throw new ShopException(ExceptionEnum.MANAGER_QUERY_EXCEPTION, "查询ManagerDO记录失败");
+        }
+    }
 }

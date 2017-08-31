@@ -4,24 +4,8 @@
        xsi:schemaLocation="http://www.springframework.org/schema/beans
        http://www.springframework.org/schema/beans/spring-beans-4.1.xsd">
 
-    <!-- ======================== test-start ======================== -->
-    <bean id="testJob" class="org.trc.aop.TestJob">
-    </bean>
-    <bean id="testJobDetail" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
-        <property name="targetObject" ref="testJob"/>
-        <property name="targetMethod" value="execute"/>
-    </bean>
 
-    <!-- == 调度触发器 == -->
-    <bean id="testJobCronTrigger" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
-        <property name="jobDetail" ref="testJobDetail"/>
-        <!-- <property name="cronExpression" value="0 0/1 * * * ?"/> -->
-        <property name="cronExpression" value="0 0/1 * * * ?"/>
-        
-    </bean>
-    <!-- ======================== test-end ======================== -->
-    
-    
+
     <bean id="settlementJob" class="org.trc.job.SettlementJob">
         <property name="taskIp" value="${task.ip}"/>
     </bean>
@@ -187,7 +171,6 @@
     <bean id="schedulerFactory" class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
         <property name="triggers">
             <list>
-                <ref bean="testJobCronTrigger"/>
                 <ref bean="exchangeTcoinCompensateJobCronTrigger"/>
                 <ref bean="settlementCronTrigger"/>
                 <ref bean="consumptionSummaryCronTrigger"/>

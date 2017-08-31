@@ -40,13 +40,7 @@ public class AuthorityInterceptor extends BaseInterceptor implements MethodInter
                 throw new AuthenticationException("未登录或者令牌已失效");
             }
             Object[] params = methodInvocation.getArguments();
-            for(int i = 0; i < params.length ; i++){
-                if(params[i] instanceof ContainerRequestContext){
-                    ContainerRequestContext request = (ContainerRequestContext)params[i];
-                    String method = request.getMethod();
-                    logger.info(method);
-                }
-            }
+
             //取该用户的权限
             Auth auth = authBiz.getAuthByUserId(userId);
             if (auth.getShopId() != (long)params[0] || 0 == auth.getShopId().intValue()) {

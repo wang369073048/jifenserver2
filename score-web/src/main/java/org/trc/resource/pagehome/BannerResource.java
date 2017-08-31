@@ -48,12 +48,13 @@ public class BannerResource{
     @POST
     @Authority
     public Response createBanner(@PathParam("shopId") Long shopId,@BeanParam BannerForm form,
+                                 @NotBlank @FormParam("name") String name,@FormParam("type") String type,
                                   @Context ContainerRequestContext requestContext){
 
         Banner banner = new Banner();
         banner.setShopId(form.getShopId());
-        banner.setName(form.getName());
-        banner.setType(form.getType());
+        banner.setName(name);
+        banner.setType(type);
         String userId= (String) requestContext.getProperty("userId");
         banner.setOperatorUserId(userId);
         bannerBiz.saveBanner(banner);
