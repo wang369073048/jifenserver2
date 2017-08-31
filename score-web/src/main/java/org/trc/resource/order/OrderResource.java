@@ -604,7 +604,6 @@ public class OrderResource {
             if (null == userDO) {
                 throw new OrderException(ExceptionEnum.ORDER_UPDATE_EXCEPTION,String.format("手机号[%s]未注册",phone));
             }
-            //TODO 退款
             newOrderBiz.returnGoods(orderNum, userDO.getUserId(), remark);
     	}catch(OrderException e){
     		logger.error(e.getMessage(), e);
