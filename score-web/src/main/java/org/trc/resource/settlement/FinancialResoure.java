@@ -65,7 +65,7 @@ public class FinancialResoure {
 
     @GET
     @Path(ScoreAdminConstants.Route.Financial.CONSUMPTION_SUMMARY)
-    @Admin
+    //@Admin
     public Response queryConsumptionSummary(@QueryParam("shopId") Long shopId,
                                              @QueryParam("phone") String phone,
                                              @NotNull @QueryParam("startTime") Long startTime,
@@ -105,7 +105,7 @@ public class FinancialResoure {
 
     @GET
     @Path(ScoreAdminConstants.Route.Financial.CONSUMPTION_SUMMARY_EXPORT)
-    @Admin
+    //@Admin
     public Response exportConsumptionSummary(@QueryParam("shopId") Long shopId,
                                              @QueryParam("phone") String phone,
                                              @NotNull @QueryParam("startTime") Long startTime,
@@ -144,7 +144,7 @@ public class FinancialResoure {
 
     @GET
     @Path(ScoreAdminConstants.Route.Financial.MONTH_CONSUMPTION_SUMMARY)
-    @Admin
+    //@Admin
     public Response queryMonthlyConsumptionSummary(@QueryParam("shopId") Long shopId,
                                                     @QueryParam("phone") String phone,
                                                     @NotNull @QueryParam("startTime") Long startTime,
@@ -184,7 +184,7 @@ public class FinancialResoure {
 
     @GET
     @Path(ScoreAdminConstants.Route.Financial.MONTH_CONSUMPTION_SUMMARY_EXPORT)
-    @Admin
+    //@Admin
     public Response exportMonthConsumptionSummary(@QueryParam("shopId") Long shopId,
                                                   @QueryParam("phone") String phone,
                                                   @NotNull @QueryParam("startTime") Long startTime,
@@ -228,7 +228,7 @@ public class FinancialResoure {
 
     @GET
     @Path(ScoreAdminConstants.Route.Financial.MEMBERSHIP_SCORE_DAILY_DETAILS)
-    @Admin
+    //@Admin
     public Response queryMembershipScoreDailyDetail(@QueryParam("userId") String userId,
                                                     @VerifyDate @QueryParam("startTime") Long startTime,
                                                     @VerifyDate @QueryParam("endTime") Long endTime,
@@ -279,7 +279,7 @@ public class FinancialResoure {
 
     @GET
     @Path(ScoreAdminConstants.Route.Financial.MEMBERSHIP_SCORE_DAILY_DETAILS_EXPORT)
-    @Admin
+    //@Admin
     public Response exportMembershipScoreDailyDetail(@QueryParam("userId") String userId,
                                                      @NotNull @QueryParam("startTime") Long startTime,
                                                      @NotNull @QueryParam("endTime") Long endTime,
