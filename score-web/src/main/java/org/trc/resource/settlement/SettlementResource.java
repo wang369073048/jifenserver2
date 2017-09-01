@@ -73,7 +73,7 @@ public class SettlementResource {
 
 
     @GET
-    @Admin
+    //@Admin
     public Response querySettlementList(@NotNull @QueryParam("shopId") Long shopId, @QueryParam("billNum") String billNum,
                                                         @Context ContainerRequestContext requestContext,
                                                         @BeanParam Pagenation<SettlementDO> page) {
@@ -85,7 +85,7 @@ public class SettlementResource {
     }
 
     @GET
-    @Admin
+    //@Admin
     @Path(ScoreAdminConstants.Route.Settlement.ORDER)
     public Response querySettlementOrderList(@QueryParam("shopId") Long shopId,
                                               @QueryParam("phone") String phone,
@@ -136,7 +136,7 @@ public class SettlementResource {
     }
 
     @GET
-    @Admin
+    //@Admin
     @Path(ScoreAdminConstants.Route.Settlement.EXPORT)
     public Response exportSettlementOrderList(@QueryParam("shopId") Long shopId,
                                               @QueryParam("phone") String phone,

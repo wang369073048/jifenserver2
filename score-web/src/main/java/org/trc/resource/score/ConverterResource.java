@@ -66,7 +66,6 @@ public class ConverterResource {
      * @return
      */
     @POST
-    @Authority
     public Response setExchageRule(@PathParam("shopId") Long shopId,
                                     @NotNull @FormParam("amount") Integer amount,
                                     @NotNull @FormParam("score") Integer score,
@@ -129,7 +128,6 @@ public class ConverterResource {
      * @return
      */
     @PUT
-    @Authority
     public Response modifyExchangeRule(@PathParam("shopId") Long shopId,
                                         @NotNull @FormParam("id") Long id,
                                        @NotNull @FormParam("amount") Integer amount,
@@ -193,7 +191,6 @@ public class ConverterResource {
      */
     @DELETE
     @Path("/{id}")
-    @Authority
     public Response deleteExchangeRule(@PathParam("shopId") Long shopId,
                                         @PathParam("id") Long id,
                                         @Context ContainerRequestContext requestContext) {
@@ -221,7 +218,6 @@ public class ConverterResource {
      * @return
      */
     @GET
-    @Authority
     public Response getExchangeRuleList(@PathParam("shopId") Long shopId,@Context ContainerRequestContext requestContext) {
         String userId= (String) requestContext.getProperty("userId");
         //查询权限
@@ -241,7 +237,6 @@ public class ConverterResource {
      */
     @GET
     @Path("{id}")
-    @Authority
     public Response getExchageRuleById(@PathParam("shopId") Long shopId,
                                                         @PathParam("id") String id,
                                                         @Context ContainerRequestContext requestContext){

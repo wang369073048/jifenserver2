@@ -38,7 +38,7 @@ public class ActivityPrizesBiz implements IActivityPrizesBiz{
 
     @Override
     public Pagenation<ActivityPrizesDO> queryActivityPrizes(ActivityPrizesDO param, Pagenation<ActivityPrizesDO> pageRequest) {
-        if(pageRequest.getPageSize() == 1){
+        if(pageRequest.getPageIndex() == 1){
             List<ActivityPrizesDO> activityPrizes = ActivityPrizesDO.getDefaultActivityPrizes();
             pageRequest = goodsService.queryActivityPrizes(param, pageRequest);
             List<ActivityPrizesDO> dataList = pageRequest.getInfos();
