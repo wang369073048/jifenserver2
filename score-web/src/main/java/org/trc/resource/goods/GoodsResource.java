@@ -77,7 +77,7 @@ public class GoodsResource {
                              @FormParam("autoUpTime") Long autoUpTime, @FormParam("autoDownTime") Long autoDownTime, @NotEmpty(message = "content不能为空") @FormParam("content") String content,
                              @FormParam("virtualExchangeQuantity") Integer virtualExchangeQuantity, @FormParam("whetherPrizes") Integer whetherPrizes,
                              @FormParam("sort") Integer sort, @FormParam("shopClassificationIds") String shopClassificationIds,
-                             @NotNull(message = "limitQuantity不能为空") @FormParam("limitQuantity") Integer limitQuantity) {
+                             @NotNull(message = "limitQuantity不能为空") @FormParam("limitQuantity") Integer limitQuantity,@Context ContainerRequestContext requestContext) {
         Date time = Calendar.getInstance().getTime();
         GoodsDO goodsDO = new GoodsDO();
         goodsDO.setShopId(shopId);
