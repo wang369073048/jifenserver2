@@ -106,6 +106,8 @@
     <update id="deleteByParam" parameterType="org.trc.domain.goods.GoodsDO">
         UPDATE goods SET
         versionLock = versionLock+1,
+        barcode = CONCAT(barcode, CAST(id AS CHAR)),
+        goodsNo = CONCAT(goodsNo, CAST(id AS CHAR)),
         isDeleted = 1,
         updateTime = NOW()
         WHERE
