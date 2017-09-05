@@ -297,9 +297,9 @@
         </profile>
         <profile>
             <!-- 线上环境 -->
-            <id>online</id>
+            <id>prd</id>
             <properties>
-                <package.environment>online</package.environment>
+                <package.environment>prd</package.environment>
                 <jvm.opt.args>-server -Xms2048m -Xmx3072m -Xmn1152m -XX:MetaspaceSize=256m</jvm.opt.args>
             </properties>
         </profile>
