@@ -7,6 +7,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.CollectionUtils;
 import org.trc.biz.admin.IRequestFlowBiz;
 import org.trc.domain.admin.RequestFlow;
 import org.trc.operation.ExchangeFinancialCard;
@@ -17,6 +18,7 @@ import org.trc.util.IpUtil;
 import org.trc.util.ThreadPoolUtil;
 
 /**
+ * 补偿任务
  * Created by wangzhen
  */
 public class CompensateJob extends BaseJob{
@@ -48,12 +50,18 @@ public class CompensateJob extends BaseJob{
         }
     }
 
+    //获取TB
     @Transactional
     public void gainTcoin(){
         if(!_checkIp()){
             return ;
         }
+        //查询需要重试的请求流水
         List<RequestFlow> requestFlowList = requestFlowBiz.listRequestFlowForGainTcoinCompensate();
+        if(CollectionUtils.isEmpty(requestFlowList)){
+            logger.info("no need for compensation");
+            return;
+        }
         for(RequestFlow item : requestFlowList){
             ThreadPoolUtil.execute(new GainTcoin(item));
         }
@@ -65,6 +73,10 @@ public class CompensateJob extends BaseJob{
             return ;
         }
         List<RequestFlow> requestFlowList = requestFlowBiz.listRequestFlowForGainScoreCompensate();
+        if(CollectionUtils.isEmpty(requestFlowList)){
+            logger.info("no need for compensation");
+            return;
+        }
         for(RequestFlow item : requestFlowList){
             ThreadPoolUtil.execute(new GainScore(item));
         }
@@ -76,6 +88,10 @@ public class CompensateJob extends BaseJob{
             return ;
         }
         List<RequestFlow> requestFlowList = requestFlowBiz.listRequestFlowForExchangeFinancialCardCompensate();
+        if(CollectionUtils.isEmpty(requestFlowList)){
+           logger.info("no need for compensation");
+           return;
+        }
         for(RequestFlow item : requestFlowList){
             exchangeFinancialCard.execute(item);
         }
@@ -87,6 +103,10 @@ public class CompensateJob extends BaseJob{
             return ;
         }
         List<RequestFlow> requestFlowList = requestFlowBiz.listRequestFlowForGainFinancialCardCompensate();
+        if(CollectionUtils.isEmpty(requestFlowList)){
+            logger.info("no need for compensation");
+            return;
+        }
         for(RequestFlow item : requestFlowList){
             gainFinancialCard.execute(item);
         }

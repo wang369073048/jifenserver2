@@ -27,6 +27,7 @@ import java.io.IOException;
 import java.net.SocketTimeoutException;
 
 /**
+ * 金融卡券
  * Created by wangzhen
  */
 @Component("exchangeFinancialCard")

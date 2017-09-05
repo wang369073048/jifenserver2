@@ -88,7 +88,8 @@ public class DealWithExpiredScoreJob extends BaseJob{
         logger.info("--DealWithExpiredScoreJob end--:"+expirationTime);
     }
 
-    @Transactional(propagation= Propagation.REQUIRED,rollbackFor=Exception.class)
+    //这里的事物不会生效
+    //@Transactional(propagation= Propagation.REQUIRED,rollbackFor=Exception.class)
     private void expireScore(ScoreChild scoreChild, Date expirationTime){
         Score score = scoreService.selectByPrimaryKey(scoreChild.getScoreId());
         score.setScore(score.getScore() - scoreChild.getScore());
