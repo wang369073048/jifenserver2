@@ -18,11 +18,13 @@ public class ManagerInterceptor extends BaseInterceptor implements MethodInterce
 
     private Logger logger = LoggerFactory.getLogger(ManagerInterceptor.class);
 
+    @Autowired
+    private IShopBiz shopBiz;
+
     public ManagerInterceptor() {
         logger.info("ManagerInterceptor init...");
     }
-    @Autowired
-    private IShopBiz shopBiz;
+
     @Override
     public Object invoke(MethodInvocation methodInvocation) throws Throwable {
         try {

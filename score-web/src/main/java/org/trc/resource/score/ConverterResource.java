@@ -1,7 +1,5 @@
 package org.trc.resource.score;
 
-import static org.trc.util.ResultUtil.createSucssAppResult;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -35,12 +33,8 @@ import org.trc.domain.score.ScoreConverter;
 import org.trc.domain.shop.ShopDO;
 import org.trc.enums.ExceptionEnum;
 import org.trc.exception.ConverterException;
-import org.trc.interceptor.Authority;
-import org.trc.util.AppResult;
-import org.trc.util.JSONUtil;
 import org.trc.util.TxJerseyTools;
 
-import com.alibaba.druid.support.json.JSONUtils;
 import com.alibaba.fastjson.JSON;
 
 /**

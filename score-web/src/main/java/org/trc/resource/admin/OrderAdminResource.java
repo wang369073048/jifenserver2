@@ -1,8 +1,5 @@
 package org.trc.resource.admin;
 
-import static org.trc.util.ResultUtil.createFailAppResult;
-import static org.trc.util.ResultUtil.createSucssAppResult;
-
 import java.io.IOException;
 
 import javax.annotation.Resource;
@@ -30,13 +27,11 @@ import org.trc.domain.order.LogisticsDO;
 import org.trc.domain.order.OrdersDO;
 import org.trc.enums.ExceptionEnum;
 import org.trc.exception.OrderException;
-import org.trc.interceptor.Admin;
-import org.trc.util.AppResult;
+import org.trc.interceptor.annotation.Admin;
 import org.trc.util.CustomAck;
 import org.trc.util.Pagenation;
 import org.trc.util.TxJerseyTools;
 
-import com.alibaba.druid.support.json.JSONUtils;
 import com.alibaba.fastjson.JSON;
 import com.tairanchina.md.account.user.model.UserDO;
 import com.tairanchina.md.account.user.service.UserService;

@@ -1,9 +1,6 @@
 package org.trc.resource.settlement;
 
-import com.alibaba.druid.support.json.JSONUtils;
 import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONArray;
-import com.alibaba.fastjson.JSONObject;
 import com.tairanchina.md.account.user.model.UserDO;
 import com.tairanchina.md.account.user.service.UserService;
 import com.tairanchina.md.api.QueryType;
@@ -17,16 +14,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.trc.biz.settlement.IFinancialSettlementBiz;
 import org.trc.constants.ScoreAdminConstants;
-import org.trc.constants.TemporaryContext;
 import org.trc.domain.dto.ConsumptionSummaryStatisticalDataDTO;
 import org.trc.domain.dto.SettlementIntervalDTO;
 import org.trc.domain.query.SettlementQuery;
 import org.trc.domain.order.ConsumptionSummaryDO;
 import org.trc.domain.order.MembershipScoreDailyDetailsDO;
-import org.trc.domain.order.OrdersDO;
 import org.trc.enums.ExceptionEnum;
 import org.trc.exception.BusinessException;
-import org.trc.interceptor.Admin;
 import org.trc.util.*;
 import org.trc.validation.VerifyDate;
 
@@ -43,8 +37,6 @@ import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-
-import static org.trc.util.ResultUtil.createSucssAppResult;
 
 /**
  * author: hzwzhen

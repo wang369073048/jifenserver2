@@ -1,6 +1,5 @@
 package org.trc.resource.goods;
 
-import com.alibaba.druid.support.json.JSONUtils;
 import com.alibaba.dubbo.common.utils.CollectionUtils;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
@@ -25,8 +24,7 @@ import org.trc.domain.goods.ShopClassificationDO;
 import org.trc.domain.query.GoodsQuery;
 import org.trc.enums.ExceptionEnum;
 import org.trc.exception.GoodsException;
-import org.trc.interceptor.Authority;
-import org.trc.util.AppResult;
+import org.trc.interceptor.annotation.Authority;
 import org.trc.util.GuidUtil;
 import org.trc.util.Pagenation;
 import org.trc.util.TxJerseyTools;
@@ -42,9 +40,6 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.regex.Pattern;
-
-import static org.trc.util.ResultUtil.createFailAppResult;
-import static org.trc.util.ResultUtil.createSucssAppResult;
 
 /**
  * Created by hzwzhen on 2017/6/22.

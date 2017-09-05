@@ -21,11 +21,10 @@ import org.trc.biz.pagehome.IBannerBiz;
 import org.trc.constants.ScoreAdminConstants;
 import org.trc.domain.pagehome.Banner;
 import org.trc.form.pagehome.BannerForm;
-import org.trc.interceptor.Authority;
+import org.trc.interceptor.annotation.Authority;
 import org.trc.util.Pagenation;
 import org.trc.util.TxJerseyTools;
 
-import com.alibaba.druid.support.json.JSONUtils;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 

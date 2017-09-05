@@ -1,8 +1,5 @@
 package org.trc.resource.order;
 
-import static org.trc.util.ResultUtil.createFailAppResult;
-import static org.trc.util.ResultUtil.createSucssAppResult;
-
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
@@ -27,7 +24,6 @@ import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
-import com.sun.xml.bind.v2.TODO;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.slf4j.Logger;
@@ -43,7 +39,6 @@ import org.trc.domain.auth.Auth;
 import org.trc.domain.dto.ExportOrderDTO;
 import org.trc.domain.dto.OrderDTO;
 import org.trc.domain.dto.OrderQuery;
-import org.trc.domain.dto.WinningRecordDTO;
 import org.trc.domain.order.LogisticsDO;
 import org.trc.domain.order.OrdersDO;
 import org.trc.domain.query.SettlementQuery;
@@ -52,16 +47,14 @@ import org.trc.domain.shop.ManagerDO;
 import org.trc.enums.ExceptionEnum;
 import org.trc.exception.OrderException;
 import org.trc.exception.ShopException;
-import org.trc.interceptor.CustomerService;
-import org.trc.interceptor.Manager;
-import org.trc.util.AppResult;
+import org.trc.interceptor.annotation.CustomerService;
+import org.trc.interceptor.annotation.Manager;
 import org.trc.util.CellDefinition;
 import org.trc.util.ExportExcel;
 import org.trc.util.FatherToChildUtils;
 import org.trc.util.Pagenation;
 import org.trc.util.TxJerseyTools;
 
-import com.alibaba.druid.support.json.JSONUtils;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.tairanchina.md.account.user.model.UserDO;

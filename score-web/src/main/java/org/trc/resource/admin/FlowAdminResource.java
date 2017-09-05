@@ -1,6 +1,5 @@
 package org.trc.resource.admin;
 
-import com.alibaba.druid.support.json.JSONUtils;
 import com.alibaba.fastjson.JSON;
 import com.tairanchina.md.account.user.model.UserDO;
 import com.tairanchina.md.account.user.service.UserService;
@@ -23,7 +22,7 @@ import org.trc.domain.dto.ScoreChangeRecordQueryDTO;
 import org.trc.domain.score.ScoreChange;
 import org.trc.enums.ExceptionEnum;
 import org.trc.exception.FlowException;
-import org.trc.interceptor.Admin;
+import org.trc.interceptor.annotation.Admin;
 import org.trc.util.CellDefinition;
 import org.trc.util.ExportExcel;
 import org.trc.util.FatherToChildUtils;
