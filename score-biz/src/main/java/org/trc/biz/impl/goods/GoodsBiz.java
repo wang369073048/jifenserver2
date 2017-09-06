@@ -1,8 +1,10 @@
 package org.trc.biz.impl.goods;
 
 import com.trc.mall.externalservice.HttpBaseAck;
+import com.trc.mall.externalservice.TairanCouponOperation;
 import com.trc.mall.externalservice.TrCouponOperation;
 import com.trc.mall.externalservice.dto.CouponDto;
+import com.trc.mall.externalservice.dto.TairanCouponDto;
 import com.trc.mall.util.GuidUtil;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.time.DateUtils;
@@ -76,6 +78,9 @@ public class GoodsBiz implements IGoodsBiz{
     private IGoodsClassificationRelationshipService goodsClassificationRelationshipService;
     @Autowired
     private IShopBiz shopBiz;
+
+    @Resource
+    private TairanCouponOperation tairanCouponOperation;
 
     @Override
     //@CacheEvit(key="#goodsDO.id")
@@ -420,6 +425,22 @@ public class GoodsBiz implements IGoodsBiz{
     }
 
     @Override
+    public TairanCouponDto checkTairanEid(String eid) throws IOException, URISyntaxException, CouponException {
+        logger.info("eid:"+eid);
+        HttpBaseAck<TairanCouponDto> resultAck = tairanCouponOperation.checkEid(Integer.parseInt(eid));
+        logger.info(null!=resultAck?resultAck.toString():"resultAck:null");
+        logger.info("resultAck.isSuccess() && null != resultAck.getData():"+ (resultAck.isSuccess() && null != resultAck.getData()));
+        logger.info(""+resultAck.getData().isStatus());
+        logger.info(""+TairanCouponDto.SUCCESS_CODE.intValue());
+        logger.info(""+resultAck.getData().getCode().intValue());
+        if(resultAck.isSuccess() && null != resultAck.getData() && resultAck.getData().isStatus() && TairanCouponDto.SUCCESS_CODE.intValue() == resultAck.getData().getCode().intValue()){
+            return resultAck.getData();
+        } else{
+            throw new CouponException(ExceptionEnum.COUPON_QUERY_EXCEPTION, "优惠券对应的ID不存在!");
+        }
+    }
+
+    @Override
     public void setClassification(List<Long> goodsList, List<GoodsClassificationRelationshipDO> gcrList) {
         try {
             goodsClassificationRelationshipService.batchDeleteByGoodsIds(goodsList);
@@ -503,11 +524,12 @@ public class GoodsBiz implements IGoodsBiz{
         Assert.hasText(goodsDO.getGoodsName(),"goodsDO对应的商品名称不能为空！");
         Assert.isTrue(null!=goodsDO.getShopId(),"goodsDO对应的shopId不能为空！");
         Assert.isTrue(null!=goodsDO.getCategory(),"goodsDO对应的category不能为空！");
-        Assert.isTrue(null!=goodsDO.getPriceScore()&&goodsDO.getPriceScore()>0&&goodsDO.getPriceScore()<10000000l,"goodsDO对应的兑换价不能为空并且最大不超过99999999！");
+        //添加奖品时.兑换价可以为空
+        //Assert.isTrue(null!=goodsDO.getPriceScore()&&goodsDO.getPriceScore()>0&&goodsDO.getPriceScore()<10000000l,"goodsDO对应的兑换价不能为空并且最大不超过99999999！");
         Assert.isTrue(null!=goodsDO.getStock()&&goodsDO.getStock()>0&&goodsDO.getStock()<100000000,"goodsDO对应的库存不能为空并且最大不超过99999999！");
         Assert.isTrue(null!=goodsDO.getStockWarn()&&goodsDO.getStockWarn()>0&&goodsDO.getStockWarn()<100000000,"goodsDO对应的库存预警不能为空并且最大不超过99999999！");
         Assert.hasText(goodsDO.getGoodsSn(),"goodsDO对应的商品编号不能为空！");
-        Assert.hasText(goodsDO.getMediumImg(),"goodsDO对应的商品组图不能为空！");
+        //Assert.hasText(goodsDO.getMediumImg(),"goodsDO对应的商品组图不能为空！");
 //        Assert.hasText(goodsDO.getContent(),"goodsDO对应的商品描述不能为空！");
     }
 
