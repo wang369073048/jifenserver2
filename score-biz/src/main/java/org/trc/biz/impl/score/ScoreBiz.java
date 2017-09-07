@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -54,6 +55,12 @@ public class ScoreBiz implements IScoreBiz{
     
     @Autowired
     private IAuthService authService;
+    
+    @Override
+    public Score getScoreByUserId2(String userId) {
+        Assert.isTrue(StringUtils.isNotEmpty(userId), "用户id不能为空");
+        return scoreService.getScoreByUserId(userId);
+    }
     
     @Override
     public Score getScoreByUserId(String userId) {

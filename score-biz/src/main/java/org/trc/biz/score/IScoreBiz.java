@@ -15,6 +15,8 @@ import java.util.List;
  * since Date： 2017/8/8
  */
 public interface IScoreBiz {
+	
+	Score getScoreByUserId2(String userId);
 
     Score getScoreByUserId(String userId);
 
