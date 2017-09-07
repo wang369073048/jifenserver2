@@ -1,9 +1,11 @@
 package org.trc.biz.goods;
 
 import com.trc.mall.externalservice.dto.CouponDto;
+import com.trc.mall.externalservice.dto.TairanCouponDto;
 import org.trc.domain.goods.GoodsClassificationRelationshipDO;
 import org.trc.domain.goods.GoodsDO;
 import org.trc.domain.query.GoodsQuery;
+import org.trc.exception.CouponException;
 import org.trc.util.Pagenation;
 
 import java.io.IOException;
@@ -150,6 +152,13 @@ public interface IGoodsBiz {
      */
     CouponDto checkEid(String eid) throws IOException, URISyntaxException;
 
+    /**
+     * 检查优惠券id
+     * @param eid
+     * @return
+     */
+    TairanCouponDto checkTairanEid(String eid) throws IOException, URISyntaxException, CouponException;
+
     void setClassification(List<Long> goodsList, List<GoodsClassificationRelationshipDO> gcrList);
 
     /**
@@ -160,6 +169,7 @@ public interface IGoodsBiz {
      * @return
      */
     int prizeOrderAssociationProcessing(Long goodsId, Integer quantity, int version);
+
 
 
 

@@ -10,11 +10,9 @@ import org.springframework.stereotype.Component;
 import org.trc.biz.auth.IAuthBiz;
 import org.trc.biz.shop.IShopBiz;
 import org.trc.constants.ScoreAdminConstants;
-import org.trc.domain.auth.Auth;
 import org.trc.domain.shop.ManagerDO;
-import org.trc.exception.AuthException;
 import org.trc.exception.ShopException;
-import org.trc.interceptor.Manager;
+import org.trc.interceptor.annotation.Manager;
 import org.trc.util.CommonConstants;
 import org.trc.util.TxJerseyTools;
 

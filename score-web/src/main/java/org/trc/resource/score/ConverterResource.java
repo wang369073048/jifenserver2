@@ -1,7 +1,5 @@
 package org.trc.resource.score;
 
-import static org.trc.util.ResultUtil.createSucssAppResult;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -35,12 +33,8 @@ import org.trc.domain.score.ScoreConverter;
 import org.trc.domain.shop.ShopDO;
 import org.trc.enums.ExceptionEnum;
 import org.trc.exception.ConverterException;
-import org.trc.interceptor.Authority;
-import org.trc.util.AppResult;
-import org.trc.util.JSONUtil;
 import org.trc.util.TxJerseyTools;
 
-import com.alibaba.druid.support.json.JSONUtils;
 import com.alibaba.fastjson.JSON;
 
 /**
@@ -66,7 +60,6 @@ public class ConverterResource {
      * @return
      */
     @POST
-    @Authority
     public Response setExchageRule(@PathParam("shopId") Long shopId,
                                     @NotNull @FormParam("amount") Integer amount,
                                     @NotNull @FormParam("score") Integer score,
@@ -129,7 +122,6 @@ public class ConverterResource {
      * @return
      */
     @PUT
-    @Authority
     public Response modifyExchangeRule(@PathParam("shopId") Long shopId,
                                         @NotNull @FormParam("id") Long id,
                                        @NotNull @FormParam("amount") Integer amount,
@@ -193,7 +185,6 @@ public class ConverterResource {
      */
     @DELETE
     @Path("/{id}")
-    @Authority
     public Response deleteExchangeRule(@PathParam("shopId") Long shopId,
                                         @PathParam("id") Long id,
                                         @Context ContainerRequestContext requestContext) {
@@ -221,7 +212,6 @@ public class ConverterResource {
      * @return
      */
     @GET
-    @Authority
     public Response getExchangeRuleList(@PathParam("shopId") Long shopId,@Context ContainerRequestContext requestContext) {
         String userId= (String) requestContext.getProperty("userId");
         //查询权限
@@ -241,7 +231,6 @@ public class ConverterResource {
      */
     @GET
     @Path("{id}")
-    @Authority
     public Response getExchageRuleById(@PathParam("shopId") Long shopId,
                                                         @PathParam("id") String id,
                                                         @Context ContainerRequestContext requestContext){

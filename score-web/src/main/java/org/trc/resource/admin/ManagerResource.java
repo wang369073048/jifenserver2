@@ -1,6 +1,5 @@
 package org.trc.resource.admin;
 
-import com.alibaba.druid.support.json.JSONUtils;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.tairanchina.md.account.user.model.UserDO;
@@ -15,12 +14,10 @@ import org.trc.biz.shop.IShopBiz;
 import org.trc.constants.ScoreAdminConstants;
 import org.trc.domain.auth.Auth;
 import org.trc.domain.dto.AuthQueryDTO;
-import org.trc.domain.score.ScoreChange;
 import org.trc.domain.shop.ShopDO;
 import org.trc.enums.ExceptionEnum;
 import org.trc.exception.ManagerException;
-import org.trc.interceptor.Admin;
-import org.trc.util.AppResult;
+import org.trc.interceptor.annotation.Admin;
 import org.trc.util.Pagenation;
 import org.trc.util.TxJerseyTools;
 
@@ -31,8 +28,6 @@ import javax.ws.rs.container.ContainerRequestContext;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-
-import static org.trc.util.ResultUtil.createSucssAppResult;
 
 /**
  * author: hzwzhen

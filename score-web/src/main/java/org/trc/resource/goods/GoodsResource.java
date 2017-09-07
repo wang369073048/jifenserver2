@@ -1,11 +1,11 @@
 package org.trc.resource.goods;
 
-import com.alibaba.druid.support.json.JSONUtils;
 import com.alibaba.dubbo.common.utils.CollectionUtils;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.trc.mall.externalservice.dto.CouponDto;
+import com.trc.mall.externalservice.dto.TairanCouponDto;
 import com.trc.mall.util.CustomAck;
 import com.txframework.util.ListUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -14,6 +14,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.util.Assert;
 import org.trc.biz.goods.ICategoryBiz;
 import org.trc.biz.goods.IGoodsBiz;
 import org.trc.constants.Category;
@@ -24,9 +25,9 @@ import org.trc.domain.goods.GoodsDO;
 import org.trc.domain.goods.ShopClassificationDO;
 import org.trc.domain.query.GoodsQuery;
 import org.trc.enums.ExceptionEnum;
+import org.trc.exception.CouponException;
 import org.trc.exception.GoodsException;
-import org.trc.interceptor.Authority;
-import org.trc.util.AppResult;
+import org.trc.interceptor.annotation.Authority;
 import org.trc.util.GuidUtil;
 import org.trc.util.Pagenation;
 import org.trc.util.TxJerseyTools;
@@ -42,9 +43,6 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.regex.Pattern;
-
-import static org.trc.util.ResultUtil.createFailAppResult;
-import static org.trc.util.ResultUtil.createSucssAppResult;
 
 /**
  * Created by hzwzhen on 2017/6/22.
@@ -68,16 +66,21 @@ public class GoodsResource {
     @Authority
     @Path(ScoreAdminConstants.Route.Goods.ENTITY)
     public Response publish(@NotNull(message = "shopId不能为空") @PathParam("shopId") Long shopId, @NotNull(message = "category不能为空")@FormParam("category") Long category,
-                             @FormParam("brandName") String brandName, @NotEmpty(message = "goodsName不能为空") @FormParam("goodsName") String goodsName, @FormParam("barcode") String barcode,
+                             @FormParam("brandName") String brandName, @NotNull(message = "goodsName不能为空") @FormParam("goodsName") String goodsName, @FormParam("barcode") String barcode,
                              @FormParam("goodsNo") String goodsNo, @FormParam("batchNumber") String batchNumber, @FormParam("mainImg") String mainImg,
-                             @NotEmpty(message = "mediumImg不能为空") @FormParam("mediumImg") String mediumImg, @FormParam("priceMarket") Integer priceMarket,
-                             @NotNull(message = "shopId不能为空") @FormParam("priceScore") Integer priceScore, @NotNull(message = "stock不能为空") @FormParam("stock") Integer stock,
+                             @FormParam("mediumImg") String mediumImg, @FormParam("priceMarket") Integer priceMarket,
+                             @FormParam("priceScore") Integer priceScore, @NotNull(message = "stock不能为空") @FormParam("stock") Integer stock,
                              @NotNull(message = "stockWarn不能为空") @FormParam("stockWarn") Integer stockWarn, @FormParam("targetUrl") String targetUrl,
                              @FormParam("validStartTime") Long validStartTime, @FormParam("validEndTime") Long validEndTime,
-                             @FormParam("autoUpTime") Long autoUpTime, @FormParam("autoDownTime") Long autoDownTime, @NotEmpty(message = "content不能为空") @FormParam("content") String content,
-                             @FormParam("virtualExchangeQuantity") Integer virtualExchangeQuantity, @FormParam("whetherPrizes") Integer whetherPrizes,
+                             @FormParam("autoUpTime") Long autoUpTime, @FormParam("autoDownTime") Long autoDownTime, @NotNull(message = "content不能为空") @FormParam("content") String content,
+                             @FormParam("virtualExchangeQuantity") Integer virtualExchangeQuantity, @NotNull(message = "whetherPrizes不能为空")@FormParam("whetherPrizes") Integer whetherPrizes,
                              @FormParam("sort") Integer sort, @FormParam("shopClassificationIds") String shopClassificationIds,
-                             @NotNull(message = "limitQuantity不能为空") @FormParam("limitQuantity") Integer limitQuantity) {
+                             @NotNull(message = "limitQuantity不能为空")@FormParam("limitQuantity") Integer limitQuantity,@Context ContainerRequestContext requestContext) {
+        //当非奖品时.mediumImg和priceScore不能为空
+        if(whetherPrizes == 0){
+            Assert.isTrue(StringUtils.isNotBlank(mediumImg),"mediumImg不能为空");
+            Assert.notNull(priceScore,"priceScore不能为空");
+        }
         Date time = Calendar.getInstance().getTime();
         GoodsDO goodsDO = new GoodsDO();
         goodsDO.setShopId(shopId);
@@ -343,8 +346,8 @@ public class GoodsResource {
     @POST
     @Path(ScoreAdminConstants.Route.Goods.SET_CLASSIFICATION)
     @Authority
-    public Response setClassification(@PathParam("shopId") Long shopId, @NotEmpty @FormParam("goodsIds") String goodsIds,
-                                      @NotEmpty @FormParam("classificationIds") String classificationIds,@Context ContainerRequestContext requestContext) {
+    public Response setClassification(@PathParam("shopId") Long shopId, @NotEmpty(message = "goodsIds不能为空") @FormParam("goodsIds") String goodsIds,
+                                      @NotEmpty(message = "classificationIds不能为空") @FormParam("classificationIds") String classificationIds,@Context ContainerRequestContext requestContext) {
         _checkString(goodsIds);
         _checkString(classificationIds);
         String[] goodsIdStrs = goodsIds.split(",");
@@ -469,5 +472,42 @@ public class GoodsResource {
             return CustomAck.customError("金融卡券查询服务不可用!");
         }
 
+    }
+
+    /**
+     * 检查泰然优惠券ID
+     * @param shopId
+     * @param eid
+     * @return
+     */
+
+    @GET
+    @Authority
+    @Path(ScoreAdminConstants.Route.Goods.CHECKEID + ScoreAdminConstants.Route.Goods.TAIRAN)
+    public Response checkTairanEid(@PathParam("shopId") Long shopId, @NotNull @QueryParam("eid")String eid,@Context ContainerRequestContext requestContext){
+        try {
+            TairanCouponDto tairanCouponDto = goodsBiz.checkTairanEid(eid);
+            logger.info("" + TairanCouponDto.SUCCESS_CODE.intValue());
+            logger.info("" + tairanCouponDto.getCode().intValue());
+            if(TairanCouponDto.SUCCESS_CODE.intValue() == tairanCouponDto.getCode().intValue()) {
+                JSONObject result = new JSONObject();
+                result.put("packageFrom", tairanCouponDto.getData().getPackageFrom());
+                result.put("packageTo", tairanCouponDto.getData().getPackageTo());
+                result.put("useStartTime", tairanCouponDto.getData().getUseStartTime());
+                result.put("useEndTime", tairanCouponDto.getData().getUseEndTime());
+                result.put("expireTime", tairanCouponDto.getData().getExpireTime());
+                result.put("limitQuantity", tairanCouponDto.getData().getUser_obtain_limit());
+                result.put("couponType", tairanCouponDto.getData().getCoupon_type());
+                return TxJerseyTools.returnSuccess(result.toJSONString());
+            } else{
+                return CustomAck.customError(tairanCouponDto.getMsg());
+            }
+        } catch (CouponException e){
+            logger.error(e.getMessage());
+            return CustomAck.customError(e.getMessage());
+        } catch (Exception e){
+            logger.error("泰然优惠券查询服务不可用!");
+            return CustomAck.customError("泰然优惠券查询服务不可用!");
+        }
     }
 }

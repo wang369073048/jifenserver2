@@ -26,7 +26,7 @@ import org.trc.constants.ScoreAdminConstants;
 import org.trc.domain.goods.CategoryDO;
 import org.trc.enums.ExceptionEnum;
 import org.trc.exception.BannerException;
-import org.trc.interceptor.Admin;
+import org.trc.interceptor.annotation.Admin;
 import org.trc.util.Pagenation;
 import org.trc.util.TxJerseyTools;
 

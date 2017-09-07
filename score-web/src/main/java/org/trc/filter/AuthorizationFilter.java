@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.trc.biz.impl.impower.AclResourceBiz;
 import org.trc.constants.ScoreAdminConstants;
+import org.trc.constants.ScoreConstants;
 import org.trc.domain.impower.AclUserAccreditInfo;
 import org.trc.enums.ExceptionEnum;
 import org.trc.enums.ResultEnum;
@@ -62,41 +63,43 @@ public class AuthorizationFilter implements ContainerRequestFilter {
                     BeegoToken beegoToken = beegoService.authenticationBeegoToken(beegoAuthRequest);
                     if (null != beegoToken) {
                         String userId = beegoToken.getUserId();
-                        requestContext.setProperty(ScoreAdminConstants.Authorization.USER_ID,userId);
-
-//                        AclUserAccreditInfo aclUserAccreditInfo = userAccreditInfoService.selectOneById(userId);
-//                        if (aclUserAccreditInfo == null) {
-//                            //说明用户已经被禁用或者失效需要将用户退出要求重新登录或者联系管理员处理问题
-//                            AppResult appResult = new AppResult(ResultEnum.FAILURE.getCode(), ExceptionEnum.USER_BE_FORBIDDEN.getMessage(), null);
-//                            requestContext.abortWith(Response.status(Response.Status.FORBIDDEN).entity(appResult).type(MediaType.APPLICATION_JSON).encoding("UTF-8").build());
-//                        } else {
-//                            requestContext.setProperty(ScoreAdminConstants.Authorization.USER_ID, userId);
-//                            requestContext.setProperty(ScoreAdminConstants.Authorization.ACL_USER_ACCREDIT_INFO, aclUserAccreditInfo);
-//                            String method = ((ContainerRequest) requestContext).getMethod();
-//                            //验证是否在需要验证的权限列表中，需要则验证，不需要url直接放行
-//                            if (jurisdictionBiz.urlCheck(url)) {
-//                                //验证权限
-//                                if (!jurisdictionBiz.authCheck(userId, url, method)) {
-//                                    AppResult appResult = new AppResult(ResultEnum.FAILURE.getCode(), "用户无此权限", null);
-//                                    requestContext.abortWith(Response.status(Response.Status.UNAUTHORIZED).entity(appResult).type(MediaType.APPLICATION_JSON).encoding("UTF-8").build());
-//                                }
-//                            }else{
-//                            log.info("url:{}不需要验证放行成功",url);
-//                        }
-//                        }
+                        AclUserAccreditInfo aclUserAccreditInfo = userAccreditInfoService.selectOneById(userId);
+                        if (aclUserAccreditInfo == null) {
+                            //说明用户已经被禁用或者失效需要将用户退出要求重新登录或者联系管理员处理问题
+                            log.warn("用户授权信息不存在或已经被禁用!");
+                            AppResult appResult = new AppResult(ResultEnum.FAILURE.getCode(), ExceptionEnum.USER_BE_FORBIDDEN.getMessage(), null);
+                            requestContext.abortWith(Response.status(Response.Status.FORBIDDEN).entity(appResult).type(MediaType.APPLICATION_JSON).encoding("UTF-8").build());
+                        } else {
+                            requestContext.setProperty(ScoreConstants.Authorization.USER_ID, userId);
+                            requestContext.setProperty(ScoreConstants.Authorization.ACL_USER_ACCREDIT_INFO, aclUserAccreditInfo);
+                            String method = ((ContainerRequest) requestContext).getMethod();
+                            //验证是否在需要验证的权限列表中，需要则验证，不需要url直接放行
+                            if (jurisdictionBiz.urlCheck(url)) {
+                                //验证权限
+                                if (!jurisdictionBiz.authCheck(userId, url, method)) {
+                                    AppResult appResult = new AppResult(ResultEnum.FAILURE.getCode(), "用户无此权限", null);
+                                    requestContext.abortWith(Response.status(Response.Status.UNAUTHORIZED).entity(appResult).type(MediaType.APPLICATION_JSON).encoding("UTF-8").build());
+                                }
+                            }else{
+                                log.info("url:{}不需要验证放行成功",url);
+                            }
+                        }
+                    }else {
+                        log.error("页面token错误,需重新获取");
+                        AppResult appResult = new AppResult(ResultEnum.FAILURE.getCode(), "页面token错误", Response.Status.FORBIDDEN.getStatusCode());
+                        requestContext.abortWith(Response.status(Response.Status.FORBIDDEN).entity(appResult).type(MediaType.APPLICATION_JSON).encoding("UTF-8").build());
                     }
-                } catch (AuthenticateException e) {
-                    log.error(e.getMessage());
+                }  catch (AuthenticateException e) {
                     //token失效需要用户重新登录
-                    AppResult appResult = new AppResult(ResultEnum.FAILURE.getCode(), "用户未登录", Response.Status.FORBIDDEN.getStatusCode());
-                    requestContext.abortWith(Response.status(Response.Status.FORBIDDEN).entity(appResult).type(MediaType.APPLICATION_JSON).encoding("UTF-8").build());
+                    log.error("message:{},e:{}",e.getMessage(),e);
+                    requestContext.abortWith(Response.status(Response.Status.FORBIDDEN).entity("").type(MediaType.APPLICATION_JSON).encoding("UTF-8").build());
                 } catch (Exception e) {
-                    log.error(e.getMessage());
-                    AppResult appResult = new AppResult(ResultEnum.FAILURE.getCode(), "请重新登录", Response.Status.FORBIDDEN.getStatusCode());
-                    requestContext.abortWith(Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(appResult).type(MediaType.APPLICATION_JSON).encoding("UTF-8").build());
+                    log.error("message:{},e:{}",e.getMessage(),e);
+                    requestContext.abortWith(Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("").type(MediaType.APPLICATION_JSON).encoding("UTF-8").build());
                 }
             } else {
                 //未获取到token返回登录页面
+                log.info("页面token不存在,需要重新登录");
                 AppResult appResult = new AppResult(ResultEnum.FAILURE.getCode(), "用户未登录", Response.Status.FORBIDDEN.getStatusCode());
                 requestContext.abortWith(Response.status(Response.Status.FORBIDDEN).entity(appResult).type(MediaType.APPLICATION_JSON).encoding("UTF-8").build());
             }

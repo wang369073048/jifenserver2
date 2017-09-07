@@ -23,6 +23,7 @@ import org.trc.constants.ScoreAdminConstants;
 import org.trc.domain.auth.Auth;
 import org.trc.domain.shop.ShopDO;
 import org.trc.util.AppResult;
+import org.trc.util.AssertUtil;
 import org.trc.util.Pagenation;
 import org.trc.util.TxJerseyTools;
 
@@ -98,7 +99,7 @@ public class ShopResource {
     }
 
     /**
-     * 查询shop列表
+     * 查询shop分页列表
      *
      * @return Response
      */

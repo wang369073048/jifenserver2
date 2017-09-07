@@ -36,14 +36,12 @@ import org.trc.domain.query.SettlementQuery;
 import org.trc.domain.settlement.SettlementDO;
 import org.trc.enums.ExceptionEnum;
 import org.trc.exception.OrderException;
-import org.trc.interceptor.Admin;
 import org.trc.util.CellDefinition;
 import org.trc.util.ExportExcel;
 import org.trc.util.FatherToChildUtils;
 import org.trc.util.Pagenation;
 import org.trc.util.TxJerseyTools;
 
-import com.alibaba.druid.support.json.JSONUtils;
 import com.alibaba.fastjson.JSON;
 import com.tairanchina.md.account.user.model.UserDO;
 import com.tairanchina.md.account.user.service.UserService;
@@ -73,7 +71,7 @@ public class SettlementResource {
 
 
     @GET
-    @Admin
+    //@Admin
     public Response querySettlementList(@NotNull @QueryParam("shopId") Long shopId, @QueryParam("billNum") String billNum,
                                                         @Context ContainerRequestContext requestContext,
                                                         @BeanParam Pagenation<SettlementDO> page) {
@@ -85,7 +83,7 @@ public class SettlementResource {
     }
 
     @GET
-    @Admin
+    //@Admin
     @Path(ScoreAdminConstants.Route.Settlement.ORDER)
     public Response querySettlementOrderList(@QueryParam("shopId") Long shopId,
                                               @QueryParam("phone") String phone,
@@ -136,7 +134,7 @@ public class SettlementResource {
     }
 
     @GET
-    @Admin
+    //@Admin
     @Path(ScoreAdminConstants.Route.Settlement.EXPORT)
     public Response exportSettlementOrderList(@QueryParam("shopId") Long shopId,
                                               @QueryParam("phone") String phone,

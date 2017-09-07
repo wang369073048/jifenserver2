@@ -1,6 +1,5 @@
 package org.trc.resource.score;
 
-import com.alibaba.druid.support.json.JSONUtils;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.tairanchina.md.account.user.model.UserDO;
@@ -18,12 +17,11 @@ import org.trc.constants.ScoreCst;
 import org.trc.domain.auth.Auth;
 import org.trc.domain.dto.ScoreChangeDTO;
 import org.trc.domain.dto.ScoreChangeRecordQueryDTO;
-import org.trc.domain.luckydraw.ActivityPrizesDO;
 import org.trc.domain.score.ScoreChange;
 import org.trc.domain.shop.ManagerDO;
 import org.trc.enums.ExceptionEnum;
 import org.trc.exception.FlowException;
-import org.trc.interceptor.CustomerService;
+import org.trc.interceptor.annotation.CustomerService;
 import org.trc.util.FatherToChildUtils;
 import org.trc.util.Pagenation;
 import org.trc.util.TxJerseyTools;

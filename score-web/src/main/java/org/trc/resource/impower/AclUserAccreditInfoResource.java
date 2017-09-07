@@ -210,7 +210,7 @@ public class AclUserAccreditInfoResource {
 //        return ResultUtil.createSucssAppResult("查询成功", userAccreditInfoBiz.checkRoleValid(id));
         String[] result =userAccreditInfoBiz.checkRoleValid(id);
         if(result!=null){
-        	return TxJerseyTools.returnSuccess(JSON.toJSONString(result));
+            return TxJerseyTools.returnSuccess(JSON.toJSONString(result));
         }
         return TxJerseyTools.returnSuccess();
     }

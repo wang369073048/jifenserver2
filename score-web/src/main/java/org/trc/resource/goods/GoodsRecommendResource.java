@@ -31,15 +31,13 @@ import org.trc.domain.goods.GoodsDO;
 import org.trc.domain.goods.GoodsRecommendDO;
 import org.trc.enums.ExceptionEnum;
 import org.trc.exception.GoodsRecommendException;
-import org.trc.interceptor.Authority;
+import org.trc.interceptor.annotation.Authority;
 import org.trc.util.Pagenation;
 import org.trc.util.TxJerseyTools;
 
-import com.alibaba.druid.support.json.JSONUtils;
 import com.alibaba.dubbo.common.logger.Logger;
 import com.alibaba.dubbo.common.logger.LoggerFactory;
 import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONArray;
 
 /**
  * author: hzwzhen

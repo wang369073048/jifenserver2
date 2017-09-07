@@ -1,6 +1,5 @@
 package org.trc.resource.luckydraw;
 
-import com.alibaba.druid.support.json.JSONUtils;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.txframework.util.DateUtils;
@@ -19,7 +18,6 @@ import org.trc.biz.shop.IShopBiz;
 import org.trc.constants.ScoreAdminConstants;
 import org.trc.domain.auth.Auth;
 import org.trc.domain.dto.WinningRecordDTO;
-import org.trc.domain.impower.AclUserAddPageDate;
 import org.trc.domain.luckydraw.ActivityDetailDO;
 import org.trc.domain.luckydraw.ActivityPrizesDO;
 import org.trc.domain.luckydraw.LuckyDrawDO;
@@ -30,8 +28,7 @@ import org.trc.domain.query.DateQuery;
 import org.trc.domain.shop.ManagerDO;
 import org.trc.enums.ExceptionEnum;
 import org.trc.exception.OrderException;
-import org.trc.interceptor.Temp;
-import org.trc.util.AppResult;
+import org.trc.interceptor.annotation.Temp;
 import org.trc.util.CellDefinition;
 import org.trc.util.ExportExcel;
 import org.trc.util.Pagenation;
@@ -52,8 +49,6 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
-
-import static org.trc.util.ResultUtil.createSucssAppResult;
 
 /**
  * author: hzwzhen

@@ -13,27 +13,27 @@
 
     <aop:config>
         <!--@Admin切入点-->
-        <aop:pointcut id="methodPoint" expression="execution(* org.trc.resource..*.*(..)) and  @annotation(org.trc.interceptor.Admin)"/>
+        <aop:pointcut id="methodPoint" expression="execution(* org.trc.resource..*.*(..)) and  @annotation(org.trc.interceptor.annotation.Admin)"/>
         <aop:advisor pointcut-ref="methodPoint" advice-ref="adminInterceptor"/>
     </aop:config>
     <aop:config>
         <!--@Authority切入点-->
-        <aop:pointcut id="methodPoint2" expression="execution(* org.trc.resource..*.*(..)) and  @annotation(org.trc.interceptor.Authority)"/>
+        <aop:pointcut id="methodPoint2" expression="execution(* org.trc.resource..*.*(..)) and  @annotation(org.trc.interceptor.annotation.Authority)"/>
         <aop:advisor pointcut-ref="methodPoint2" advice-ref="authorityInterceptor"/>
     </aop:config>
     <aop:config>
         <!--@CustomerService切入点-->
-        <aop:pointcut id="methodPoint3" expression="execution(* org.trc.resource..*.*(..)) and  @annotation(org.trc.interceptor.CustomerService)"/>
+        <aop:pointcut id="methodPoint3" expression="execution(* org.trc.resource..*.*(..)) and  @annotation(org.trc.interceptor.annotation.CustomerService)"/>
         <aop:advisor pointcut-ref="methodPoint3" advice-ref="customerServiceInterceptor"/>
     </aop:config>
     <aop:config>
         <!--@Manager切入点-->
-        <aop:pointcut id="methodPoint4" expression="execution(* org.trc.resource..*.*(..)) and  @annotation(org.trc.interceptor.Manager)"/>
+        <aop:pointcut id="methodPoint4" expression="execution(* org.trc.resource..*.*(..)) and  @annotation(org.trc.interceptor.annotation.Manager)"/>
         <aop:advisor pointcut-ref="methodPoint4" advice-ref="managerInterceptor"/>
     </aop:config>
     <aop:config>
         <!--@Temp切入点-->
-        <aop:pointcut id="methodPoint5" expression="execution(* org.trc.resource..*.*(..)) and  @annotation(org.trc.interceptor.Temp)"/>
+        <aop:pointcut id="methodPoint5" expression="execution(* org.trc.resource..*.*(..)) and  @annotation(org.trc.interceptor.annotation.Temp)"/>
         <aop:advisor pointcut-ref="methodPoint5" advice-ref="tempInterceptor"/>
     </aop:config>
 </beans>
