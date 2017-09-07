@@ -47,7 +47,7 @@ import static org.trc.util.StringUtil.splitByComma;
  * JDK-version:  JDK1.8
  * since Date： 2017/7/13
  */
-@Service("userAccreditInfoBiz")
+@Service("aclUserAccreditInfoBiz")
 public class AclUserAccreditInfoBiz extends CommonBiz implements IAclUserAccreditInfoBiz {
 
     private Logger LOGGER = LoggerFactory.getLogger(AclUserAccreditInfoBiz.class);

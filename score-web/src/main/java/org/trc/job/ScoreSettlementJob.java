@@ -139,6 +139,7 @@ public class ScoreSettlementJob extends BaseJob{
             params.put("dailySettlementTime", dailySettlementTime);
             ScoreChange scoreChange = scoreChangeRecordService.getLastScoreChange(params);
             if (null != scoreChange) {
+                //TODO  计算存在问题
                 score.setPreviousScore(scoreChange.getScoreBalance());
                 score.setPreviousFreezingScore(scoreChange.getFreezingScoreBalance());
                 scoreService.updateScore(score);

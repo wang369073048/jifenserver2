@@ -37,6 +37,7 @@ public class AuthorityInterceptor extends BaseInterceptor implements MethodInter
         try {
             String userId = getUserId(methodInvocation);
             if (StringUtils.isEmpty(userId)) {
+
                 throw new AuthenticationException("未登录或者令牌已失效");
             }
             Object[] params = methodInvocation.getArguments();

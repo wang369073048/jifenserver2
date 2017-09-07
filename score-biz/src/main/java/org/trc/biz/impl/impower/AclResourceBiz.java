@@ -53,9 +53,6 @@ public class AclResourceBiz implements IAclResourceBiz {
     @Autowired
     private IAclUserAccreditRoleRelationService userAccreditInfoRoleRelationService;
 
-    private final static Integer WHOLE_JURISDICTION_ID = 1;//全局角色的所属
-
-    private final static Integer CHANNEL_JURISDICTION_ID = 2;//渠道角色的所属
     @Override
     public List<AclResource> findWholeJurisdiction(){
 
@@ -360,16 +357,14 @@ public class AclResourceBiz implements IAclResourceBiz {
         List<Long> roleIdList = new ArrayList<>();
         Collections.addAll(roleIdList, roleIds);
         criteria.andIn("roleId", roleIdList);
-        criteria.andGreaterThan("resourceCode", 100000);
         List<AclRoleResourceRelation> roleJdRelationList = roleJurisdictionRelationService.selectByExample(example);
         if (AssertUtil.collectionIsEmpty(roleJdRelationList)) {
             throw new JurisdictionException(ExceptionEnum.SYSTEM_ACCREDIT_QUERY_EXCEPTION, "用户权限信息不存在");
         }
-        Map<String, Object> map = new HashMap<>();
         Set<Long> resourceCodeSet = new HashSet<>();
         for (AclRoleResourceRelation aclRoleResourceRelation : roleJdRelationList) {
             //取得资源码前3位
-            resourceCodeSet.add(aclRoleResourceRelation.getResourceCode() / 1000000);
+            resourceCodeSet.add(aclRoleResourceRelation.getResourceCode() / 100);
         }
         for (Long resourceCode : resourceCodeSet) {
             Map<String, Object> jurisdictionMap = new HashMap<>();
@@ -377,9 +372,9 @@ public class AclResourceBiz implements IAclResourceBiz {
             Set<Long> longSet = new HashSet<>();
             for (AclRoleResourceRelation aclRoleResourceRelation : roleJdRelationList) {
                 //取得资源码前3位
-                if (resourceCode.equals(aclRoleResourceRelation.getResourceCode() / 1000000)) {
+                if (resourceCode.equals(aclRoleResourceRelation.getResourceCode() / 100)) {
                     //取得资源码前5位
-                    longSet.add(aclRoleResourceRelation.getResourceCode() / 10000);
+                    longSet.add(aclRoleResourceRelation.getResourceCode());
                 }
             }
             jurisdictionMap.put("codeList", longSet);
