@@ -26,8 +26,12 @@
     <select id="selectListByParams" parameterType="org.trc.domain.settlement.SettlementDO" resultType="org.trc.domain.settlement.SettlementDO">
         SELECT <include refid="allSelectionColumn"/> FROM settlement
         <where>
-            <if test="shopId != null ">
-                shopId = #{shopId}
+            1 = 1
+            <if test="shopId != null and shopId != ''">
+                and shopId = #{shopId}
+            </if>
+            <if test="billNum != null and billNum != ''">
+                and billNum = #{billNum}
             </if>
         </where>
         order by createTime desc
