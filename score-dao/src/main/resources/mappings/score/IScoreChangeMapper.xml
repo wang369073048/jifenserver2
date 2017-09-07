@@ -128,6 +128,9 @@
             <if test="userId!=null">
                 and userId = #{userId}
             </if>
+            <if test="theOtherUserId!=null and theOtherUserId != ''">
+                and theOtherUserId = #{theOtherUserId}
+            </if>
             <if test="businessCodeList != null and businessCodeList.size() > 0">
                 and businessCode in
                 <foreach item="item" index="index" collection="businessCodeList" open="(" separator="," close=")">

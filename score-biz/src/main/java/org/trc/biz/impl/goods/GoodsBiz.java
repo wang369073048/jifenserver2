@@ -539,7 +539,7 @@ public class GoodsBiz implements IGoodsBiz{
         Assert.hasText(goodsDO.getGoodsName(),"goodsDO对应的商品名称不能为空！");
         Assert.isTrue(null!=goodsDO.getShopId(),"goodsDO对应的shopId不能为空！");
         Assert.isTrue(null!=goodsDO.getCategory(),"goodsDO对应的category不能为空！");
-        Assert.isTrue(null!=goodsDO.getPriceScore()&&goodsDO.getPriceScore()>0&&goodsDO.getPriceScore()<10000000l,"goodsDO对应的兑换价必须大于0并且最大不超过99999999！");
+       // Assert.isTrue(null!=goodsDO.getPriceScore()&&goodsDO.getPriceScore()>0&&goodsDO.getPriceScore()<10000000l,"goodsDO对应的兑换价必须大于0并且最大不超过99999999！");
         Assert.isTrue(null!=goodsDO.getStock()&&goodsDO.getStock()>0&&goodsDO.getStock()<100000000,"goodsDO对应的库存必须大于0并且最大不超过99999999！");
         Assert.isTrue(null!=goodsDO.getStockWarn()&&goodsDO.getStockWarn()>0&&goodsDO.getStockWarn()<100000000,"goodsDO对应的库存预警必须大于0并且最大不超过99999999！");
         Assert.hasText(goodsDO.getMediumImg(),"goodsDO对应的商品组图不能为空！");

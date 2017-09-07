@@ -71,7 +71,12 @@ public class FlowResource {
             if (null == userDO) {
                 throw new FlowException(ExceptionEnum.ORDER_QUERY_EXCEPTION,"手机号不存在");
             }
-            queryDto.setUserId(userDO.getUserId());
+            //查询积分消费记录,当businessCodes为"income,lotteryIncome",TheOtherUserId为消费者
+            if("income,lotteryIncome".equals(businessCodes)){
+                queryDto.setTheOtherUserId(userDO.getUserId());
+            }else {
+                queryDto.setUserId(userDO.getUserId());
+            }
         }
         queryDto.setShopId(manager.getShopId());
         Auth auth = authBiz.getAuthByShopId(manager.getShopId());

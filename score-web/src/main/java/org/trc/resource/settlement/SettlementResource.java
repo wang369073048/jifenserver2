@@ -77,6 +77,7 @@ public class SettlementResource {
                                                         @BeanParam Pagenation<SettlementDO> page) {
         SettlementDO settlementDO = new SettlementDO();
         settlementDO.setShopId(shopId);
+        settlementDO.setBillNum(billNum);
 //        return settlementBiz.queryListByParams(settlementDO, page);
         Pagenation<SettlementDO> pageSettlementDOs = settlementBiz.queryListByParams(settlementDO, page);
         return TxJerseyTools.returnSuccess(JSON.toJSONString(pageSettlementDOs));

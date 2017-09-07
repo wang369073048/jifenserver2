@@ -27,11 +27,14 @@ import org.trc.domain.goods.CategoryDO;
 import org.trc.enums.ExceptionEnum;
 import org.trc.exception.BannerException;
 import org.trc.interceptor.annotation.Admin;
+import org.trc.util.CommonConstants;
 import org.trc.util.Pagenation;
 import org.trc.util.TxJerseyTools;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+
+import static org.trc.util.CommonConstants.ErrorCode.ERROR_NO_DATA;
 
 /**
  * author: hzwzhen
@@ -182,15 +185,15 @@ public class CategoryResource {
      */
     @GET
     @Admin
-    public Response getCategoryList(@QueryParam("name") String name,
+    public Response getCategoryList(@QueryParam("categoryName") String categoryName,
                                     @BeanParam Pagenation<CategoryDO> page,@Context ContainerRequestContext requestContext) {
         CategoryDO query = new CategoryDO();
-        query.setCategoryName(name);
+        query.setCategoryName(categoryName);
         page = categoryBiz.queryCategoryDOListForPage(query, page);
         if(page!=null){
         	return TxJerseyTools.returnSuccess(JSON.toJSONString(page));
         }else{
-        	return TxJerseyTools.returnSuccess();
+        	return TxJerseyTools.returnAbort(CommonConstants.ErrorCode.ERROR_NO_DATA);
         }
     }
 }
