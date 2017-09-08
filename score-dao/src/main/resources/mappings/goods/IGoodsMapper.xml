@@ -115,7 +115,7 @@
         and shopId = #{shopId}
     </update>
 
-    <!--多条件查询未推荐商品信息(分页) -->
+    <!--多条件查询未推荐商品信息(分页) 只查询非奖品-->
     <select id="selectListExceptRecommendByPage" parameterType="org.trc.domain.goods.GoodsDO"
             resultType="org.trc.domain.goods.GoodsDO">
         SELECT
@@ -125,6 +125,7 @@
         <if test="goodsName != null">
             and g.goodsName like concat('%',#{goodsName},'%')
         </if>
+        and g.whetherPrizes = 0
         order by updateTime desc
     </select>
 

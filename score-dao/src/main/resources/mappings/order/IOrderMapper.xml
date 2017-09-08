@@ -125,7 +125,6 @@
             <if test="endTime != null">
                 AND <![CDATA[createTime < #{endTime}]]>
             </if>
-            and source = 1
         </where>
         order by shopId asc, createTime desc
     </select>
